@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Contact | Evantra De-Buckman Ventures</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Contact Evantra De-Buckman Ventures for IT and trade services.">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container nav">
+      <div class="brand">
+        <div class="logo">EV</div>
+        <div>
+          <div class="name" data-company>Evantra De-Buckman Ventures</div>
+          <div class="tag">IT Consulting • Software • Trading • Import/Export</div>
+        </div>
+      </div>
+      <nav>
+        <button class="burger" aria-label="Toggle navigation">☰</button>
+        <div class="nav-links" role="navigation">
+          <a href="/index.html">Home</a>
+          <a href="/about.html">About</a>
+          <a href="/services.html">Services</a>
+          <a href="/industries.html">Industries</a>
+          <a href="/why-us.html">Why Us</a>
+          <a href="/contact.html" class="btn">Contact Us</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <span class="badge">Contact Us</span>
+        <h1 class="mt-3">Let’s discuss your needs</h1>
+        <p class="lead">Tell us about your project or request. We’ll respond promptly.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container grid cols-2">
+        <div>
+          <h2>Send a Message</h2>
+          <div id="form-messages" class="mt-2"></div>
+          <form id="contact-form" class="form mt-2" name="contact" method="post">
+            <input class="input" type="text" name="name" placeholder="Full name" required>
+            <input class="input" type="email" name="email" placeholder="Email address" required>
+            <input class="input" type="text" name="company" placeholder="Company (optional)">
+            <select class="input" name="interest">
+              <option value="">How can we help?</option>
+              <option>IT Consulting</option>
+              <option>Software Development</option>
+              <option>Systems Support</option>
+              <option>General Trading</option>
+              <option>Import & Export</option>
+              <option>Partnership</option>
+            </select>
+            <textarea name="message" placeholder="Briefly describe your needs" required></textarea>
+            <button class="btn" type="submit">Submit</button>
+          </form>
+          <p class="muted mt-2">By submitting, you agree to be contacted about your request.</p>
+        </div>
+        <div class="card">
+          <h3>Contact Details</h3>
+          <p class="mt-2"><strong>Email:</strong> <a data-email href="mailto:info@evantraventures.com">info@evantraventures.com</a></p>
+          <p><strong>Phone:</strong> <a data-phone href="tel:+233200000000">+233 20 000 0000</a></p>
+          <p><strong>Location:</strong> <span data-location>Accra, Ghana</span></p>
+          <div class="hr"></div>
+          <h4>Office Hours</h4>
+          <p class="mt-2">Mon–Fri: 9:00–17:30 GMT</p>
+          <p class="mt-2">Sat–Sun: 12:00–17:00 GMT</p>
+          <div class="hr"></div>
+          <h4>Map</h4>
+          <p class="muted">Map placeholder. Embed Google Maps or GhanaPost GPS when address is finalized.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="cols">
+        <div>
+          <div class="brand">
+            <div class="logo">EV</div>
+            <div>
+              <div class="name" data-company>Evantra De-Buckman Ventures</div>
+              <div class="tag">Trusted IT and Trade Partner in Ghana</div>
+            </div>
+          </div>
+          <p class="mt-3">We help organizations modernize operations, build reliable software, and move goods efficiently across borders.</p>
+        </div>
+        <div>
+          <h4>Company</h4>
+          <div class="hr"></div>
+          <a href="/about.html">About</a><br/>
+          <a href="/services.html">Services</a><br/>
+          <a href="/industries.html">Industries</a><br/>
+          <a href="/why-us.html">Why Choose Us</a>
+        </div>
+        <div>
+          <h4>Contact</h4>
+          <div class="hr"></div>
+          <a data-email href="mailto:info@evantraventures.com">info@evantraventures.com</a><br/>
+          <a data-phone href="tel:+233200000000">+233 20 000 0000</a><br/>
+          <span data-location>Accra, Ghana</span>
+        </div>
+        <div>
+          <h4>Quick Actions</h4>
+          <div class="hr"></div>
+          <a class="btn secondary" href="/contact.html">Request a Consultation</a>
+          <div class="mt-2"><a href="/services.html#software">Explore Software Development</a></div>
+        </div>
+      </div>
+      <div class="bottom">
+        <div>© <span id="year"></span> <span data-company>Evantra De-Buckman Ventures</span>. All rights reserved.</div>
+        <div>Built with performance, accessibility, and clarity in mind.</div>
+      </div>
+    </div>
+    <script>document.getElementById('year').textContent=new Date().getFullYear()</script>
+  </footer>
+
+  <script src="/assets/js/site.js"></script>
+</body>
+</html>
