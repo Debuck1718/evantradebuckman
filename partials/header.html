@@ -1,21 +1,40 @@
 <header class="header">
   <div class="container nav">
     <div class="brand">
-      <div class="logo">EV</div>
-      <div>
+      <a href="/index.html" class="logo-link">
+        <div class="logo">
+          <img src="/assets/images/logo.png" alt="Evantra De-Buckman Ventures Logo">
+        </div>
+      </a>
+      <div class="brand-text">
         <div class="name" data-company>Evantra De-Buckman Ventures</div>
-        <div class="tag">IT Consulting • Software • Trading • Import/Export</div>
+        <div class="tag">Global Enterprise Solutions • IT & Trade</div>
       </div>
     </div>
-    <nav>
-      <button class="burger" aria-label="Toggle navigation">☰</button>
+    
+    <nav class="main-nav">
+      <button class="burger" aria-label="Open navigation menu" aria-expanded="false">
+        <span class="burger-line"></span>
+        <span class="burger-line"></span>
+        <span class="burger-line"></span>
+      </button>
+
       <div class="nav-links" role="navigation">
-        <a href="/index.html">Home</a>
-        <a href="/about.html">About</a>
-        <a href="/services.html">Services</a>
-        <a href="/industries.html">Industries</a>
-        <a href="/why-us.html">Why Us</a>
-        <a href="/contact.html" class="btn">Contact Us</a>
+        <a href="/index.html" class="nav-item">Home</a>
+        <a href="/about.html" class="nav-item">About</a>
+        
+        <div class="dropdown">
+          <a href="/services.html" class="nav-item dropdown-trigger">Services <span class="chevron">▾</span></a>
+          <div class="dropdown-content">
+            <a href="/services.html#it-engineering">IT Engineering</a>
+            <a href="/services.html#cybersecurity">Cybersecurity</a>
+            <a href="/services.html#global-logistics">Global Logistics</a>
+          </div>
+        </div>
+
+        <a href="/industries.html" class="nav-item">Industries</a>
+        <a href="/why-us.html" class="nav-item">Why Us</a>
+        <a href="/contact.html" class="btn-primary">Request Consultation</a>
       </div>
     </nav>
   </div>

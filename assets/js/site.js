@@ -62,6 +62,22 @@ function initContactForm(){
   });
 }
 
+// Simple Reveal Animation
+const observerOptions = { threshold: 0.15 };
+
+const revealOnScroll = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('active');
+    }
+  });
+}, observerOptions);
+
+document.querySelectorAll('[data-aos]').forEach(el => {
+  el.classList.add('reveal-init'); // Hide elements initially
+  revealOnScroll.observe(el);
+});
+
 function init(){
   injectConfig();
   initNav();

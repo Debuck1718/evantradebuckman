@@ -2,190 +2,225 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Services | Evantra De-Buckman Ventures</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="IT consulting, software development, systems support, general trading, and import/export services tailored to your goals.">
+<meta property="og:title" content="Evantra De-Buckman Ventures | Global IT & Trade">
+<meta property="og:description" content="Engineering digital infrastructure and global supply chains from West Africa.">
+<meta property="og:image" content="/assets/images/og-preview.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png" />
   <link rel="stylesheet" href="/assets/css/styles.css">
 </head>
 <body>
   <header class="header">
-    <div class="container nav">
-      <div class="brand">
-        <div class="logo">EV</div>
-        <div>
-          <div class="name" data-company>Evantra De-Buckman Ventures</div>
-          <div class="tag">IT Consulting • Software • Trading • Import/Export</div>
+  <div class="container nav">
+    <div class="brand">
+      <a href="/index.html" class="logo-link">
+        <div class="logo">
+          <img src="/assets/images/logo.png" alt="Evantra De-Buckman Ventures Logo">
         </div>
+      </a>
+      <div class="brand-text">
+        <div class="name" data-company>Evantra De-Buckman Ventures</div>
+        <div class="tag">Global Enterprise Solutions • IT & Trade</div>
       </div>
-      <nav>
-        <button class="burger" aria-label="Toggle navigation">☰</button>
-        <div class="nav-links" role="navigation">
-          <a href="/index.html">Home</a>
-          <a href="/about.html">About</a>
-          <a href="/services.html">Services</a>
-          <a href="/industries.html">Industries</a>
-          <a href="/why-us.html">Why Us</a>
-          <a href="/contact.html" class="btn">Contact Us</a>
-        </div>
-      </nav>
     </div>
-  </header>
+    
+    <nav class="main-nav">
+      <button class="burger" aria-label="Open navigation menu" aria-expanded="false">
+        <span class="burger-line"></span>
+        <span class="burger-line"></span>
+        <span class="burger-line"></span>
+      </button>
+
+      <div class="nav-links" role="navigation">
+        <a href="/index.html" class="nav-item">Home</a>
+        <a href="/about.html" class="nav-item">About</a>
+        
+        <div class="dropdown">
+          <a href="/services.html" class="nav-item dropdown-trigger">Services <span class="chevron">▾</span></a>
+          <div class="dropdown-content">
+            <a href="/services.html#it-engineering">IT Engineering</a>
+            <a href="/services.html#cybersecurity">Cybersecurity</a>
+            <a href="/services.html#global-logistics">Global Logistics</a>
+          </div>
+        </div>
+
+        <a href="/industries.html" class="nav-item">Industries</a>
+        <a href="/why-us.html" class="nav-item">Why Us</a>
+        <a href="/contact.html" class="btn-primary">Request Consultation</a>
+      </div>
+    </nav>
+  </div>
+</header>
 
   <main>
-    <section class="hero">
-      <div class="container">
-        <span class="badge">What We Offer</span>
-        <h1 class="mt-3">Services tailored to outcomes</h1>
-        <p class="lead">Clarity, reliability, and compliance across technology and trade.</p>
-      </div>
-    </section>
-
-    <section class="section" id="it-consulting">
-      <div class="container grid cols-2">
-        <div>
-          <h2>IT Consulting</h2>
-          <p>We help you align technology with strategy, budgets, and risk appetite. From assessments to roadmaps, we deliver practical recommendations that your teams can implement.</p>
-          <ul class="mt-2">
-            <li>IT assessments and optimization</li>
-            <li>Cloud strategy and architecture</li>
-            <li>Cybersecurity posture and controls</li>
-            <li>Governance, vendor management, and procurement</li>
-          </ul>
-          <a class="btn mt-3" href="/contact.html">Request IT consultation</a>
-        </div>
-        <div class="card">
-          <h3>Outcomes</h3>
-          <ul class="mt-2">
-            <li>Reduced downtime and costs</li>
-            <li>Better visibility and risk control</li>
-            <li>Clear execution plan</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="software">
-      <div class="container grid cols-2">
-        <div>
-          <h2>Software Development</h2>
-          <p>We build secure, maintainable applications that solve real business problems. Our process emphasizes user experience, integration, and long-term maintainability.</p>
-          <ul class="mt-2">
-            <li>Web and mobile applications</li>
-            <li>APIs and integrations</li>
-            <li>Data and reporting pipelines</li>
-            <li>DevOps and CI/CD</li>
-          </ul>
-          <a class="btn mt-3" href="/contact.html">Discuss your software project</a>
-        </div>
-        <div class="card">
-          <h3>Tech Focus</h3>
-          <p class="mt-2">Modern stacks (TypeScript, Python, Java), secure patterns, and robust hosting.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="support">
-      <div class="container grid cols-2">
-        <div>
-          <h2>Systems Support</h2>
-          <p>We keep your systems running—cloud or on-premises—with proactive monitoring, patching, and end-user support.</p>
-          <ul class="mt-2">
-            <li>Managed services and helpdesk</li>
-            <li>Cloud administration (AWS/Azure)</li>
-            <li>Backup, DR, and security hardening</li>
-          </ul>
-          <a class="btn mt-3" href="/contact.html">Explore support plans</a>
-        </div>
-        <div class="card">
-          <h3>Service Levels</h3>
-          <p class="mt-2">Tailored SLAs to your operating hours and criticality.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="trading">
-      <div class="container grid cols-2">
-        <div>
-          <h2>General Trading</h2>
-          <p>We source quality goods with vetted suppliers, competitive pricing, and transparent timelines.</p>
-          <ul class="mt-2">
-            <li>Supplier sourcing and evaluation</li>
-            <li>Quality checks and documentation</li>
-            <li>Local distribution and fulfillment</li>
-          </ul>
-          <a class="btn mt-3" href="/contact.html">Source products</a>
-        </div>
-        <div class="card">
-          <h3>Categories</h3>
-          <p class="mt-2">IT equipment, industrial supplies, office and facility needs, and more.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="import-export">
-      <div class="container grid cols-2">
-        <div>
-          <h2>Import & Export</h2>
-          <p>We manage end-to-end processes—shipping, customs, and compliance—so your goods arrive on time and in full.</p>
-          <ul class="mt-2">
-            <li>Freight coordination and documentation</li>
-            <li>Customs clearance and regulations</li>
-            <li>Last-mile delivery and warehousing</li>
-          </ul>
-          <a class="btn mt-3" href="/contact.html">Plan your shipment</a>
-        </div>
-        <div class="card">
-          <h3>Compliance</h3>
-          <p class="mt-2">Aligned with Ghanaian standards and international trade practices.</p>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">
+  <section class="hero-modern services-hero">
     <div class="container">
-      <div class="cols">
-        <div>
-          <div class="brand">
-            <div class="logo">EV</div>
-            <div>
-              <div class="name" data-company>Evantra De-Buckman Ventures</div>
-              <div class="tag">Trusted IT and Trade Partner in Ghana</div>
-            </div>
-          </div>
-          <p class="mt-3">We help organizations modernize operations, build reliable software, and move goods efficiently across borders.</p>
-        </div>
-        <div>
-          <h4>Company</h4>
-          <div class="hr"></div>
-          <a href="/about.html">About</a><br/>
-          <a href="/services.html">Services</a><br/>
-          <a href="/industries.html">Industries</a><br/>
-          <a href="/why-us.html">Why Choose Us</a>
-        </div>
-        <div>
-          <h4>Contact</h4>
-          <div class="hr"></div>
-          <a data-email href="mailto:info@evantraventures.com">info@evantraventures.com</a><br/>
-          <a data-phone href="tel:+233200000000">+233 20 000 0000</a><br/>
-          <span data-location>Accra, Ghana</span>
-        </div>
-        <div>
-          <h4>Quick Actions</h4>
-          <div class="hr"></div>
-          <a class="btn secondary" href="/contact.html">Request a Consultation</a>
-          <div class="mt-2"><a href="/services.html#software">Explore Software Development</a></div>
-        </div>
-      </div>
-      <div class="bottom">
-        <div>© <span id="year"></span> <span data-company>Evantra De-Buckman Ventures</span>. All rights reserved.</div>
-        <div>Built with performance, accessibility, and clarity in mind.</div>
+      <div data-aos="fade-up">
+        <span class="badge-new">Enterprise Solutions</span>
+        <h1>Integrated <span class="gradient-text">Trade & Tech</span> Services</h1>
+        <p class="lead">We provide the digital infrastructure and physical logistical support required to scale operations across international markets.</p>
       </div>
     </div>
-    <script>document.getElementById('year').textContent=new Date().getFullYear()</script>
-  </footer>
+  </section>
+
+  <div class="sticky-subnav">
+    <div class="container">
+      <a href="#it-engineering">IT Engineering</a>
+      <a href="#cybersecurity">Cybersecurity</a>
+      <a href="#global-logistics">Global Logistics</a>
+      <a href="#supply-chain">Supply Chain</a>
+    </div>
+  </div>
+
+  <section class="section" id="it-engineering">
+    <div class="container grid-2-1">
+      <div data-aos="fade-right">
+        <h2>Digital Infrastructure & Engineering</h2>
+        <p>We design and deploy scalable software ecosystems that serve as the backbone for modern enterprises. Our approach focuses on long-term maintainability and global accessibility.</p>
+        
+        <div class="service-stack mt-4">
+          <div class="s-card">
+            <h4>Full-Stack Development</h4>
+            <p>Modern web & mobile applications built with React Native, Node.js, and Supabase.</p>
+          </div>
+          <div class="s-card">
+            <h4>Cloud Migration</h4>
+            <p>Architecting AWS/Azure environments for high availability and low latency.</p>
+          </div>
+          <div class="s-card">
+            <h4>API Integration</h4>
+            <p>Seamlessly connecting your ERP, CRM, and custom toolsets.</p>
+          </div>
+        </div>
+      </div>
+      <div class="bento-item tech-bg center" data-aos="fade-left">
+        <div class="icon-large">🧩</div>
+        <h3>The Tech Stack</h3>
+        <p class="small muted">TypeScript • Python • PostgreSQL • Docker • Kubernetes</p>
+        <a href="/contact.html" class="btn mt-3">Start Engineering Project</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-surface" id="cybersecurity">
+    <div class="container">
+      <div class="grid-1-2">
+        <div class="mockup-container" data-aos="zoom-in">
+           <div class="security-shield-viz">
+             <div class="pulse-ring"></div>
+             <span class="shield-icon">🛡️</span>
+           </div>
+        </div>
+        <div data-aos="fade-left">
+          <span class="badge-new">Defensive Ops</span>
+          <h2>Cybersecurity & Risk Mitigation</h2>
+          <p>Protecting international trade data requires more than a firewall. We implement multi-layered security frameworks inspired by ISO 27001 standards.</p>
+          <ul class="clean-list mt-3">
+            <li><strong>Vulnerability Assessments:</strong> Identifying weak points before they are exploited.</li>
+            <li><strong>Managed Auth:</strong> Implementing JWT, OAuth2, and Biometric protocols.</li>
+            <li><strong>DR Planning:</strong> Disaster recovery and automated backup systems for zero-loss trade data.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="global-logistics">
+    <div class="container grid-2-1">
+      <div data-aos="fade-up">
+        <h2>Cross-Border Logistics & Compliance</h2>
+        <p>Managing the physical movement of goods requires deep knowledge of international maritime law and customs protocols. We serve as your eyes on the ground in West Africa and beyond.</p>
+        
+        <div class="bento-grid mt-4">
+          <div class="bento-item small">
+            <h4>Freight Coordination</h4>
+            <p class="small">Sea, Air, and Land logistics via vetted global partners.</p>
+          </div>
+          <div class="bento-item small">
+            <h4>Incoterms 2026</h4>
+            <p class="small">Expert handling of DDP, CIF, and FOB agreements.</p>
+          </div>
+        </div>
+      </div>
+      <div class="card trade-bg" data-aos="fade-up">
+        <h3>Compliance Record</h3>
+        <ul class="mt-2">
+          <li>100% Customs Verification Rate</li>
+          <li>Digital Documentation Tracking</li>
+          <li>SGS & Intertek Coordination</li>
+        </ul>
+        <a href="/contact.html" class="btn-outline mt-3">Consult Trade Expert</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+  <footer class="footer">
+  <div class="container">
+    <div class="cols">
+      <div>
+        <div class="brand">
+          <div class="logo">EV</div>
+          <div>
+            <div class="name" data-company>Evantra De-Buckman Ventures</div>
+            <div class="tag">Global Enterprise Solutions • IT & Trade</div>
+          </div>
+        </div>
+        <p class="mt-3 muted small">
+          Bridging the gap between digital engineering and physical supply chains. We empower international organizations with secure infrastructure and seamless cross-border execution.
+        </p>
+      </div>
+
+      <div>
+        <h4>Strategic Links</h4>
+        <div class="hr"></div>
+        <ul class="footer-links">
+          <li><a href="/about.html">Our Vision</a></li>
+          <li><a href="/services.html">Solutions Portfolio</a></li>
+          <li><a href="/industries.html">Sector Expertise</a></li>
+          <li><a href="/why-us.html">The Hybrid Advantage</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>Global Presence</h4>
+        <div class="hr"></div>
+        <div class="contact-item">
+          <span class="icon-small">✉️</span>
+          <a data-email href="mailto:info@evantraventures.com">info@evantraventures.com</a>
+        </div>
+        <div class="contact-item mt-2">
+          <span class="icon-small">📞</span>
+          <a data-phone href="tel:+233547443817">+233 54 744 3817</a>
+        </div>
+        <div class="contact-item mt-2">
+          <span class="icon-small">🌍</span>
+          <span data-location>West Africa Hub | Global Operations</span>
+        </div>
+      </div>
+
+      <div>
+        <h4>Project Inquiries</h4>
+        <div class="hr"></div>
+        <a class="btn-glow small" href="/contact.html">Request a Global Consultation</a>
+        <div class="mt-3">
+          <p class="small muted"><strong>Technical Excellence:</strong> Aligned with ISO 27001 & International Trade Protocols (Incoterms).</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom">
+      <div class="bottom-left">
+        © <span id="year"></span> <span data-company>Evantra De-Buckman Ventures</span>. All rights reserved.
+      </div>
+      <div class="bottom-right">
+        <span>Security First</span> • <span>Privacy Compliant</span> • <span>Engineering Rigor</span>
+      </div>
+    </div>
+  </div>
+  <script>document.getElementById('year').textContent=new Date().getFullYear()</script>
+</footer>
 
   <script src="/assets/js/site.js"></script>
 </body>

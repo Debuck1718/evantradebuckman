@@ -1,213 +1,284 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>About | Evantra De-Buckman Ventures</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Company overview, mission, vision, and values of Evantra De-Buckman Ventures.">
-  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/css/styles.css">
-</head>
-<body>
-  <header class="header">
-    <div class="container nav">
-      <div class="brand">
-        <div class="logo">EV</div>
-        <div>
-          <div class="name" data-company>Evantra De-Buckman Ventures</div>
-          <div class="tag">IT Consulting • Software • Trading • Import/Export</div>
-        </div>
-      </div>
-      <nav>
-        <button class="burger" aria-label="Toggle navigation">☰</button>
-        <div class="nav-links" role="navigation">
-          <a href="/index.html">Home</a>
-          <a href="/about.html">About</a>
-          <a href="/services.html">Services</a>
-          <a href="/industries.html">Industries</a>
-          <a href="/why-us.html">Why Us</a>
-          <a href="/contact.html" class="btn">Contact Us</a>
-        </div>
-      </nav>
-    </div>
-  </header>
-
-  <main>
-    <!-- Enhanced split hero with image -->
-    <section class="hero">
-      <div class="container hero-inner">
-        <div>
-          <span class="badge">About Our Company</span>
-          <h1 class="mt-3">Evantra De-Buckman Ventures</h1>
-          <p class="lead">A Ghana-based partner helping organizations leverage technology and trade to achieve measurable outcomes.</p>
-          <div class="mt-3">
-            <a class="btn" href="/contact.html">Request a Consultation</a>
-            <a class="btn secondary" href="/services.html">Explore Services</a>
-          </div>
-          <div class="kpis">
-            <div class="kpi"><strong>Technology + Trade</strong><div class="muted">End-to-end capability</div></div>
-            <div class="kpi"><strong>Compliance</strong><div class="muted">Data & cross-border</div></div>
-            <div class="kpi"><strong>Partner Network</strong><div class="muted">Local + international</div></div>
+  <head>
+    <meta charset="utf-8" />
+    <title>About | Evantra De-Buckman Ventures</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Company overview, mission, vision, and values of Evantra De-Buckman Ventures."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" type="image/png" href="/assets/images/favicon.png" />
+    <link rel="stylesheet" href="/assets/css/styles.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="container nav">
+        <div class="brand">
+          <a href="/index.html" class="logo-link">
+            <div class="logo">
+              <img
+                src="/assets/images/logo.png"
+                alt="Evantra De-Buckman Ventures Logo"
+              />
+            </div>
+          </a>
+          <div class="brand-text">
+            <div class="name" data-company>Evantra De-Buckman Ventures</div>
+            <div class="tag">Global Enterprise Solutions • IT & Trade</div>
           </div>
         </div>
-        <div>
-          <div class="card">
-            <img src="/assets/images/about.png" alt="Team and industrial operations representing technology and trade" style="border-radius:10px">
+
+        <nav class="main-nav">
+          <button
+            class="burger"
+            aria-label="Open navigation menu"
+            aria-expanded="false"
+          >
+            <span class="burger-line"></span>
+            <span class="burger-line"></span>
+            <span class="burger-line"></span>
+          </button>
+
+          <div class="nav-links" role="navigation">
+            <a href="/index.html" class="nav-item">Home</a>
+            <a href="/about.html" class="nav-item">About</a>
+
+            <div class="dropdown">
+              <a href="/services.html" class="nav-item dropdown-trigger"
+                >Services <span class="chevron">▾</span></a
+              >
+              <div class="dropdown-content">
+                <a href="/services.html#it-engineering">IT Engineering</a>
+                <a href="/services.html#cybersecurity">Cybersecurity</a>
+                <a href="/services.html#global-logistics">Global Logistics</a>
+              </div>
+            </div>
+
+            <a href="/industries.html" class="nav-item">Industries</a>
+            <a href="/why-us.html" class="nav-item">Why Us</a>
+            <a href="/contact.html" class="btn-primary">Request Consultation</a>
           </div>
-        </div>
+        </nav>
       </div>
-    </section>
+    </header>
 
-    <!-- Capabilities strip -->
-    <section class="section" aria-label="Capabilities">
-      <div class="container grid cols-4">
-        <div class="card">
-          <div class="feature"><div class="icon">🧭</div><div><h3>Advisory</h3><div class="meta">Assessments, roadmaps, governance</div></div></div>
-        </div>
-        <div class="card">
-          <div class="feature"><div class="icon">🧩</div><div><h3>Engineering</h3><div class="meta">Web, mobile, integrations</div></div></div>
-        </div>
-        <div class="card">
-          <div class="feature"><div class="icon">🛡️</div><div><h3>Operations</h3><div class="meta">Support, security, SLAs</div></div></div>
-        </div>
-        <div class="card">
-          <div class="feature"><div class="icon">🚢</div><div><h3>Trade</h3><div class="meta">Sourcing, import/export</div></div></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Image-led Who We Are -->
-    <section class="section">
-      <div class="container grid cols-2">
-        <div class="card" style="padding:0; overflow:hidden">
-          <img src="/assets/images/about.png" alt="Evantra operations - modern and industrial" style="width:100%; height:auto; display:block">
-        </div>
-        <div>
-          <h2>Who We Are</h2>
-          <p>We are a sole proprietorship providing IT consulting, software development, systems support, general trading, and import/export services. We combine technical expertise with practical trade execution to deliver reliable results for clients and partners.</p>
-          <p>Our reputation is built on clear communication, accountability, and consistent delivery—whether we are deploying systems or moving goods across borders.</p>
-          <div class="grid cols-2 mt-3">
-            <div class="feature"><div class="icon">🔒</div><div><strong>Security-first</strong><div class="meta">Data protection & controls</div></div></div>
-            <div class="feature"><div class="icon">⚙️</div><div><strong>Operational rigor</strong><div class="meta">Process-driven execution</div></div></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Mission, Vision, Values -->
-    <section class="section">
-      <div class="container grid cols-3">
-        <div class="card">
-          <h3>Mission</h3>
-          <p>Enable organizations to operate efficiently and grow confidently through dependable technology and trade services.</p>
-        </div>
-        <div class="card">
-          <h3>Vision</h3>
-          <p>Be the trusted Ghanaian partner where business and technology meet practical execution.</p>
-        </div>
-        <div class="card">
-          <h3>Core Values</h3>
-          <ul class="mt-2">
-            <li>Integrity and accountability</li>
-            <li>Client success and clarity</li>
-            <li>Reliability and compliance</li>
-            <li>Continuous improvement</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <!-- Credibility and Standards -->
-    <section class="section">
-      <div class="container grid cols-3">
-        <div class="card">
-          <h3>Standards & Compliance</h3>
-          <p class="mt-2">Aligned with ISO-inspired best practices, data protection requirements, and Ghanaian trade regulations.</p>
-          <ul class="mt-2">
-            <li>Risk management and access control</li>
-            <li>Vendor due diligence</li>
-            <li>Documentation and audit trail</li>
-          </ul>
-        </div>
-        <div class="card">
-          <h3>Trusted Partnerships</h3>
-          <p class="mt-2">We collaborate with reputable suppliers, logistics providers, and technology partners.</p>
-          <p class="muted">Logos and references available upon request.</p>
-        </div>
-        <div class="card">
-          <h3>Health, Safety & Environment</h3>
-          <p class="mt-2">Our trading operations follow HSE considerations in warehousing and transport.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Timeline / Process -->
-    <section class="section">
-      <div class="container">
-        <h2>How We Work</h2>
-        <div class="grid cols-4 mt-3">
-          <div class="card"><strong>1. Discover</strong><p class="mt-2">Clarify goals, risks, and constraints.</p></div>
-          <div class="card"><strong>2. Design</strong><p class="mt-2">Define solutions, budgets, and milestones.</p></div>
-          <div class="card"><strong>3. Deliver</strong><p class="mt-2">Execute with checkpoints and transparency.</p></div>
-          <div class="card"><strong>4. Support</strong><p class="mt-2">Operate, optimize, and scale.</p></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Call to action -->
-    <section class="section">
-      <div class="container center">
-        <h2>Ready to move forward?</h2>
-        <p class="mt-2">Partner with a team that understands both technology and trade.</p>
-        <a class="btn mt-2" href="/contact.html">Talk to us</a>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <div class="container">
-      <div class="cols">
-        <div>
-          <div class="brand">
-            <div class="logo">EV</div>
-            <div>
-              <div class="name" data-company>Evantra De-Buckman Ventures</div>
-              <div class="tag">Trusted IT and Trade Partner in Ghana</div>
+    <main>
+      <section class="hero-modern about-hero">
+        <div class="container hero-grid">
+          <div class="hero-content" data-aos>
+            <span class="badge-new">Global Enterprise Solutions</span>
+            <h1>
+              Scaling Businesses Across
+              <span class="gradient-text">Borders & Bytes.</span>
+            </h1>
+            <p class="lead">
+              Evantra De-Buckman Ventures is a multi-disciplinary firm dedicated
+              to optimizing international supply chains and deploying
+              high-performance digital infrastructure.
+            </p>
+            <div class="hero-stats">
+              <div class="stat">
+                <strong>Intl.</strong>
+                <p>Compliance</p>
+              </div>
+              <div class="stat">
+                <strong>24/7</strong>
+                <p>Remote Support</p>
+              </div>
+              <div class="stat">
+                <strong>Secure</strong>
+                <p>Global Trade</p>
+              </div>
             </div>
           </div>
-          <p class="mt-3">We help organizations modernize operations, build reliable software, and move goods efficiently across borders.</p>
+          <div class="hero-visual" data-aos>
+            <div class="network-viz">
+              <div class="pulse-node" style="top: 20%; left: 30%"></div>
+              <div class="pulse-node" style="top: 50%; left: 60%"></div>
+              <div class="pulse-node" style="top: 80%; left: 40%"></div>
+            </div>
+          </div>
         </div>
-        <div>
-          <h4>Company</h4>
-          <div class="hr"></div>
-          <a href="/about.html">About</a><br/>
-          <a href="/services.html">Services</a><br/>
-          <a href="/industries.html">Industries</a><br/>
-          <a href="/why-us.html">Why Choose Us</a>
-        </div>
-        <div>
-          <h4>Contact</h4>
-          <div class="hr"></div>
-          <a data-email href="mailto:info@evantraventures.com">info@evantraventures.com</a><br/>
-          <a data-phone href="tel:+233200000000">+233 20 000 0000</a><br/>
-          <span data-location>Accra, Ghana</span>
-        </div>
-        <div>
-          <h4>Quick Actions</h4>
-          <div class="hr"></div>
-          <a class="btn secondary" href="/contact.html">Request a Consultation</a>
-          <div class="mt-2"><a href="/services.html#software">Explore Software Development</a></div>
-        </div>
-      </div>
-      <div class="bottom">
-        <div>© <span id="year"></span> <span data-company>Evantra De-Buckman Ventures</span>. All rights reserved.</div>
-        <div>Built with performance, accessibility, and clarity in mind.</div>
-      </div>
-    </div>
-    <script>document.getElementById('year').textContent=new Date().getFullYear()</script>
-  </footer>
+      </section>
 
-  <script src="/assets/js/site.js"></script>
-</body>
+      <section class="section">
+        <div class="container grid-2-1">
+          <div data-aos>
+            <h2>The Intersection of Trade & Tech</h2>
+            <p>
+              In a globalized economy, technology and trade are no longer
+              separate functions. Efficiency in one requires excellence in the
+              other.
+            </p>
+            <p>
+              We provide the technical engineering required to build modern
+              platforms and the operational rigor to move physical assets across
+              continents. Our mission is to eliminate the friction between
+              digital intent and physical delivery.
+            </p>
+          </div>
+          <div class="bento-item tech-bg" data-aos>
+            <h4>Our Philosophy</h4>
+            <p class="small">
+              "Complexity is the enemy of execution. We build systems that
+              simplify global operations."
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section bg-surface">
+        <div class="container">
+          <div class="section-header center">
+            <h2>Strategic Pillars</h2>
+            <p>How we maintain international standards in every project.</p>
+          </div>
+          <div class="grid cols-3 mt-5">
+            <div class="bento-card" data-aos>
+              <div class="icon-circle">🌍</div>
+              <h3>Global Standards</h3>
+              <p>
+                We align with ISO/IEC security frameworks and international
+                trade protocols (Incoterms) to ensure seamless cross-border
+                collaboration.
+              </p>
+            </div>
+            <div class="bento-card" data-aos>
+              <div class="icon-circle">🛡️</div>
+              <h3>Security & Privacy</h3>
+              <p>
+                From GDPR compliance to AES-256 encryption, we treat data as the
+                most valuable asset in the modern supply chain.
+              </p>
+            </div>
+            <div class="bento-card" data-aos>
+              <div class="icon-circle">🚀</div>
+              <h3>Operational Agility</h3>
+              <p>
+                Our hybrid model allows us to pivot quickly between software
+                iterations and logistical adjustments in real-time.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <h2 class="center">The Evantra Workflow</h2>
+          <div class="horizontal-timeline mt-5">
+            <div class="t-step">
+              <span class="t-num">01</span>
+              <h4>Architecture</h4>
+              <p>Mapping digital and physical flows.</p>
+            </div>
+            <div class="t-step">
+              <span class="t-num">02</span>
+              <h4>Engineering</h4>
+              <p>Development and procurement cycles.</p>
+            </div>
+            <div class="t-step">
+              <span class="t-num">03</span>
+              <h4>Integration</h4>
+              <p>Seamless Go-Live across all regions.</p>
+            </div>
+            <div class="t-step">
+              <span class="t-num">04</span>
+              <h4>Evolution</h4>
+              <p>Data-driven scaling and optimization.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <div class="cols">
+          <div>
+            <div class="brand">
+              <div class="logo">EV</div>
+              <div>
+                <div class="name" data-company>Evantra De-Buckman Ventures</div>
+                <div class="tag">Global Enterprise Solutions • IT & Trade</div>
+              </div>
+            </div>
+            <p class="mt-3 muted small">
+              Bridging the gap between digital engineering and physical supply
+              chains. We empower international organizations with secure
+              infrastructure and seamless cross-border execution.
+            </p>
+          </div>
+
+          <div>
+            <h4>Strategic Links</h4>
+            <div class="hr"></div>
+            <ul class="footer-links">
+              <li><a href="/about.html">Our Vision</a></li>
+              <li><a href="/services.html">Solutions Portfolio</a></li>
+              <li><a href="/industries.html">Sector Expertise</a></li>
+              <li><a href="/why-us.html">The Hybrid Advantage</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4>Global Presence</h4>
+            <div class="hr"></div>
+            <div class="contact-item">
+              <span class="icon-small">✉️</span>
+              <a data-email href="mailto:info@evantraventures.com"
+                >info@evantraventures.com</a
+              >
+            </div>
+            <div class="contact-item mt-2">
+              <span class="icon-small">📞</span>
+              <a data-phone href="tel:+233547443817">+233 54 744 3817</a>
+            </div>
+            <div class="contact-item mt-2">
+              <span class="icon-small">🌍</span>
+              <span data-location>West Africa Hub | Global Operations</span>
+            </div>
+          </div>
+
+          <div>
+            <h4>Project Inquiries</h4>
+            <div class="hr"></div>
+            <a class="btn-glow small" href="/contact.html"
+              >Request a Global Consultation</a
+            >
+            <div class="mt-3">
+              <p class="small muted">
+                <strong>Technical Excellence:</strong> Aligned with ISO 27001 &
+                International Trade Protocols (Incoterms).
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bottom">
+          <div class="bottom-left">
+            © <span id="year"></span>
+            <span data-company>Evantra De-Buckman Ventures</span>. All rights
+            reserved.
+          </div>
+          <div class="bottom-right">
+            <span>Security First</span> • <span>Privacy Compliant</span> •
+            <span>Engineering Rigor</span>
+          </div>
+        </div>
+      </div>
+      <script>
+        document.getElementById("year").textContent = new Date().getFullYear();
+      </script>
+    </footer>
+
+    <script src="/assets/js/site.js"></script>
+  </body>
 </html>
