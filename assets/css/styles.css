@@ -765,42 +765,264 @@ textarea{min-height:140px;resize:vertical}
   }
 }
 
-/* Header Layout */
-.header {
-  position: sticky;
+/* Advanced Animations & Simulations */
+
+/* Development Visualization */
+.dev-viz {
+  height: 300px;
+  display: grid;
+  place-items: center;
+  position: relative;
+  background: linear-gradient(135deg, var(--clr-card), rgba(43, 182, 115, 0.1));
+  border-radius: var(--radius);
+  border: 1px solid var(--clr-border);
+}
+
+.code-pulse {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border: 2px solid var(--clr-primary);
+  border-radius: 50%;
+  animation: codePulse 2s infinite;
+}
+
+.dev-icon {
+  font-size: 3rem;
+  z-index: 2;
+  position: relative;
+}
+
+@keyframes codePulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+}
+
+/* Logistics Visualization */
+.logistics-viz {
+  height: 300px;
+  display: grid;
+  place-items: center;
+  position: relative;
+  background: linear-gradient(135deg, var(--clr-card), rgba(74, 163, 255, 0.1));
+  border-radius: var(--radius);
+  border: 1px solid var(--clr-border);
+  overflow: hidden;
+}
+
+.shipping-pulse {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle, var(--clr-accent), transparent);
+  border-radius: 50%;
+  animation: shippingWave 3s infinite;
+}
+
+.logistics-icon {
+  font-size: 3rem;
+  z-index: 2;
+  position: relative;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes shippingWave {
+  0% {
+    transform: scale(0.5);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(0.5);
+    opacity: 0.8;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Enhanced Floating Cards */
+.floating-card {
+  animation: gentleFloat 6s ease-in-out infinite;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.floating-card:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes gentleFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  33% {
+    transform: translateY(-5px);
+  }
+  66% {
+    transform: translateY(5px);
+  }
+}
+
+/* Progress Bar Animation */
+.bar-loader {
+  height: 4px;
+  background: linear-gradient(90deg, transparent, var(--clr-primary), transparent);
+  border-radius: 2px;
+  animation: progressFlow 2s infinite;
+}
+
+@keyframes progressFlow {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Interactive Button Glow */
+.btn-glow {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--clr-primary), var(--clr-primary-600));
+  box-shadow: 0 0 20px rgba(43, 182, 115, 0.3);
+  transition: all 0.3s ease;
+}
+
+.btn-glow::before {
+  content: '';
+  position: absolute;
   top: 0;
-  background: rgba(15, 17, 21, 0.95); /* High-end dark theme with blur */
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--clr-border);
-  z-index: 1000;
-  padding: 12px 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
 }
 
-.nav {
+.btn-glow:hover::before {
+  left: 100%;
+}
+
+.btn-glow:hover {
+  box-shadow: 0 0 30px rgba(43, 182, 115, 0.5);
+  transform: translateY(-2px);
+}
+
+/* Gradient Text Animation */
+.gradient-text {
+  background: linear-gradient(135deg, var(--clr-primary), var(--clr-accent), var(--clr-primary));
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 3s ease infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Pulse Ring Animation */
+.pulse-ring {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  border: 2px solid var(--clr-primary);
+  border-radius: 50%;
+  animation: pulseRing 2s infinite;
+}
+
+@keyframes pulseRing {
+  0% {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+/* Newsletter Form */
+.newsletter-form {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
 }
 
-/* Brand Styling */
-.brand {
+.newsletter-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid var(--clr-border);
+  border-radius: 6px;
+  background: var(--clr-card);
+  color: var(--clr-text);
+  font-size: 0.85rem;
+}
+
+.newsletter-input:focus {
+  outline: none;
+  border-color: var(--clr-primary);
+  box-shadow: 0 0 0 2px rgba(43, 182, 115, 0.2);
+}
+
+.newsletter-btn {
+  white-space: nowrap;
+  font-size: 0.8rem;
+  padding: 8px 12px;
+}
+
+/* Social Links */
+.social-links {
   display: flex;
+  gap: 12px;
+}
+
+.social-link {
+  display: inline-flex;
   align-items: center;
-  gap: 15px;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--clr-card);
+  border: 1px solid var(--clr-border);
+  color: var(--clr-text-muted);
+  text-decoration: none;
+  transition: all 0.3s ease;
 }
 
-.brand-text .name {
-  font-family: 'DM Serif Display', serif;
-  font-size: 1.1rem;
-  letter-spacing: 0.5px;
-}
-
-.brand-text .tag {
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  color: var(--clr-primary);
-  font-weight: 700;
+.social-link:hover {
+  background: var(--clr-primary);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(43, 182, 115, 0.3);
 }
 
 /* Nav Items */

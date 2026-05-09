@@ -38,27 +38,27 @@ function initSmoothScroll(){
   });
 }
 
-function initContactForm(){
-  const form = $('#contact-form');
+function initNewsletterForm(){
+  const form = $('#newsletter-form');
   if(!form) return;
   form.addEventListener('submit', (e)=>{
     e.preventDefault();
-    const fd = new FormData(form);
-    const data = Object.fromEntries(fd.entries());
-    const errors = [];
-    if(!data.name || data.name.length < 2) errors.push("Please provide your full name.");
-    if(!data.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) errors.push("Please enter a valid email address.");
-    if(!data.message || data.message.length < 10) errors.push("Message should be at least 10 characters.");
+    const email = form.querySelector('input[type="email"]').value;
+    const messages = $('#newsletter-messages');
 
-    const box = $('#form-messages');
-    box.innerHTML = '';
-    if(errors.length){
-      box.innerHTML = `<div class="card" role="alert"><strong>Fix the following:</strong><ul>${errors.map(e=>`<li>${e}</li>`).join('')}</ul></div>`;
+    if(!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      messages.innerHTML = '<p class="small error">Please enter a valid email address.</p>';
       return;
     }
-    // Placeholder: integrate with form backend (Netlify Forms, Formspree, etc.)
-    box.innerHTML = `<div class="card" role="status">Thank you! Your message has been submitted. We'll get back to you shortly.</div>`;
+
+    // Placeholder: integrate with email service (Mailchimp, ConvertKit, etc.)
+    messages.innerHTML = '<p class="small success">Thank you for subscribing! Check your email for confirmation.</p>';
     form.reset();
+
+    // Clear message after 5 seconds
+    setTimeout(() => {
+      messages.innerHTML = '';
+    }, 5000);
   });
 }
 
@@ -83,5 +83,6 @@ function init(){
   initNav();
   initSmoothScroll();
   initContactForm();
+  initNewsletterForm();
 }
 document.addEventListener('DOMContentLoaded', init);

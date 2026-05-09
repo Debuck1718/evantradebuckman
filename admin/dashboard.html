@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Site Monitoring Dashboard - Evantra De-Buckman Ventures</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2bb673;
+      --secondary: #4aa3ff;
+      --bg: #0f1115;
+      --card: #1b2130;
+      --text: #e7ecf3;
+      --text-muted: #a9b3c5;
+      --border: #243047;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --error: #ef4444;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+    .header { text-align: center; margin-bottom: 40px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .metric { text-align: center; margin-bottom: 20px; }
+    .metric-value { font-size: 2rem; font-weight: 700; color: var(--primary); }
+    .metric-label { color: var(--text-muted); font-size: 0.9rem; }
+
+    .status-indicator {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+
+    .status-good { background: var(--success); }
+    .status-warning { background: var(--warning); }
+    .status-error { background: var(--error); }
+
+    .chart-placeholder {
+      height: 200px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px dashed var(--border);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .actions { margin-top: 20px; }
+    .btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+
+    .btn:hover { opacity: 0.9; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>Site Monitoring Dashboard</h1>
+      <p>Evantra De-Buckman Ventures - Internal Monitoring</p>
+      <div class="status-indicator status-good"></div>
+      <span>All Systems Operational</span>
+    </header>
+
+    <div class="grid">
+      <div class="card">
+        <h3>Website Performance</h3>
+        <div class="metric">
+          <div class="metric-value" id="pageLoadTime">--</div>
+          <div class="metric-label">Average Page Load Time (ms)</div>
+        </div>
+        <div class="chart-placeholder">Performance Chart</div>
+      </div>
+
+      <div class="card">
+        <h3>User Analytics</h3>
+        <div class="metric">
+          <div class="metric-value" id="visitorCount">--</div>
+          <div class="metric-label">Monthly Visitors</div>
+        </div>
+        <div class="chart-placeholder">Traffic Chart</div>
+      </div>
+
+      <div class="card">
+        <h3>Contact Form Submissions</h3>
+        <div class="metric">
+          <div class="metric-value" id="contactSubmissions">--</div>
+          <div class="metric-label">This Month</div>
+        </div>
+        <div class="chart-placeholder">Conversion Chart</div>
+      </div>
+
+      <div class="card">
+        <h3>System Health</h3>
+        <div class="metric">
+          <div class="metric-value" id="uptime">--%</div>
+          <div class="metric-label">Uptime</div>
+        </div>
+        <div class="chart-placeholder">Health Chart</div>
+      </div>
+
+      <div class="card">
+        <h3>SEO Performance</h3>
+        <div class="metric">
+          <div class="metric-value" id="seoScore">--</div>
+          <div class="metric-label">SEO Score</div>
+        </div>
+        <div class="chart-placeholder">SEO Chart</div>
+      </div>
+
+      <div class="card">
+        <h3>Security Status</h3>
+        <div class="metric">
+          <div class="metric-value" id="securityScore">--</div>
+          <div class="metric-label">Security Rating</div>
+        </div>
+        <div class="chart-placeholder">Security Chart</div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn" onclick="refreshData()">Refresh Data</button>
+      <button class="btn" onclick="runBackup()">Run Backup</button>
+      <button class="btn" onclick="checkSecurity()">Security Scan</button>
+    </div>
+  </div>
+
+  <script>
+    // Mock data for demonstration
+    const mockData = {
+      pageLoadTime: 1250,
+      visitorCount: 2847,
+      contactSubmissions: 23,
+      uptime: 99.8,
+      seoScore: 85,
+      securityScore: 92
+    };
+
+    function updateMetrics() {
+      Object.keys(mockData).forEach(key => {
+        const element = document.getElementById(key);
+        if (element) {
+          element.textContent = mockData[key];
+        }
+      });
+    }
+
+    function refreshData() {
+      // In a real implementation, this would fetch data from your analytics/monitoring service
+      console.log('Refreshing monitoring data...');
+      updateMetrics();
+      alert('Data refreshed successfully!');
+    }
+
+    function runBackup() {
+      // In a real implementation, this would trigger a backup process
+      console.log('Running backup...');
+      alert('Backup initiated! Check server logs for status.');
+    }
+
+    function checkSecurity() {
+      // In a real implementation, this would run security scans
+      console.log('Running security scan...');
+      alert('Security scan completed! No issues found.');
+    }
+
+    // Initialize with mock data
+    document.addEventListener('DOMContentLoaded', updateMetrics);
+  </script>
+</body>
+</html>
