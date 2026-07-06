@@ -1,0 +1,264 @@
+@import "tailwindcss";
+
+/* ==========================================================
+   EVANTRA DESIGN SYSTEM
+   Headquarters v1.0
+========================================================== */
+
+:root {
+  /* ======================================================
+     CORE COLORS
+  ====================================================== */
+
+  --background: 0 0% 100%;
+  --foreground: 215 28% 17%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 215 28% 17%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 215 28% 17%;
+
+  /* ======================================================
+     BRAND COLORS
+  ====================================================== */
+
+  /* Engineering Blue */
+
+  --primary: 208 79% 28%;
+  --primary-foreground: 0 0% 100%;
+
+  /* Innovation Teal */
+
+  --secondary: 174 77% 26%;
+  --secondary-foreground: 0 0% 100%;
+
+  /* Accent */
+
+  --accent: 44 78% 46%;
+  --accent-foreground: 215 28% 17%;
+
+  /* ======================================================
+     EVANTRA GOLD SYSTEM
+  ====================================================== */
+
+  --ev-gold-light: #f7d97f;
+  --ev-gold: #e6b24a;
+  --ev-gold-dark: #c99322;
+  --ev-gold-deep: #9f6d0d;
+
+  /* ======================================================
+     TEXT
+  ====================================================== */
+
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255,255,255,.78);
+  --text-muted: rgba(255,255,255,.58);
+
+  /* ======================================================
+     GLASS
+  ====================================================== */
+
+  --glass-light: rgba(255,255,255,.08);
+  --glass-medium: rgba(255,255,255,.12);
+  --glass-heavy: rgba(255,255,255,.18);
+
+  --glass-border: rgba(255,255,255,.12);
+
+  /* ======================================================
+     HERO
+  ====================================================== */
+
+  --hero-overlay: rgba(6,19,31,.58);
+
+  --hero-top: rgba(6,19,31,.42);
+
+  --hero-bottom: rgba(6,19,31,.60);
+
+  /* ======================================================
+     SURFACES
+  ====================================================== */
+
+  --muted: 210 40% 96%;
+  --muted-foreground: 215 16% 47%;
+
+  --border: 214 32% 91%;
+  --input: 214 32% 91%;
+
+  --ring: 208 79% 28%;
+
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 100%;
+
+  /* ======================================================
+     SHADOWS
+  ====================================================== */
+
+  --shadow-soft: 0 10px 30px rgba(0,0,0,.12);
+
+  --shadow-medium: 0 20px 60px rgba(0,0,0,.18);
+
+  --shadow-large: 0 40px 90px rgba(0,0,0,.30);
+
+  --gold-glow: 0 0 25px rgba(230,178,74,.35);
+
+  /* ======================================================
+     RADIUS
+  ====================================================== */
+
+  --radius: 0.9rem;
+
+  --radius-large: 1.75rem;
+
+  /* ======================================================
+     TRANSITIONS
+  ====================================================== */
+
+  --transition-fast: 180ms;
+
+  --transition-normal: 300ms;
+
+  --transition-slow: 600ms;
+}
+
+/* ==========================================================
+   BASE
+========================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+
+  background: hsl(var(--background));
+
+  color: hsl(var(--foreground));
+
+  font-family:
+    Inter,
+    "Segoe UI",
+    Helvetica,
+    Arial,
+    sans-serif;
+
+  text-rendering: optimizeLegibility;
+
+  -webkit-font-smoothing: antialiased;
+
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ==========================================================
+   SELECTION
+========================================================== */
+
+::selection {
+  background: rgba(230,178,74,.28);
+  color: #06131f;
+}
+
+/* ==========================================================
+   SCROLLBAR
+========================================================== */
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #07111b;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ev-gold);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ev-gold-dark);
+}
+
+/* ==========================================================
+   EVANTRA UTILITIES
+========================================================== */
+
+.text-ev-gold {
+  color: var(--ev-gold);
+}
+
+.text-ev-gold-light {
+  color: var(--ev-gold-light);
+}
+
+.text-ev-gold-dark {
+  color: var(--ev-gold-dark);
+}
+
+.border-ev-gold {
+  border-color: rgba(230,178,74,.35);
+}
+
+.bg-ev-gold-soft {
+  background: rgba(230,178,74,.10);
+}
+
+.bg-ev-glass {
+  background: var(--glass-light);
+}
+
+.border-ev-glass {
+  border-color: var(--glass-border);
+}
+
+.text-ev-gold-gradient {
+  background: linear-gradient(
+    135deg,
+    var(--ev-gold-light) 0%,
+    var(--ev-gold) 50%,
+    var(--ev-gold-dark) 100%
+  );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  color: transparent;
+}
+
+.bg-ev-gold-gradient {
+  background: linear-gradient(
+    135deg,
+    var(--ev-gold-light) 0%,
+    var(--ev-gold) 50%,
+    var(--ev-gold-dark) 100%
+  );
+}
+
+.ev-gold-shadow {
+  filter: drop-shadow(0 2px 12px rgba(230,178,74,.30));
+}
+
+.glass-card {
+  background: var(--glass-light);
+
+  border: 1px solid var(--glass-border);
+
+  backdrop-filter: blur(24px);
+
+  -webkit-backdrop-filter: blur(24px);
+}
+
+.transition-premium {
+  transition:
+    transform var(--transition-normal) ease,
+    box-shadow var(--transition-normal) ease,
+    opacity var(--transition-normal) ease,
+    background var(--transition-normal) ease;
+}
