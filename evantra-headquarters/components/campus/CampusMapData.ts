@@ -57,9 +57,9 @@ export const campusMapData: CampusCenter[] = [
 
     status: "Operational",
 
-    x: 28,
+    x: 58,
 
-    y: 63,
+    y: 78,
 
     image: "/images/campus/software-center.webp",
 
@@ -95,9 +95,9 @@ export const campusMapData: CampusCenter[] = [
 
     status: "Operational",
 
-    x: 63,
+    x: 27,
 
-    y: 58,
+    y: 33,
 
     image: "/images/campus/cybersecurity-center.webp",
 
@@ -133,9 +133,9 @@ export const campusMapData: CampusCenter[] = [
 
     status: "Operational",
 
-    x: 74,
+    x: 72,
 
-    y: 40,
+    y: 76,
 
     image: "/images/campus/engineering-center.webp",
 
@@ -171,9 +171,9 @@ export const campusMapData: CampusCenter[] = [
 
     status: "Operational",
 
-    x: 22,
+    x: 69,
 
-    y: 34,
+    y: 52,
 
     image: "/images/campus/innovation-hub.webp",
 
@@ -209,9 +209,9 @@ export const campusMapData: CampusCenter[] = [
 
     status: "Operational",
 
-    x: 56,
+    x: 34,
 
-    y: 26,
+    y: 58,
 
     image: "/images/campus/ai-research-center.webp",
 
@@ -228,4 +228,41 @@ export const campusMapData: CampusCenter[] = [
       "Ethical AI",
     ],
   },
+  {
+  id: "commerce",
+
+  name: "Global Commerce Center",
+
+  category: "Import & Export",
+
+  tagline: "Connecting Markets Worldwide",
+
+  description:
+    "Supporting international trade, logistics, procurement and cross-border commerce through intelligent digital infrastructure.",
+
+  campusDistrict: "International Commerce District",
+
+  established: "2026",
+
+  status: "Operational",
+
+  x: 69,
+
+  y: 32,
+
+  image: "/images/campus/global-commerce-center.webp",
+
+  imageAlt: "Global Commerce Center",
+
+  href: "/companies/global-commerce",
+
+  accent: "teal",
+
+  technologies: [
+    "Global Trade",
+    "Logistics",
+    "Supply Chain",
+    "Procurement",
+  ],
+},
 ];

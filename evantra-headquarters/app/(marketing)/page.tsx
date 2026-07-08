@@ -9,26 +9,61 @@ import { ResearchSection } from "@/components/home/research";
 import { GlobalImpactSection } from "@/components/home/impact";
 import { CallToActionSection } from "@/components/home/cta";
 
+import { CampusNavigator } from "@/components/campus";
+
 export default function HomePage() {
   return (
     <>
+      {/* ================================================= */}
+      {/* Global Header */}
+      {/* ================================================= */}
+
       <GlobalHeader />
 
-      <main>
+      {/* ================================================= */}
+      {/* Main Content */}
+      {/* ================================================= */}
+
+      <main
+        id="main-content"
+        className="relative overflow-x-hidden"
+      >
+        {/* Hero */}
+
         <HeroSection />
+
+        {/* Business Ecosystem */}
 
         <EcosystemSection />
 
+        {/* Featured Centers */}
+
         <FeaturedCompaniesSection />
+
+        {/* Innovation Campus */}
 
         <InnovationCampusSection />
 
+        {/* Interactive Campus */}
+
+        <CampusNavigator />
+
+        {/* Research */}
+
         <ResearchSection />
+
+        {/* Global Impact */}
 
         <GlobalImpactSection />
 
+        {/* Call To Action */}
+
         <CallToActionSection />
       </main>
+
+      {/* ================================================= */}
+      {/* Global Footer */}
+      {/* ================================================= */}
 
       <GlobalFooter />
     </>
