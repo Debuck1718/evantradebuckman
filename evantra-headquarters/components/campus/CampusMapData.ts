@@ -1,208 +1,231 @@
-export interface CampusLocation {
-  /** Unique ID */
-  id: string;
+import type { CampusCenter } from "./types";
 
-  /** Display */
-  name: string;
-  shortName: string;
-  category: string;
-  district: string;
-
-  /** Description */
-  description: string;
-
-  /** Navigation */
-  href: string;
-
-  /** Assets */
-  image: string;
-
-  /** Theme */
-  accent: "gold" | "blue" | "teal";
-
-  /** Status */
-  status: "Operational" | "Coming Soon";
-
-  /** Marker Position (percentage) */
-  x: number;
-  y: number;
-
-  /** Technologies */
-  technologies: string[];
-}
-
-export const campusMapData: CampusLocation[] = [
+export const campusMapData: CampusCenter[] = [
   {
     id: "headquarters",
+
     name: "Evantra Headquarters",
-    shortName: "HQ",
+
     category: "Corporate Headquarters",
-    district: "Central Administration District",
+
+    tagline: "Leading Global Innovation",
 
     description:
-      "The heart of the Evantra Innovation Campus, housing executive leadership, global operations, strategy, and the digital command center.",
+      "The central headquarters bringing together executive leadership, strategic operations, AI research and innovation across the Evantra ecosystem.",
 
-    href: "/headquarters",
+    campusDistrict: "Central District",
 
-    image: "/images/campus/headquarters.webp",
-
-    accent: "gold",
+    established: "2026",
 
     status: "Operational",
 
-    x: 50,
-    y: 41,
+    x: 49,
+
+    y: 45,
+
+    image: "/images/campus/headquarters.webp",
+
+    imageAlt: "Evantra Headquarters",
+
+    href: "/headquarters",
+
+    accent: "gold",
 
     technologies: [
-      "Executive Leadership",
-      "Digital Operations",
+      "Leadership",
+      "Innovation",
+      "AI",
       "Strategy",
-      "Corporate Services",
     ],
   },
 
   {
-    id: "ai",
-    name: "AI Research Center",
-    shortName: "AI",
-    category: "Artificial Intelligence",
-    district: "Research District",
+    id: "software",
+
+    name: "Software Center",
+
+    category: "Enterprise Technology",
+
+    tagline: "Building Intelligent Digital Platforms",
 
     description:
-      "Applied artificial intelligence research focused on healthcare, enterprise transformation, computer vision and responsible AI.",
+      "Enterprise software engineering, cloud computing and digital transformation technologies.",
 
-    href: "/companies/artificial-intelligence",
+    campusDistrict: "Digital Systems Wing",
 
-    image: "/images/campus/ai-research-center.webp",
-
-    accent: "blue",
+    established: "2026",
 
     status: "Operational",
 
-    x: 31,
-    y: 54,
+    x: 28,
+
+    y: 63,
+
+    image: "/images/campus/software-center.webp",
+
+    imageAlt: "Software Center",
+
+    href: "/companies/software",
+
+    accent: "blue",
 
     technologies: [
-      "Machine Learning",
-      "Computer Vision",
-      "LLMs",
-      "Responsible AI",
+      "AI",
+      "Cloud",
+      "Enterprise",
+      "Automation",
     ],
   },
 
   {
     id: "cybersecurity",
+
     name: "Cybersecurity Center",
-    shortName: "Cyber",
-    category: "Cybersecurity",
-    district: "Security District",
+
+    category: "Digital Trust",
+
+    tagline: "Protecting Critical Infrastructure",
 
     description:
-      "Advanced cyber defence, security operations, digital forensics and zero-trust research protecting critical infrastructure.",
+      "Cyber resilience, governance and digital trust protecting modern organizations.",
 
-    href: "/companies/cybersecurity",
+    campusDistrict: "Security Operations Wing",
+
+    established: "2026",
+
+    status: "Operational",
+
+    x: 63,
+
+    y: 58,
 
     image: "/images/campus/cybersecurity-center.webp",
 
+    imageAlt: "Cybersecurity Center",
+
+    href: "/companies/cybersecurity",
+
     accent: "gold",
-
-    status: "Operational",
-
-    x: 23,
-    y: 27,
 
     technologies: [
       "SOC",
-      "Threat Intelligence",
-      "Digital Forensics",
       "Zero Trust",
-    ],
-  },
-
-  {
-    id: "commerce",
-    name: "Global Commerce Center",
-    shortName: "Commerce",
-    category: "Import & Export",
-    district: "International Commerce District",
-
-    description:
-      "Supporting global trade, procurement, logistics, customs and intelligent supply chain operations.",
-
-    href: "/companies/global-commerce",
-
-    image: "/images/campus/global-commerce-center.webp",
-
-    accent: "teal",
-
-    status: "Operational",
-
-    x: 72,
-    y: 27,
-
-    technologies: [
-      "Supply Chain",
-      "Logistics",
-      "Procurement",
-      "Global Trade",
-    ],
-  },
-
-  {
-    id: "innovation",
-    name: "Innovation Hub",
-    shortName: "Innovation",
-    category: "Innovation",
-    district: "Innovation District",
-
-    description:
-      "A collaborative ecosystem where startups, researchers and industry partners transform ideas into scalable products.",
-
-    href: "/companies/innovation",
-
-    image: "/images/campus/innovation-hub.webp",
-
-    accent: "gold",
-
-    status: "Operational",
-
-    x: 72,
-    y: 55,
-
-    technologies: [
-      "Startups",
-      "Incubation",
-      "Research",
-      "Innovation",
+      "Threat Intelligence",
+      "Compliance",
     ],
   },
 
   {
     id: "engineering",
+
     name: "Engineering Center",
-    shortName: "Engineering",
+
     category: "Engineering",
-    district: "Engineering District",
+
+    tagline: "Engineering Tomorrow",
 
     description:
-      "Engineering robotics, automation, smart infrastructure and industrial technologies for sustainable development.",
+      "Advanced robotics, intelligent infrastructure and industrial automation.",
 
-    href: "/companies/engineering",
+    campusDistrict: "Engineering District",
 
-    image: "/images/campus/engineering-center.webp",
-
-    accent: "teal",
+    established: "2026",
 
     status: "Operational",
 
-    x: 69,
-    y: 78,
+    x: 74,
+
+    y: 40,
+
+    image: "/images/campus/engineering-center.webp",
+
+    imageAlt: "Engineering Center",
+
+    href: "/companies/engineering",
+
+    accent: "teal",
 
     technologies: [
       "Robotics",
       "Automation",
       "IoT",
       "Infrastructure",
+    ],
+  },
+
+  {
+    id: "innovation",
+
+    name: "Innovation Hub",
+
+    category: "Innovation",
+
+    tagline: "Where Ideas Become Reality",
+
+    description:
+      "Collaborative innovation ecosystem connecting researchers, startups and industry partners.",
+
+    campusDistrict: "Innovation District",
+
+    established: "2026",
+
+    status: "Operational",
+
+    x: 22,
+
+    y: 34,
+
+    image: "/images/campus/innovation-hub.webp",
+
+    imageAlt: "Innovation Hub",
+
+    href: "/companies/innovation",
+
+    accent: "gold",
+
+    technologies: [
+      "Innovation",
+      "Research",
+      "Incubation",
+      "Collaboration",
+    ],
+  },
+
+  {
+    id: "ai",
+
+    name: "AI Research Center",
+
+    category: "Artificial Intelligence",
+
+    tagline: "Advancing Machine Intelligence",
+
+    description:
+      "Applied AI research focusing on enterprise intelligence, healthcare and education.",
+
+    campusDistrict: "Research Wing",
+
+    established: "2026",
+
+    status: "Operational",
+
+    x: 56,
+
+    y: 26,
+
+    image: "/images/campus/ai-research-center.webp",
+
+    imageAlt: "AI Research Center",
+
+    href: "/companies/artificial-intelligence",
+
+    accent: "blue",
+
+    technologies: [
+      "Machine Learning",
+      "Computer Vision",
+      "LLMs",
+      "Ethical AI",
     ],
   },
 ];

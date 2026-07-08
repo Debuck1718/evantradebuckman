@@ -1,67 +1,82 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
-// Using native img element instead of CampusImage component because
-// the shared CampusImage module may not be available as a module.
+import CampusImage from "@/components/shared/CampusImage";
+import GlassCard from "@/components/shared/GlassCard";
 
 import CampusMarker from "./CampusMarker";
 import CampusTooltip from "./CampusTooltip";
-import { campusMapData, CampusLocation } from "./CampusMapData";
+
+import { campusMapData } from "./CampusMapData";
+import type { CampusCenter } from "./types";
 
 export default function CampusMap() {
-  const [activeBuilding, setActiveBuilding] =
-    useState<CampusLocation | null>(null);
+  // Headquarters is selected by default.
+  const [selectedId, setSelectedId] = useState("headquarters");
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
+
+  const activeId = hoveredId ?? selectedId;
+
+  const activeCenter: CampusCenter =
+  useMemo(() => {
+    return (
+      campusMapData.find(
+        (center) => center.id === activeId
+      ) ?? campusMapData[0]
+    );
+  }, [activeId]);
 
   return (
-    <div className="relative mx-auto w-full max-w-7xl">
+    <div className="mx-auto max-w-7xl">
 
-      {/* Campus Image */}
+      <GlassCard
+        className="
+          overflow-hidden
+          border-white/10
+          bg-[#081521]
+          p-0
+        "
+      >
+        {/* ================================================= */}
+        {/* Campus Map */}
+        {/* ================================================= */}
 
-      <div className="relative overflow-hidden rounded-[32px] border border-white/10 shadow-2xl">
+        <div className="relative">
 
-        <img
-          src="/images/campus/campus-aerial.webp"
-          alt="Evantra Innovation Campus"
-          className="aspect-[16/9] w-full object-cover"
-        />
-
-        {/* Dark Gradient */}
-
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent" />
-
-        {/* Markers */}
-
-        {campusMapData.map((building) => (
-          <CampusMarker
-            key={building.id}
-            x={building.x}
-            y={building.y}
-            accent={building.accent}
-            active={activeBuilding?.id === building.id}
-            onMouseEnter={() => setActiveBuilding(building)}
-            onMouseLeave={() => setActiveBuilding(null)}
-            onClick={() => setActiveBuilding(building)}
+          <CampusImage
+            src="/images/campus/campus-aerial.webp"
+            alt="Interactive Evantra Innovation Campus"
+            aspectRatio="16:9"
+            priority
           />
-        ))}
 
-        {/* Tooltip */}
+          {/* Campus Markers */}
 
-        {activeBuilding && (
-          <div
-            className="absolute z-50 -translate-y-1/2"
-            style={{
-              left: `${activeBuilding.x}%`,
-              top: `${activeBuilding.y}%`,
-            }}
-          >
-            <CampusTooltip
-              building={activeBuilding}
+          {campusMapData.map((center) => (
+            <CampusMarker
+              key={center.id}
+              center={center}
+              active={activeId === center.id}
+              onHover={() => setHoveredId(center.id)}
+              onLeave={() => setHoveredId(null)}
+              onSelect={() => setSelectedId(center.id)}
             />
-          </div>
-        )}
+          ))}
+        </div>
 
-      </div>
+        {/* ================================================= */}
+        {/* Information Panel */}
+        {/* ================================================= */}
+
+        <div className="border-t border-white/10">
+
+          <CampusTooltip
+            center={activeCenter}
+          />
+
+        </div>
+      </GlassCard>
 
     </div>
   );
