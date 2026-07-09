@@ -5,96 +5,177 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 
-import { EvantraButton } from "@/components/shared/EvantraButton";
+import type {
+  CompanyAction,
+  CompanyMetric,
+} from "@/data/companies";
 
-export interface CompanyHeroMetric {
-  label: string;
-  value: string;
-}
+import { EvantraButton } from "@/components/shared/EvantraButton";
 
 interface CompanyHeroProps {
   badge: string;
-
   title: string;
-
   description: string;
-
   image: string;
 
-  primaryAction?: {
-    label: string;
-    href: string;
-  };
+  primaryAction?: CompanyAction;
+  secondaryAction?: CompanyAction;
 
-  secondaryAction?: {
-    label: string;
-    href: string;
-  };
+  metrics?: CompanyMetric[];
 
-  metrics?: CompanyHeroMetric[];
+  theme?:
+    | "software"
+    | "ai"
+    | "engineering"
+    | "cybersecurity"
+    | "commerce"
+    | "innovation";
+
+  showMetrics?: boolean;
+
+  animatedGrid?: boolean;
+
+  showParticles?: boolean;
+
+  glassIntensity?: "low" | "medium" | "high";
 }
+
+const themeOverlay = {
+  software:
+    "from-[#07131f]/95 via-[#081d36]/82 to-[#0b2d56]/60",
+
+  ai:
+    "from-[#15052d]/95 via-[#28124f]/82 to-[#5b21b6]/60",
+
+  engineering:
+    "from-[#032b2a]/95 via-[#0f766e]/82 to-[#14b8a6]/60",
+
+  cybersecurity:
+    "from-[#031c16]/95 via-[#065f46]/82 to-[#10b981]/60",
+
+  commerce:
+    "from-[#2d1d02]/95 via-[#5a4108]/82 to-[#d4af37]/45",
+
+  innovation:
+    "from-[#2b1203]/95 via-[#9a3412]/82 to-[#fb923c]/55",
+};
+
+const glass = {
+  low:
+    "bg-white/5 backdrop-blur-md",
+
+  medium:
+    "bg-white/10 backdrop-blur-xl",
+
+  high:
+    "bg-white/15 backdrop-blur-3xl",
+};
 
 export default function CompanyHero({
   badge,
   title,
   description,
   image,
+
   primaryAction,
   secondaryAction,
+
   metrics = [],
+
+  theme = "software",
+
+  showMetrics = true,
+
+  animatedGrid = false,
+
+  showParticles = false,
+
+  glassIntensity = "medium",
 }: CompanyHeroProps) {
   return (
     <section
       className="
         relative
-
         flex
-
         min-h-screen
-
         items-center
-
         overflow-hidden
       "
     >
       {/* Background */}
 
-      <Image
-        src={image}
-        alt={title}
-        fill
-        priority
-        sizes="100vw"
-        className="
-          object-cover
+      <motion.div
+        initial={{ scale: 1 }}
+        animate={{ scale: 1.05 }}
+        transition={{
+          duration: 18,
+          repeat: Infinity,
+          repeatType: "reverse",
+        }}
+        className="absolute inset-0"
+      >
+        <Image
+          src={image}
+          alt={title}
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
+        />
+      </motion.div>
 
-          scale-[1.02]
-        "
-      />
-
-      {/* Overlay */}
+      {/* Theme Overlay */}
 
       <div
-        className="
+        className={`
           absolute
           inset-0
 
           bg-gradient-to-r
 
-          from-[#07131f]/92
-
-          via-[#07131f]/78
-
-          to-[#07131f]/55
-        "
+          ${themeOverlay[theme]}
+        `}
       />
+
+      {/* Digital Grid */}
+
+      {animatedGrid && (
+        <div
+          className="
+            absolute
+            inset-0
+
+            opacity-[0.08]
+
+            [background-image:linear-gradient(rgba(255,255,255,.12)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.12)_1px,transparent_1px)]
+
+            [background-size:48px_48px]
+
+            animate-pulse
+          "
+        />
+      )}
+
+      {/* Particles Placeholder */}
+
+      {showParticles && (
+        <div
+          className="
+            absolute
+            inset-0
+
+            bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,.08),transparent_20%),radial-gradient(circle_at_80%_30%,rgba(255,255,255,.06),transparent_18%),radial-gradient(circle_at_40%_80%,rgba(255,255,255,.05),transparent_20%)]
+
+            pointer-events-none
+          "
+        />
+      )}
 
       {/* Content */}
 
       <div
         className="
           relative
-
           z-10
 
           mx-auto
@@ -107,13 +188,13 @@ export default function CompanyHero({
 
           px-6
 
-          py-36
+          py-40
         "
       >
         <motion.div
           initial={{
             opacity: 0,
-            y: 30,
+            y: 40,
           }}
           animate={{
             opacity: 1,
@@ -122,7 +203,21 @@ export default function CompanyHero({
           transition={{
             duration: 0.7,
           }}
-          className="max-w-3xl"
+          className={`
+            max-w-4xl
+
+            rounded-[32px]
+
+            border
+
+            border-white/10
+
+            ${glass[glassIntensity]}
+
+            p-8
+
+            md:p-12
+          `}
         >
           {/* Badge */}
 
@@ -147,7 +242,7 @@ export default function CompanyHero({
 
               uppercase
 
-              tracking-[0.18em]
+              tracking-[0.2em]
 
               text-[hsl(var(--accent))]
             "
@@ -165,7 +260,7 @@ export default function CompanyHero({
 
               font-bold
 
-              leading-tight
+              leading-[1.05]
 
               text-white
 
@@ -183,7 +278,7 @@ export default function CompanyHero({
             className="
               mt-8
 
-              max-w-2xl
+              max-w-3xl
 
               text-xl
 
@@ -206,7 +301,7 @@ export default function CompanyHero({
 
                 flex-wrap
 
-                gap-5
+                gap-4
               "
             >
               {primaryAction && (
@@ -235,7 +330,7 @@ export default function CompanyHero({
 
           {/* Metrics */}
 
-          {metrics.length > 0 && (
+          {showMetrics && metrics.length > 0 && (
             <div
               className="
                 mt-16
@@ -246,14 +341,33 @@ export default function CompanyHero({
 
                 gap-8
 
+                border-t
+
+                border-white/10
+
+                pt-10
+
                 md:grid-cols-4
               "
             >
-              {metrics.map((metric) => (
-                <div key={metric.label}>
+              {metrics.map((metric, index) => (
+                <motion.div
+                  key={metric.label}
+                  initial={{
+                    opacity: 0,
+                    y: 20,
+                  }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                  }}
+                  transition={{
+                    delay: index * 0.1,
+                  }}
+                >
                   <h3
                     className="
-                      text-3xl
+                      text-4xl
 
                       font-bold
 
@@ -271,14 +385,14 @@ export default function CompanyHero({
 
                       uppercase
 
-                      tracking-wider
+                      tracking-[0.18em]
 
                       text-white/60
                     "
                   >
                     {metric.label}
                   </p>
-                </div>
+                </motion.div>
               ))}
             </div>
           )}

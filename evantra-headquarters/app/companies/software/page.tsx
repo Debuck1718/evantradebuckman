@@ -10,26 +10,37 @@ import {
   Careers,
 } from "@/components/software";
 
+import {
+  GlobalHeader,
+  GlobalFooter,
+} from "@/components/layout";
+
 export default function SoftwarePage() {
   return (
     <>
-      <Hero />
+      <GlobalHeader />
 
-      <Mission />
+      <main>
+        <Hero />
 
-      <Capabilities />
+        <Mission />
 
-      <Solutions />
+        <Capabilities />
 
-      <Technology />
+        <Solutions />
 
-      <Products />
+        <Technology />
 
-      <Research />
+        <Products />
 
-      <Culture />
+        <Research />
 
-      <Careers />
+        <Culture />
+
+        <Careers />
+      </main>
+
+      <GlobalFooter />
     </>
   );
 }
