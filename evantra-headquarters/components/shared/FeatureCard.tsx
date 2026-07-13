@@ -5,22 +5,15 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
-import GlassCard from "./GlassCard";
 import TechChip from "./TechChip";
 
 interface FeatureCardProps {
   title: string;
-
   description: string;
-
   icon: LucideIcon;
-
   tags?: string[];
-
   href?: string;
-
   featured?: boolean;
-
   className?: string;
 }
 
@@ -34,195 +27,228 @@ export default function FeatureCard({
   className = "",
 }: FeatureCardProps) {
   return (
-    <motion.div
+    <motion.article
       whileHover={{
-        y: -8,
+        y: -10,
       }}
       transition={{
-        duration: 0.25,
+        duration: 0.3,
       }}
       className={className}
     >
-      <GlassCard
+      <div
         className={`
           group
-
           relative
-
           flex
-
           h-full
-
           flex-col
-
           overflow-hidden
-
+          rounded-[32px]
+          border
           p-8
-
           transition-all
           duration-500
 
           ${
             featured
-              ? "ring-1 ring-[hsl(var(--accent))]/25"
-              : ""
+              ? `
+                border-[hsl(var(--accent))]/40
+                bg-gradient-to-br
+                from-[#102338]
+                via-[#0d1d2f]
+                to-[#07131f]
+                shadow-[0_0_40px_rgba(11,92,171,.12)]
+              `
+              : `
+                border-white/10
+                bg-gradient-to-br
+                from-[#0c1825]
+                via-[#091522]
+                to-[#07131f]
+                hover:border-[hsl(var(--accent))]/30
+              `
           }
+
+          hover:shadow-[0_25px_60px_rgba(0,0,0,.45)]
         `}
       >
-        {/* ================================================= */}
-        {/* Glow */}
-        {/* ================================================= */}
+        {/* Top Accent */}
 
         <div
           className="
-            pointer-events-none
-
             absolute
-            inset-0
-
+            left-0
+            top-0
+            h-1
+            w-full
+            bg-gradient-to-r
+            from-[hsl(var(--accent))]
+            via-[hsl(var(--accent))]
+            to-transparent
             opacity-0
-
             transition-opacity
             duration-500
-
             group-hover:opacity-100
-
-            bg-[radial-gradient(circle_at_top_right,rgba(11,92,171,.14),transparent_60%)]
           "
         />
 
-        {/* ================================================= */}
-        {/* Icon */}
-        {/* ================================================= */}
+        {/* Glow */}
 
-        <motion.div
-          whileHover={{
-            rotate: 8,
-            scale: 1.08,
-          }}
+        <div
           className="
-            relative
-
-            flex
-
-            h-16
-            w-16
-
-            items-center
-            justify-center
-
-            rounded-2xl
-
-            border
-
-            border-[hsl(var(--accent))]/25
-
-            bg-[hsl(var(--accent))]/10
-
-            text-[hsl(var(--accent))]
+            absolute
+            inset-0
+            opacity-0
+            transition-all
+            duration-500
+            group-hover:opacity-100
+            group-hover:scale-110
+            bg-[radial-gradient(circle_at_top_right,rgba(11,92,171,.18),transparent_65%)]
           "
-        >
-          <Icon size={30} />
-        </motion.div>
+        />
 
-        {/* ================================================= */}
-        {/* Title */}
-        {/* ================================================= */}
+        {/* Featured */}
 
-        <h3
-          className="
-            mt-8
-
-            text-2xl
-
-            font-bold
-
-            text-white
-          "
-        >
-          {title}
-        </h3>
-
-        {/* ================================================= */}
-        {/* Description */}
-        {/* ================================================= */}
-
-        <p
-          className="
-            mt-5
-
-            flex-grow
-
-            leading-8
-
-            text-white/70
-          "
-        >
-          {description}
-        </p>
-
-        {/* ================================================= */}
-        {/* Tags */}
-        {/* ================================================= */}
-
-        {tags.length > 0 && (
+        {featured && (
           <div
             className="
-              mt-8
-
-              flex
-
-              flex-wrap
-
-              gap-2
+              absolute
+              right-6
+              top-6
+              rounded-full
+              bg-[hsl(var(--accent))]
+              px-4
+              py-1.5
+              text-[10px]
+              font-bold
+              uppercase
+              tracking-[0.2em]
+              text-[#07131f]
             "
           >
-            {tags.map((tag) => (
-              <TechChip
-                key={tag}
-                label={tag}
-              />
-            ))}
+            Featured
           </div>
         )}
 
-        {/* ================================================= */}
-        {/* Footer */}
-        {/* ================================================= */}
+        <div className="relative z-10 flex h-full flex-col">
+          {/* Icon */}
 
-        {href && (
-          <Link
-            href={href}
+          <motion.div
+            whileHover={{
+              rotate: 6,
+              scale: 1.08,
+            }}
+            transition={{
+              duration: 0.25,
+            }}
             className="
-              mt-10
-
-              inline-flex
-
+              flex
+              h-20
+              w-20
               items-center
-
-              font-semibold
-
+              justify-center
+              rounded-3xl
+              border
+              border-[hsl(var(--accent))]/25
+              bg-[hsl(var(--accent))]/10
               text-[hsl(var(--accent))]
-
               transition-all
-
-              group-hover:translate-x-1
+              duration-300
+              group-hover:bg-[hsl(var(--accent))]/15
             "
           >
-            Learn More
+            <Icon size={38} />
+          </motion.div>
 
-            <ArrowRight
+          {/* Title */}
+
+          <h3
+            className="
+              mt-8
+              text-3xl
+              font-bold
+              tracking-tight
+              text-white
+              transition-colors
+              duration-300
+              group-hover:text-[hsl(var(--accent))]
+            "
+          >
+            {title}
+          </h3>
+
+          {/* Description */}
+
+          <p
+            className="
+              mt-5
+              flex-grow
+              text-[15px]
+              leading-8
+              text-white/75
+            "
+          >
+            {description}
+          </p>
+
+          {/* Divider */}
+
+          <div
+            className="
+              my-8
+              h-px
+              bg-gradient-to-r
+              from-transparent
+              via-white/10
+              to-transparent
+            "
+          />
+
+          {/* Tags */}
+
+          {tags.length > 0 && (
+            <div
               className="
-                ml-2
-
-                h-4
-                w-4
+                flex
+                flex-wrap
+                gap-3
               "
-            />
-          </Link>
-        )}
-      </GlassCard>
-    </motion.div>
+            >
+              {tags.map((tag) => (
+                <TechChip
+                  key={tag}
+                  label={tag}
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Footer */}
+
+          {href && (
+            <Link
+              href={href}
+              className="
+                mt-10
+                inline-flex
+                items-center
+                gap-2
+                font-semibold
+                text-[hsl(var(--accent))]
+                transition-all
+                duration-300
+                hover:gap-3
+              "
+            >
+              Learn More
+
+              <ArrowRight size={18} />
+            </Link>
+          )}
+        </div>
+      </div>
+    </motion.article>
   );
 }
         

@@ -8,44 +8,64 @@ import { softwareCompany } from "@/data/companies";
 
 export default function Technology() {
   return (
-    <CompanySection id="technology">
+    <CompanySection
+      id="technology"
+      background="gradient"
+    >
       <SectionHeading
-        badge="Technology"
+        badge="Technology Stack"
         title="Engineering With Modern Technologies"
-        description="Our engineering teams combine modern frameworks, cloud-native infrastructure, artificial intelligence and secure development practices to deliver world-class digital solutions."
+        description="Our engineering teams leverage proven technologies, cloud-native infrastructure and artificial intelligence to build secure, scalable and future-ready digital platforms."
         centered
       />
 
-      <div className="mt-20 space-y-12">
-        {softwareCompany.technologies.map((group) => (
-          <div key={group.title}>
+      <div className="mt-20 space-y-14">
+        {softwareCompany.technologies.map((category) => (
+          <div
+            key={category.title}
+            className="
+              rounded-3xl
+              border
+              border-white/10
+              bg-white/5
+              p-8
+              backdrop-blur-xl
+            "
+          >
             <h3
               className="
-                mb-5
-
-                text-xl
-
+                text-2xl
                 font-semibold
-
                 text-white
               "
             >
-              {group.title}
+              {category.title}
             </h3>
+
+            {category.description && (
+              <p
+                className="
+                  mt-3
+                  max-w-3xl
+                  text-white/70
+                "
+              >
+                {category.description}
+              </p>
+            )}
 
             <div
               className="
+                mt-8
                 flex
-
                 flex-wrap
-
-                gap-4
+                gap-3
               "
             >
-              {group.technologies.map((tech) => (
+              {category.technologies.map((technology) => (
                 <TechChip
-                  key={tech}
-                  label={tech}
+                  key={technology}
+                  label={technology}
                 />
               ))}
             </div>

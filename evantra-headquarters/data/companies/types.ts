@@ -94,11 +94,13 @@ export interface CompanyProduct {
 ============================================================ */
 
 export interface TechnologyCategory {
+  [x: string]: any;
+  name: string;
   title: string;
 
   description?: string;
 
-  technologies: string[];
+  technologies: TechnologyCategory[];
 }
 
 /* ============================================================

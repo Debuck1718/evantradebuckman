@@ -27,7 +27,7 @@ export const softwareCompany: CompanyData = {
     description:
       "Designing and engineering secure, scalable enterprise software, cloud infrastructure, artificial intelligence and digital platforms that accelerate digital transformation for governments, enterprises and emerging economies.",
 
-    image: "/images/software/software-center-hero.webp",
+    image: "/images/campus/software-center.webp",
 
     primaryAction: {
       label: "Explore Solutions",
@@ -254,6 +254,7 @@ export const softwareCompany: CompanyData = {
 
   technologies: [
     {
+      name: "frontend-engineering",
       title: "Frontend Engineering",
 
       technologies: [
@@ -262,10 +263,11 @@ export const softwareCompany: CompanyData = {
         "TypeScript",
         "Tailwind CSS",
         "React Native",
-      ],
+      ] as any,
     },
 
     {
+      name: "backend-apis",
       title: "Backend & APIs",
 
       technologies: [
@@ -273,10 +275,11 @@ export const softwareCompany: CompanyData = {
         "Express.js",
         "REST API",
         "GraphQL",
-      ],
+      ] as any,
     },
 
     {
+      name: "cloud-infrastructure",
       title: "Cloud & Infrastructure",
 
       technologies: [
@@ -285,10 +288,11 @@ export const softwareCompany: CompanyData = {
         "AWS",
         "Azure",
         "Supabase",
-      ],
+      ] as any,
     },
 
     {
+      name: "artificial-intelligence",
       title: "Artificial Intelligence",
 
       technologies: [
@@ -296,20 +300,22 @@ export const softwareCompany: CompanyData = {
         "LangChain",
         "RAG",
         "Machine Learning",
-      ],
+      ] as any,
     },
 
     {
+      name: "data-engineering",
       title: "Data Engineering",
 
       technologies: [
         "PostgreSQL",
         "MongoDB",
         "Redis",
-      ],
+      ] as any,
     },
 
     {
+      name: "security-devsecops",
       title: "Security & DevSecOps",
 
       technologies: [
@@ -317,7 +323,7 @@ export const softwareCompany: CompanyData = {
         "OAuth",
         "Zero Trust",
         "CI/CD",
-      ],
+      ] as any,
     },
   ],
     products: [
@@ -491,7 +497,7 @@ export const softwareCompany: CompanyData = {
       description:
         "Continued research into artificial intelligence, cloud computing, enterprise software and digital transformation technologies.",
     },
-  ],
+  ] as any,
 
   culture: [
     {
