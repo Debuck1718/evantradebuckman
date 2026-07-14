@@ -108,6 +108,11 @@ export interface TechnologyCategory {
 ============================================================ */
 
 export interface CompanyTimelineItem {
+  icon: LucideIcon;
+  /* ============================================================
+     Products
+  ============================================================ */
+  tags(tags: any): unknown;
   year: string;
 
   title: string;

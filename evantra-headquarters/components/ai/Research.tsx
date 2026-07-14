@@ -34,7 +34,7 @@ export default function Research() {
                         title={item.title}
                         description={item.description}
                         icon={item.icon}
-                        tags={Array.isArray(item.tags) ? item.tags : []}
+                        tags={(Array.isArray(item.tags) ? item.tags : []) as string[]}
                     />
                 ))}
             </div>
