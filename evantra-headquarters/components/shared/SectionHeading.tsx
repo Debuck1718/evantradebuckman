@@ -1,8 +1,11 @@
 "use client";
 
+import clsx from "clsx";
+
 import Reveal from "./Reveal";
 import SectionBadge from "./SectionBadge";
 import { EvantraButton } from "./EvantraButton";
+import { useSectionTheme } from "./SectionThemeContext";
 
 interface SectionHeadingProps {
   badge?: string;
@@ -31,6 +34,10 @@ export default function SectionHeading({
   maxWidth = "700px",
   buttonText,
 }: SectionHeadingProps) {
+  const theme = useSectionTheme();
+
+  const isDark = theme === "dark";
+
   const highlightedTitle =
     highlight && title.includes(highlight)
       ? title.split(highlight)
@@ -38,45 +45,54 @@ export default function SectionHeading({
 
   return (
     <div
-      className={`
-        flex
-        flex-col
-        gap-6
-
-        ${centered ? "items-center text-center" : ""}
-      `}
+      className={clsx(
+        "flex flex-col gap-6",
+        centered && "items-center text-center"
+      )}
       style={{
         maxWidth,
       }}
     >
       {badge && (
         <Reveal>
-          <SectionBadge>
-            {badge}
-          </SectionBadge>
+          <SectionBadge>{badge}</SectionBadge>
         </Reveal>
       )}
 
       <Reveal delay={0.1}>
         <h2
-          className="
-            text-4xl
-            font-bold
-            leading-tight
-            tracking-tight
+          className={clsx(
+            `
+              text-4xl
+              font-extrabold
+              leading-[1.05]
+              tracking-tight
 
-            text-slate-900
+              md:text-5xl
+              xl:text-6xl
 
-            md:text-5xl
-
-            xl:text-6xl
-          "
+              transition-colors
+              duration-300
+            `,
+            isDark
+              ? `
+                  text-white
+                  drop-shadow-[0_2px_10px_rgba(255,255,255,0.08)]
+                `
+              : `
+                  text-slate-900
+                `
+          )}
         >
           {highlightedTitle ? (
             <>
               {highlightedTitle[0]}
 
-              <span className="text-[hsl(var(--accent))]">
+              <span
+                className="
+                  text-[hsl(var(--accent))]
+                "
+              >
                 {highlight}
               </span>
 
@@ -91,12 +107,18 @@ export default function SectionHeading({
       {description && (
         <Reveal delay={0.2}>
           <p
-            className="
-              text-lg
-              leading-8
+            className={clsx(
+              `
+                text-lg
+                leading-8
 
-              text-slate-600
-            "
+                transition-colors
+                duration-300
+              `,
+              isDark
+                ? "text-slate-200"
+                : "text-slate-600"
+            )}
           >
             {description}
           </p>
