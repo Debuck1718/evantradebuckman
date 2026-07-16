@@ -59,6 +59,31 @@ export const softwareCompany: CompanyData = {
     ],
   },
 
+  featuredShowcase: {
+    badge: "Featured Showcase",
+    title: "Our Platform Ecosystem",
+    description:
+      "Explore the integrated suite of intelligent digital platforms we're building to transform industries and empower organizations across Africa.",
+    image: "/images/showcase/software.webp",
+    highlights: [
+      {
+        title: "Enterprise Scale",
+        description: "Mission-critical platforms handling millions of transactions",
+        icon: Layers,
+      },
+      {
+        title: "AI-Powered",
+        description: "Intelligent systems integrated into every solution",
+        icon: Cpu,
+      },
+      {
+        title: "Secure by Design",
+        description: "Zero Trust architecture protecting your data",
+        icon: ShieldCheck,
+      },
+    ],
+  },
+
   mission: {
     title: "Engineering Digital Excellence",
 

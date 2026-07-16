@@ -6,6 +6,8 @@ export { default as Capabilities } from "./Capabilities";
 
 export { default as Solutions } from "./Solutions";
 
+export { default as FeaturedPlatform } from "./FeaturedPlatform";
+
 export { default as Technology } from "./Technology";
 
 export { default as Products } from "./Products";

@@ -8,6 +8,7 @@ import {
   Research,
   Culture,
   Careers,
+  FeaturedPlatform,
 } from "@/components/ai";
 
 import type { Metadata } from "next";
@@ -29,6 +30,8 @@ export default function AIPage() {
      
            <main>
              <Hero />
+
+             <FeaturedPlatform />
      
              <Mission />
      

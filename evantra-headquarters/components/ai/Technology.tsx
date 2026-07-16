@@ -54,18 +54,21 @@ export default function Technology() {
                 gap-3
               "
                         >
-                            {category.technologies.map((technology, index) => (
-                                <TechChip
-                                    key={`${typeof technology === "string"
+                            {category.technologies.map((technology, index) => {
+                                const label =
+                                    typeof technology === "string"
                                         ? technology
-                                        : technology.label}-${index}`}
-                                    label={
-                                        typeof technology === "string"
-                                            ? technology
-                                            : technology.label
-                                    }
-                                />
-                            ))}
+                                        : "label" in technology
+                                        ? (technology as any).label
+                                        : String(technology);
+
+                                return (
+                                    <TechChip
+                                        key={`${label}-${index}`}
+                                        label={label}
+                                    />
+                                );
+                            })}
                         </div>
                     </div>
                 ))}

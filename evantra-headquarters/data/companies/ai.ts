@@ -61,6 +61,45 @@ export const aiCompany: CompanyData = {
         ],
     },
 
+    featuredShowcase: {
+        badge: "AI Innovation",
+        title: "Transforming Healthcare with Intelligent Solutions",
+        subtitle: "LabReport AI Platform",
+        description: "Our flagship healthcare AI platform that simplifies laboratory report interpretation and connects patients with verified healthcare professionals.",
+        image: "/images/products/labreport-ai.webp",
+        highlights: [
+            {
+                title: "Report Interpretation",
+                description: "AI-powered analysis of laboratory reports",
+                icon: FileSearch,
+            },
+            {
+                title: "Telemedicine Integration",
+                description: "Secure communication with healthcare professionals",
+                icon: HeartHandshake,
+            },
+            {
+                title: "Multilingual Support",
+                description: "Language assistance across multiple regions",
+                icon: Languages,
+            },
+        ],
+        primaryAction: {
+            label: "Learn About LabReport AI",
+            href: "#products",
+        },
+        metrics: [
+            {
+                value: "100+",
+                label: "Healthcare Partners",
+            },
+            {
+                value: "10K+",
+                label: "Reports Analyzed",
+            },
+        ],
+    },
+
     mission: {
         title: "Engineering Responsible Intelligence",
 
@@ -254,158 +293,66 @@ export const aiCompany: CompanyData = {
     technologies: [
         {
             title: "Foundation Models",
-
-            technologies: [
-                {
-                    title: "OpenAI GPT", technologies: [],
-                    name: ""
-                },
-                {
-                    title: "Claude", technologies: [],
-                    name: ""
-                },
-                {
-                    title: "Gemini", technologies: [],
-                    name: ""
-                },
-                {
-                    title: "Llama", technologies: [],
-                    name: ""
-                },
-                {
-                    title: "Mistral", technologies: [],
-                    name: ""
-                },
-            ],
-            name: ""
+            name: "",
+            description: "GPT, Claude, Gemini, Llama, Mistral",
+            technologies: []
         },
 
         {
             title: "AI Frameworks",
-
+            name: "",
             technologies: [
-                {
-                    title: "LangChain", technologies: [],
-                    name: ""
-                },
-                {
-                    title: "LlamaIndex", technologies: [],
-                    name: ""
-                },
-                {
-                    title: "CrewAI", technologies: [],
-                    name: ""
-                },
-                {
-                    title: "AutoGen", technologies: [],
-                    name: ""
-                },
-                {
-                    title: "Haystack", technologies: [],
-                    name: ""
-                },
-            ],
-            name: ""
+                { title: "LangChain" },
+                { title: "LlamaIndex" },
+                { title: "CrewAI" },
+                { title: "AutoGen" },
+                { title: "Haystack" },
+            ]
         },
 
         {
             title: "Machine Learning",
-
+            name: "",
             technologies: [
-                {
-                    title: "PyTorch", technologies: [],
-                    name: ""
-                },
-                {
-                    title: "TensorFlow", technologies: [],
-                    name: ""
-                },
-                {
-                    title: "Scikit-Learn", technologies: [],
-                    name: ""
-                },
-                {
-                    title: "XGBoost", technologies: [],
-                    name: ""
-                },
-            ],
-            name: ""
+                { title: "PyTorch" },
+                { title: "TensorFlow" },
+                { title: "Scikit-Learn" },
+                { title: "XGBoost" },
+            ]
         },
 
         {
             title: "Data Engineering",
-
+            name: "",
             technologies: [
-                {
-                    title: "PostgreSQL", technologies: [],
-                    name: ""
-                },
-                {
-                    title: "MongoDB", technologies: [],
-                    name: ""
-                },
-                {
-                    title: "Redis", technologies: [],
-                    name: ""
-                },
-                {
-                    title: "Supabase", technologies: [],
-                    name: ""
-                },
-            ],
-            name: ""
+                { title: "PostgreSQL" },
+                { title: "MongoDB" },
+                { title: "Redis" },
+                { title: "Supabase" },
+            ]
         },
 
         {
             title: "Vector Databases",
-
+            name: "",
             technologies: [
-                {
-                    title: "Pinecone", technologies: [],
-                    name: ""
-                },
-                {
-                    title: "Weaviate", technologies: [],
-                    name: ""
-                },
-                {
-                    title: "Qdrant", technologies: [],
-                    name: ""
-                },
-                {
-                    title: "FAISS", technologies: [],
-                    name: ""
-                },
-            ],
-            name: ""
+                { title: "Pinecone" },
+                { title: "Weaviate" },
+                { title: "Qdrant" },
+                { title: "FAISS" },
+            ]
         },
 
         {
             title: "Cloud & Deployment",
-
+            name: "",
             technologies: [
-                {
-                    title: "Docker", technologies: [],
-                    name: ""
-                },
-                {
-                    title: "Kubernetes", technologies: [],
-                    name: ""
-                },
-                {
-                    title: "Azure AI", technologies: [],
-                    name: ""
-                },
-                {
-                    title: "AWS Bedrock", technologies: [],
-                    name: ""
-                },
-                {
-                    title: "Google Vertex AI", technologies: [],
-                    name: ""
-                },
-            ],
-            name: ""
+                { title: "Docker" },
+                { title: "Kubernetes" },
+                { title: "Azure AI" },
+                { title: "AWS Bedrock" },
+                { title: "Google Vertex AI" },
+            ]
         },
     ],
 
@@ -504,7 +451,7 @@ export const aiCompany: CompanyData = {
         },
     ],
 
-    research: ([
+    research: [
     {
         year: "2026",
         title: "StudentPreneur Hackathon Winner",
@@ -552,7 +499,7 @@ export const aiCompany: CompanyData = {
             "Building strategic partnerships with universities, research institutions, governments and industry leaders to accelerate responsible artificial intelligence research and innovation.",
         icon: Globe2,
     },
-] ) as unknown as CompanyTimelineItem[],
+] as CompanyTimelineItem[],
 
     culture: [
         {

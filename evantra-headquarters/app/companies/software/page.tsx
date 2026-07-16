@@ -8,6 +8,7 @@ import {
   Research,
   Culture,
   Careers,
+  FeaturedPlatform,
 } from "@/components/software";
 
 import {
@@ -22,6 +23,8 @@ export default function SoftwarePage() {
 
       <main>
         <Hero />
+
+        <FeaturedPlatform />
 
         <Mission />
 

@@ -92,15 +92,20 @@ export interface CompanyProduct {
 /* ============================================================
    Technology Stack
 ============================================================ */
+export interface TechnologyItem {
+  title: string;
+
+  description?: string;
+}
 
 export interface TechnologyCategory {
-  [x: string]: any;
   name: string;
+
   title: string;
 
   description?: string;
 
-  technologies: TechnologyCategory[];
+  technologies: TechnologyItem[];
 }
 
 /* ============================================================
@@ -108,16 +113,15 @@ export interface TechnologyCategory {
 ============================================================ */
 
 export interface CompanyTimelineItem {
-  icon: LucideIcon;
-  /* ============================================================
-     Products
-  ============================================================ */
-  tags(tags: any): unknown;
   year: string;
 
   title: string;
 
   description: string;
+
+  icon: LucideIcon;
+
+  tags?: string[];
 }
 
 /* ============================================================
@@ -141,6 +145,8 @@ export interface CompanyData {
 
   hero: CompanyHero;
 
+  featuredShowcase: CompanyFeaturedShowcase;
+
   mission: CompanyMission;
 
   capabilities: CompanyFeature[];
@@ -156,4 +162,44 @@ export interface CompanyData {
   culture: CompanyFeature[];
 
   careers: CompanyCareers;
+}
+
+export interface ShowcaseHighlight {
+  title: string;
+
+  description: string;
+
+  icon: LucideIcon;
+}
+
+export interface DashboardMetric {
+  label: string;
+
+  value: string;
+
+  icon?: LucideIcon;
+
+  position: string;
+}
+
+export interface CompanyFeaturedShowcase {
+  badge: string;
+
+  title: string;
+
+  subtitle?: string;
+
+  description: string;
+
+  image: string;
+
+  metrics?: CompanyMetric[];
+
+  dashboardMetrics?: DashboardMetric[];
+
+  highlights: ShowcaseHighlight[];
+
+  primaryAction?: CompanyAction;
+
+  secondaryAction?: CompanyAction;
 }

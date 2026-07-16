@@ -10,6 +10,7 @@ import {
   Research,
   Culture,
   Careers,
+  FeaturedPlatform,
 } from "@/components/cybersecurity";
 
 import GlobalHeader from "@/components/layout/GlobalHeader";
@@ -28,6 +29,7 @@ export default function CybersecurityPage() {
 
       <main>
         <Hero />
+        <FeaturedPlatform />
         <Mission />
         <Capabilities />
         <Solutions />
