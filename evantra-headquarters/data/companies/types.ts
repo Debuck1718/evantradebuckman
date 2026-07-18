@@ -203,3 +203,30 @@ export interface CompanyFeaturedShowcase {
 
   secondaryAction?: CompanyAction;
 }
+
+export interface HeadquartersCenter {
+  id: string;
+
+  accent:
+    | "ai"
+    | "commerce"
+    | "engineering"
+    | "innovation"
+    | "software"
+    | "cybersecurity";
+
+  icon: LucideIcon;
+
+  company: CompanyData;
+}
+
+export interface HeadquartersData {
+  name: string;
+
+  slogan: string;
+
+  description: string;
+
+  centers: HeadquartersCenter[];
+}
+
