@@ -280,3 +280,101 @@ Not merely initials.
 They represent Evantra's Core.
 
 Everything flows toward purpose.
+
+Law 1 — Universal Existence
+
+Everything meaningful is an Entity.
+
+Nothing in the platform exists outside an Entity.
+
+Law 2 — Identity
+
+Every Entity has exactly one canonical identity.
+
+Identity never changes.
+
+Attributes may change.
+
+Identity doesn't.
+
+Law 3 — Events
+
+Nothing changes silently.
+
+Every meaningful change creates an Event.
+
+This immediately gives us:
+
+audit history
+timelines
+AI memory
+debugging
+analytics
+compliance
+synchronization
+
+without building them separately.
+
+Law 4 — Relationships
+
+Entities never exist alone.
+
+Relationships are first-class.
+
+Not foreign keys.
+
+Native objects.
+
+Law 5 — Ownership
+
+Everything has an owner.
+
+Ownership is explicit.
+
+Ownership can be delegated.
+
+Ownership can transfer.
+
+Ownership is never ambiguous.
+
+Law 6 — Trust
+
+Trust is measurable.
+
+Not binary.
+
+Every entity has a trust profile.
+
+Law 7 — Context
+
+Nothing happens outside a context.
+
+Context determines:
+
+permissions
+AI behavior
+interface
+notifications
+automation
+policies
+Law 8 — Intelligence
+
+AI is not an application.
+
+AI is a capability.
+
+Every entity may expose intelligence.
+
+Law 9 — Governance
+
+Every action passes through governance.
+
+Not applications.
+
+The kernel.
+
+Law 10 — Evolution
+
+Everything evolves.
+
+Nothing is permanent.
