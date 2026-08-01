@@ -4,14 +4,22 @@ import { AuthorizationCodeRepository } from "./AuthorizationCodeRepository";
 import { AuthorizationCodeGenerator } from "../platform/AuthorizationCodeGenerator";
 import { IdGenerator } from "../platform/IdGenerator";
 import { Clock } from "../platform/Clock";
+import { SecurityConfiguration } from "../platform/SecurityConfiguration";
 
 import { RedirectUri } from "../client";
 import { PkceMethod } from "./PkceMethod";
+
+import {
+  InvalidGrantError,
+} from "../oauth/errors";
 
 /**
  * Coordinates OAuth
  * Authorization Code
  * operations.
+ *
+ * RFC6749
+ * RFC7636
  */
 export class AuthorizationCodeService {
 
@@ -24,6 +32,8 @@ export class AuthorizationCodeService {
     private readonly generator: AuthorizationCodeGenerator,
 
     private readonly clock: Clock,
+
+    private readonly security: SecurityConfiguration,
 
   ) {}
 
@@ -43,7 +53,15 @@ export class AuthorizationCodeService {
 
     codeChallengeMethod: PkceMethod;
 
-    scopes: string[];
+    /**
+     * OpenID Connect nonce.
+     */
+    nonce?: string | null;
+
+    /**
+     * Granted scopes.
+     */
+    scopes: readonly string[];
 
   }): Promise<AuthorizationCode> {
 
@@ -52,8 +70,10 @@ export class AuthorizationCodeService {
 
     const expiresAt =
       new Date(
+
         now.getTime() +
-        (5 * 60 * 1000),
+        this.security.authorizationCodeLifetime,
+
       );
 
     const authorizationCode =
@@ -80,8 +100,11 @@ export class AuthorizationCodeService {
         codeChallengeMethod:
           params.codeChallengeMethod,
 
+        nonce:
+          params.nonce ?? null,
+
         scopes:
-          params.scopes,
+          [...params.scopes],
 
         expiresAt,
 
@@ -111,9 +134,6 @@ export class AuthorizationCodeService {
   /**
    * Finds an active
    * Authorization Code.
-   *
-   * Throws if the code
-   * is not active.
    */
   async findActive(
     code: string,
@@ -125,15 +145,19 @@ export class AuthorizationCodeService {
       );
 
     if (!authorizationCode) {
-      throw new Error(
+
+      throw new InvalidGrantError(
         "Invalid authorization code.",
       );
+
     }
 
     if (!authorizationCode.isActive()) {
-      throw new Error(
+
+      throw new InvalidGrantError(
         "Authorization code is no longer active.",
       );
+
     }
 
     return authorizationCode;

@@ -1,22 +1,33 @@
 import {
-  Client,
   ClientService,
-  ClientRedirectUri,
   ClientRedirectUriService,
 } from "../client";
 
 import {
+  AuthorizationCodeService,
   AuthorizationRequest,
+  AuthorizationResponse,
+  PkceMethod,
 } from "../authorization";
 
+import {
+  InvalidClientError,
+  InvalidRequestError,
+  InvalidScopeError,
+} from "../oauth/errors";
+
+import {
+  SecurityConfiguration,
+} from "../platform/SecurityConfiguration";
+
+
+
 /**
- * Begins an OAuth
- * Authorization request.
+ * Begins the OAuth
+ * Authorization Code Flow.
  *
- * This workflow validates an
- * incoming OAuth request before
- * authentication, consent and
- * authorization code issuance.
+ * RFC6749
+ * RFC7636
  */
 export class AuthorizeWorkflow {
 
@@ -26,73 +37,163 @@ export class AuthorizeWorkflow {
 
     private readonly redirects: ClientRedirectUriService,
 
+    private readonly authorizationCodes: AuthorizationCodeService,
+
+    private readonly security: SecurityConfiguration,
+
   ) {}
 
   /**
-   * Validates an authorization request.
+   * Validates an OAuth
+   * Authorization Request
+   * and issues an
+   * Authorization Code.
    */
-  async execute(
-    request: AuthorizationRequest
-  ): Promise<{
+  async execute(params: {
 
-    client: Client;
+    accountId: string;
 
-    redirectUri: ClientRedirectUri;
+    request: AuthorizationRequest;
 
-  }> {
+  }): Promise<AuthorizationResponse> {
 
-    // --------------------------------------------------
-    // Find Client.
-    // --------------------------------------------------
+    const request =
+      params.request;
+
+    // ======================================================
+    // Response Type
+    // ======================================================
+
+    if (
+      request.responseType !==
+      "code"
+    ) {
+
+      throw new InvalidRequestError(
+        "Unsupported response_type.",
+      );
+
+    }
+
+    // ======================================================
+    // OAuth Client
+    // ======================================================
 
     const client =
       await this.clients.findByClientId(
-        request.clientId.value()
+        request.clientId.value(),
       );
 
     if (!client) {
-      throw new Error(
-        "OAuth client not found."
-      );
-    }
 
-    // --------------------------------------------------
-    // Client must be active.
-    // --------------------------------------------------
+      throw new InvalidClientError();
+
+    }
 
     if (!client.isActive()) {
-      throw new Error(
-        "OAuth client is not active."
-      );
+
+      throw new InvalidClientError();
+
     }
 
-    // --------------------------------------------------
-    // Redirect URI must be registered.
-    // --------------------------------------------------
+    // ======================================================
+    // Redirect URI
+    // ======================================================
 
     const redirect =
       await this.redirects.findByRedirectUri(
+
         client.id,
-        request.redirectUri
+
+        request.redirectUri,
+
       );
 
     if (!redirect) {
-      throw new Error(
-        "Redirect URI is not registered."
+
+      throw new InvalidRequestError(
+        "Redirect URI is not registered.",
       );
+
     }
 
-    // --------------------------------------------------
-    // Validation successful.
-    // --------------------------------------------------
+    // ======================================================
+    // PKCE
+    // ======================================================
 
-    return {
+    if (
+      this.security.requirePkce &&
+      !request.codeChallenge
+    ) {
 
-      client,
+      throw new InvalidRequestError(
+        "PKCE code_challenge is required.",
+      );
 
-      redirectUri: redirect,
+    }
 
-    };
+    // ======================================================
+    // Scopes
+    // ======================================================
+
+    const scopes =
+      request.scopes();
+
+    if (
+      scopes.length === 0
+    ) {
+
+      throw new InvalidScopeError();
+
+    }
+
+    // ======================================================
+    // Issue Authorization Code
+    // ======================================================
+
+    const authorizationCode =
+  await this.authorizationCodes.issue({
+
+    clientId:
+      client.id,
+
+    accountId:
+      params.accountId,
+
+    redirectUri:
+      redirect.redirectUri,
+
+    codeChallenge:
+      request.codeChallenge,
+
+    codeChallengeMethod:
+      request.codeChallengeMethod,
+
+    nonce:
+      request.nonce,
+
+    scopes:
+      request.scopes(),
+
+  });
+
+    // ======================================================
+    // Response
+    // ======================================================
+
+    return new AuthorizationResponse(
+
+      client.id,
+
+      authorizationCode.code,
+
+      authorizationCode
+        .redirectUri
+        .value(),
+
+      request.state,
+
+    );
 
   }
 

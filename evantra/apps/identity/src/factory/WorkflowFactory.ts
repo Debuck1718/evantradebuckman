@@ -6,6 +6,7 @@ import {
   RegisterClientWorkflow,
   RegisterClientRedirectUriWorkflow,
 
+  AuthorizeWorkflow,
   ExchangeAuthorizationCodeWorkflow,
   RefreshAccessTokenWorkflow,
   RevokeTokenWorkflow,
@@ -35,8 +36,11 @@ export class WorkflowFactory {
    * Builds every workflow.
    */
   static create(
+
     services: ServiceRegistry,
+
     platform: PlatformRegistry,
+
   ) {
 
     // ==========================================================
@@ -110,6 +114,19 @@ export class WorkflowFactory {
     // OAuth Authorization
     // ==========================================================
 
+    const authorize =
+      new AuthorizeWorkflow(
+
+        services.clients,
+
+        services.redirectUris,
+
+        services.authorizationCodes,
+
+        platform.security,
+
+      );
+
     const exchangeAuthorizationCode =
       new ExchangeAuthorizationCodeWorkflow(
 
@@ -119,63 +136,74 @@ export class WorkflowFactory {
 
         services.tokens,
 
+        platform.pkce,
+
       );
 
     const refreshAccessToken =
-  new RefreshAccessTokenWorkflow(
+      new RefreshAccessTokenWorkflow(
 
-    services.clients,
+        services.clients,
 
-    services.tokens,
+        services.tokens,
 
-  );  
+      );
 
-  const revokeToken =
-  new RevokeTokenWorkflow(
+    const revokeToken =
+      new RevokeTokenWorkflow(
 
-    services.clients,
+        services.clients,
 
-    services.tokens,
+        services.tokens,
 
-  );
+      );
 
-const introspectToken =
-  new IntrospectTokenWorkflow(
+    const introspectToken =
+      new IntrospectTokenWorkflow(
 
-    services.clients,
+        services.clients,
 
-    services.tokens,
+        services.tokens,
 
-  );
+      );
+
+    // ==========================================================
+    // Registry
+    // ==========================================================
 
     return {
 
-      // ========================================================
-      // Identity
-      // ========================================================
+      identity: {
 
-      registerAccount,
+        registerAccount,
 
-      verifyAccount,
+        verifyAccount,
 
-      authenticate,
+        authenticate,
 
-      // ========================================================
-      // OAuth Clients
-      // ========================================================
+      },
 
-      registerClient,
+      clients: {
 
-      registerClientRedirectUri,
+        registerClient,
 
-      // ========================================================
-      // OAuth Authorization
-      // ========================================================
+        registerClientRedirectUri,
 
-      exchangeAuthorizationCode,
-      refreshAccessToken,
-      revokeToken,
-      introspectToken,
+      },
+
+      oauth: {
+
+        authorize,
+
+        exchangeAuthorizationCode,
+
+        refreshAccessToken,
+
+        revokeToken,
+
+        introspectToken,
+
+      },
 
     };
 

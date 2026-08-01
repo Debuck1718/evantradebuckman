@@ -1,9 +1,19 @@
-import { ClientService } from "../client/ClientService";
-import { TokenService } from "../authorization/TokenService";
+import {
+  ClientService,
+} from "../client";
+
+import {
+  TokenService,
+} from "../authorization";
+
+import {
+  TokenResponse,
+  OAuthTokenType,
+} from "../oauth";
 
 /**
- * Refreshes an expired Access Token
- * using a valid Refresh Token.
+ * Executes the OAuth
+ * Refresh Token Grant.
  */
 export class RefreshAccessTokenWorkflow {
 
@@ -16,7 +26,8 @@ export class RefreshAccessTokenWorkflow {
   ) {}
 
   /**
-   * Executes the Refresh Token Grant.
+   * Refreshes an OAuth
+   * Access Token.
    */
   async execute(params: {
 
@@ -30,21 +41,12 @@ export class RefreshAccessTokenWorkflow {
 
     refreshTokenLifetime: number;
 
-  }): Promise<{
+  }): Promise<TokenResponse> {
 
-    accessToken: string;
+    // ==========================================================
+    // Authenticate Client
+    // ==========================================================
 
-    refreshToken: string;
-
-    tokenType: "Bearer";
-
-    expiresIn: number;
-
-  }> {
-
-    //
-    // Authenticate OAuth Client.
-    //
     const client =
       await this.clients.authenticate({
 
@@ -56,9 +58,10 @@ export class RefreshAccessTokenWorkflow {
 
       });
 
-    //
-    // Refresh Tokens.
-    //
+    // ==========================================================
+    // Refresh Tokens
+    // ==========================================================
+
     const issued =
       await this.tokens.refresh({
 
@@ -76,24 +79,29 @@ export class RefreshAccessTokenWorkflow {
 
       });
 
-    return {
+    // ==========================================================
+    // OAuth Response
+    // ==========================================================
 
-      accessToken:
-        issued.accessToken.token,
+    return new TokenResponse(
 
-      refreshToken:
-        issued.refreshToken.token,
+      issued.accessToken.token,
 
-      tokenType:
-        "Bearer",
+      OAuthTokenType.BEARER,
 
-      expiresIn:
-        Math.floor(
-          params.accessTokenLifetime /
-          1000,
-        ),
+      Math.floor(
 
-    };
+        params.accessTokenLifetime / 1000,
+
+      ),
+
+      issued.refreshToken.token,
+
+      issued.accessToken
+        .scopes()
+        .join(" "),
+
+    );
 
   }
 

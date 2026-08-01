@@ -1,6 +1,9 @@
 import { RedirectUri } from "../client";
 import { PkceMethod } from "./PkceMethod";
 
+import {
+  InvalidGrantError,
+} from "../oauth/errors";
 /**
  * Represents an OAuth
  * Authorization Code.
@@ -54,6 +57,13 @@ export class AuthorizationCode {
     public readonly codeChallengeMethod: PkceMethod,
 
     /**
+ * OpenID Connect nonce.
+ *
+ * Optional until OIDC is used.
+ */
+   public readonly nonce: string | null,
+
+    /**
      * Granted scopes.
      */
     private readonly grantedScopes: string[],
@@ -94,6 +104,8 @@ export class AuthorizationCode {
 
     codeChallengeMethod: PkceMethod;
 
+    nonce?: string | null;
+
     scopes: string[];
 
     expiresAt: Date;
@@ -115,6 +127,8 @@ export class AuthorizationCode {
       params.codeChallenge,
 
       params.codeChallengeMethod,
+
+      params.nonce ?? null,
 
       [...params.scopes],
 
@@ -150,6 +164,8 @@ export class AuthorizationCode {
 
     scopes: string[];
 
+    nonce: string | null;
+
     expiresAt: Date;
 
     consumedAt: Date | null;
@@ -174,6 +190,8 @@ export class AuthorizationCode {
 
       params.codeChallengeMethod,
 
+      params.nonce,
+
       [...params.scopes],
 
       new Date(params.expiresAt),
@@ -196,6 +214,69 @@ export class AuthorizationCode {
     return [...this.grantedScopes];
 
   }
+  /**
+ * Returns true when the supplied
+ * Redirect URI matches the one
+ * originally used.
+ */
+matchesRedirectUri(
+  redirectUri: RedirectUri,
+): boolean {
+
+  return this.redirectUri.equals(
+    redirectUri,
+  );
+
+}
+
+/**
+ * Returns true if the
+ * Authorization Code
+ * contains every supplied
+ * scope.
+ */
+hasScopes(
+  scopes: readonly string[],
+): boolean {
+
+  return scopes.every(
+
+    scope =>
+      this.grantedScopes.includes(
+        scope,
+      ),
+
+  );
+
+}
+
+/**
+ * Returns true if this
+ * Authorization Code
+ * belongs to an Account.
+ */
+belongsToAccount(
+  accountId: string,
+): boolean {
+
+  return this.accountId ===
+    accountId;
+
+}
+
+/**
+ * Returns true if this
+ * Authorization Code
+ * belongs to a Client.
+ */
+belongsToClient(
+  clientId: string,
+): boolean {
+
+  return this.clientId ===
+    clientId;
+
+}
 
   /**
    * Returns true if the code
@@ -220,6 +301,17 @@ export class AuthorizationCode {
   /**
  * Returns true if the
  * Authorization Code
+ * is expired.
+ */
+isExpired(): boolean {
+
+  return this.hasExpired();
+
+}
+
+  /**
+ * Returns true if the
+ * Authorization Code
  * is still active.
  */
 isActive(): boolean {
@@ -230,25 +322,35 @@ isActive(): boolean {
 }
 
   /**
-   * Consumes the authorization code.
-   */
-  consume(): void {
+ * Consumes the
+ * Authorization Code.
+ */
+consume(): void {
 
-    if (this.isConsumed()) {
-      throw new Error(
-        "Authorization Code has already been consumed."
-      );
-    }
+  if (this.isConsumed()) {
 
-    if (this.hasExpired()) {
-      throw new Error(
-        "Authorization Code has expired."
-      );
-    }
+    throw new InvalidGrantError(
 
-    this.consumedAt = new Date();
+      "Authorization Code has already been consumed.",
+
+    );
 
   }
+
+  if (this.hasExpired()) {
+
+    throw new InvalidGrantError(
+
+      "Authorization Code has expired.",
+
+    );
+
+  }
+
+  this.consumedAt =
+    new Date();
+
+}
 
   /**
    * Returns when the code

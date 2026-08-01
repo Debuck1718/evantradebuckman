@@ -25,6 +25,12 @@ import {
 import {
   CryptoOAuthTokenGenerator,
 } from "../../infrastructure/oauth/CryptoOAuthTokenGenerator";
+
+import {
+  CryptoPkceVerifier,
+} from "../../infrastructure/oauth/CryptoPkceVerifier";
+
+import { SecurityConfiguration } from "../platform/SecurityConfiguration";
 /**
  * Creates every platform service
  * used by Evantra Identity.
@@ -37,50 +43,91 @@ import {
  */
 export class PlatformFactory {
 
-  /**
-   * Builds every platform service.
-   */
   static create() {
 
-    const clock =
-      new SystemClock();
+  const clock =
+    new SystemClock();
 
-    const ids =
-      new UlidGenerator();
+  const ids =
+    new UlidGenerator();
 
-    const tokens =
-      new CryptoTokenGenerator();
+  const tokens =
+    new CryptoTokenGenerator();
 
-    const authorizationCodes =
-      new CryptoAuthorizationCodeGenerator();
+  const authorizationCodes =
+    new CryptoAuthorizationCodeGenerator();
 
-    const clientCredentials =
-      new CryptoClientCredentialGenerator();
+  const clientCredentials =
+    new CryptoClientCredentialGenerator();
 
-    const passwordHasher =
-      new Argon2PasswordHasher();
+  const passwordHasher =
+    new Argon2PasswordHasher();
 
-     const oauthTokens =
-    new CryptoOAuthTokenGenerator(); 
+  const oauthTokens =
+    new CryptoOAuthTokenGenerator();
 
-    return {
+  const pkce =
+  new CryptoPkceVerifier();  
 
-      clock,
+  // ==========================================================
+  // Security Policy
+  // ==========================================================
 
-      ids,
+  const security: SecurityConfiguration = {
 
-      tokens,
+    authorizationCodeLifetime:
+      5 * 60 * 1000,
 
-      authorizationCodes,
+    accessTokenLifetime:
+      60 * 60 * 1000,
 
-      clientCredentials,
+    refreshTokenLifetime:
+      30 * 24 * 60 * 60 * 1000,
 
-      passwordHasher,
+    sessionLifetime:
+      30 * 24 * 60 * 60 * 1000,
 
-      oauthTokens,
+    verificationLifetime:
+      24 * 60 * 60 * 1000,
 
-    };
+    recoveryLifetime:
+      60 * 60 * 1000,
 
-  }
+    maxFailedLoginAttempts:
+      5,
 
+    accountLockDuration:
+      15 * 60 * 1000,
+
+    requirePkce:
+      true,
+
+    requireHttpsRedirectUris:
+      true,
+
+  };
+
+  return {
+
+    clock,
+
+    ids,
+
+    tokens,
+
+    authorizationCodes,
+
+    clientCredentials,
+
+    passwordHasher,
+
+    oauthTokens,
+
+    pkce,
+
+    security,
+
+  };
+
+}
 }

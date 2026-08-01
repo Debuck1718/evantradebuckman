@@ -10,6 +10,6 @@ export * from "./RefreshToken"
 export * from "./ResponseType"
 export * from "./RefreshTokenRepository"
 export * from "./TokenService"
-export * from "./ResponseType"
+export * from "./AuthorizationResponse"
 export * from "./ResponseType"
 

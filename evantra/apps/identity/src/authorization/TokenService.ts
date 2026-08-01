@@ -1,5 +1,6 @@
 import { AccessToken } from "./AccessToken";
 import { RefreshToken } from "./RefreshToken";
+
 import { AccessTokenRepository } from "./AccessTokenRepository";
 import { RefreshTokenRepository } from "./RefreshTokenRepository";
 
@@ -7,6 +8,13 @@ import { IdGenerator } from "../platform/IdGenerator";
 import { OAuthTokenGenerator } from "../platform/OAuthTokenGenerator";
 import { Clock } from "../platform/Clock";
 
+import {
+  InvalidGrantError,
+} from "../oauth/errors";
+
+import {
+  TokenIntrospection,
+} from "../oauth";
 /**
  * Issues and manages OAuth Tokens.
  */
@@ -139,59 +147,115 @@ export class TokenService {
   }
 
   /**
-   * Finds an active Access Token.
-   */
-  async findAccessToken(
-    token: string,
-  ): Promise<AccessToken> {
+ * Finds an active Access Token.
+ */
+async findAccessToken(
+  token: string,
+): Promise<AccessToken> {
 
-    const accessToken =
-      await this.accessTokens.findActiveByToken(
-        token,
-      );
+  const accessToken =
+    await this.accessTokens.findActiveByToken(
+      token,
+    );
 
-    if (!accessToken) {
-      throw new Error(
-        "Access Token is invalid."
-      );
-    }
+  if (!accessToken) {
 
-    return accessToken;
+    throw new InvalidGrantError(
+      "Access Token is invalid.",
+    );
 
   }
 
-  /**
-   * Finds an active Refresh Token.
-   */
-  async findRefreshToken(
-    token: string,
-  ): Promise<RefreshToken> {
+  return accessToken;
 
-    const refreshToken =
-      await this.refreshTokens.findActiveByToken(
-        token,
-      );
+}
 
-    if (!refreshToken) {
-      throw new Error(
-        "Refresh Token is invalid."
-      );
-    }
+/**
+ * Validates an Access Token.
+ */
+async validateAccessToken(
+  token: string,
+): Promise<AccessToken> {
 
-    return refreshToken;
+  const accessToken =
+    await this.findAccessToken(
+      token,
+    );
+
+  if (!accessToken.isActive()) {
+
+    throw new InvalidGrantError(
+
+      "Access Token is no longer active.",
+
+    );
 
   }
 
+  return accessToken;
+
+}
+
+ /**
+ * Finds an active Refresh Token.
+ */
+async findRefreshToken(
+  token: string,
+): Promise<RefreshToken> {
+
+  const refreshToken =
+    await this.refreshTokens.findActiveByToken(
+      token,
+    );
+
+  if (!refreshToken) {
+
+    throw new InvalidGrantError(
+      "Refresh Token is invalid.",
+    );
+
+  }
+
+  return refreshToken;
+
+}
+/**
+ * Validates a Refresh Token.
+ */
+async validateRefreshToken(
+  token: string,
+): Promise<RefreshToken> {
+
+  const refreshToken =
+    await this.findRefreshToken(
+      token,
+    );
+
+  if (!refreshToken.isActive()) {
+
+    throw new InvalidGrantError(
+
+      "Refresh Token is no longer active.",
+
+    );
+
+  }
+
+  return refreshToken;
+
+}
   /**
- * Exchanges a Refresh Token for
- * a new Access Token and
+ * Exchanges a Refresh Token
+ * for a new Access Token and
  * Refresh Token pair.
+ *
+ * Refresh Token Rotation
+ * (OAuth 2.1)
  */
 async refresh(params: {
 
   /**
-   * OAuth Client requesting
-   * the refresh.
+   * Authenticated OAuth Client.
    */
   clientId: string;
 
@@ -218,42 +282,84 @@ async refresh(params: {
 
 }> {
 
-  //
-  // Find Refresh Token
-  //
+  // ==========================================================
+  // Lookup Refresh Token
+  // ==========================================================
+
   const existingRefreshToken =
-    await this.findRefreshToken(
+    await this.refreshTokens.findByToken(
       params.refreshToken,
     );
 
-  //
-  // Ensure the token belongs
-  // to the authenticated client.
-  //
+  if (!existingRefreshToken) {
+
+    throw new InvalidGrantError(
+      "Refresh Token is invalid.",
+    );
+
+  }
+
+  // ==========================================================
+  // Replay Detection
+  // ==========================================================
+
+  if (existingRefreshToken.isRevoked()) {
+
+    //
+    // Refresh Token replay attack.
+    // Revoke the entire token family.
+    //
+    await this.revokeTokenFamily(
+      existingRefreshToken.accessTokenId,
+    );
+
+    throw new InvalidGrantError(
+      "Refresh Token has already been used.",
+    );
+
+  }
+
+  // ==========================================================
+  // Expiration
+  // ==========================================================
+
+  if (existingRefreshToken.hasExpired()) {
+
+    throw new InvalidGrantError(
+      "Refresh Token has expired.",
+    );
+
+  }
+
+  // ==========================================================
+  // Client Ownership
+  // ==========================================================
+
   if (
     existingRefreshToken.clientId !==
     params.clientId
   ) {
 
-    throw new Error(
-      "Refresh Token does not belong to the client."
+    throw new InvalidGrantError(
+      "Refresh Token does not belong to the authenticated client.",
     );
 
   }
 
-  //
-  // Revoke old Refresh Token.
-  //
+  // ==========================================================
+  // Rotate Refresh Token
+  // ==========================================================
+
   existingRefreshToken.revoke();
 
   await this.refreshTokens.update(
     existingRefreshToken,
   );
 
-  //
-  // Revoke associated
-  // Access Token.
-  //
+  // ==========================================================
+  // Revoke Existing Access Token
+  // ==========================================================
+
   const existingAccessToken =
     await this.accessTokens.findById(
       existingRefreshToken.accessTokenId,
@@ -261,7 +367,7 @@ async refresh(params: {
 
   if (
     existingAccessToken &&
-    existingAccessToken.isActive()
+    !existingAccessToken.isRevoked()
   ) {
 
     existingAccessToken.revoke();
@@ -272,9 +378,13 @@ async refresh(params: {
 
   }
 
-  //
-  // Issue replacement pair.
-  //
+  // ==========================================================
+  // Issue Replacement Pair
+  // ==========================================================
+
+  // TODO:
+  // Publish TOKEN_REFRESHED audit event.
+
   return this.issue({
 
     accountId:
@@ -297,77 +407,136 @@ async refresh(params: {
 }
 
   /**
-   * Revokes an Access Token or
-   * Refresh Token.
-   *
-   * RFC7009 requires successful
-   * responses even when the token
-   * is unknown.
-   */
-  async revoke(
-    token: string,
-  ): Promise<void> {
+ * Revokes an OAuth Token.
+ *
+ * RFC7009
+ *
+ * Revocation is idempotent.
+ * Unknown tokens still return success.
+ */
+async revoke(
+  token: string,
+): Promise<void> {
 
-    const accessToken =
-      await this.accessTokens.findByToken(
-        token,
+  // ==========================================================
+  // Access Token
+  // ==========================================================
+
+  const accessToken =
+    await this.accessTokens.findByToken(
+      token,
+    );
+
+  if (accessToken) {
+
+    if (!accessToken.isRevoked()) {
+
+      accessToken.revoke();
+
+      await this.accessTokens.update(
+        accessToken,
       );
-
-    if (accessToken) {
-
-      if (!accessToken.isRevoked()) {
-
-        accessToken.revoke();
-
-        await this.accessTokens.update(
-          accessToken,
-        );
-
-      }
-
-      return;
 
     }
 
-    const refreshToken =
-      await this.refreshTokens.findByToken(
-        token,
-      );
+    // TODO:
+    // Publish TOKEN_REVOKED event.
 
-    if (refreshToken) {
-
-      if (!refreshToken.isRevoked()) {
-
-        refreshToken.revoke();
-
-        await this.refreshTokens.update(
-          refreshToken,
-        );
-
-      }
-
-    }
+    return;
 
   }
 
+  // ==========================================================
+  // Refresh Token
+  // ==========================================================
+
+  const refreshToken =
+    await this.refreshTokens.findByToken(
+      token,
+    );
+
+  if (refreshToken) {
+
+    if (!refreshToken.isRevoked()) {
+
+      refreshToken.revoke();
+
+      await this.refreshTokens.update(
+        refreshToken,
+      );
+
+    }
+
+    // TODO:
+    // Publish TOKEN_REVOKED event.
+
+  }
+
+  //
+  // RFC7009:
+  // Unknown tokens MUST still
+  // return success.
+  //
+
+}
+
   /**
- * Introspects an Access Token.
+ * Revokes an Access Token
+ * and every associated
+ * Refresh Token.
+ *
+ * Used when Refresh Token
+ * replay is detected.
+ */
+async revokeTokenFamily(
+  accessTokenId: string,
+): Promise<void> {
+
+  const accessToken =
+    await this.accessTokens.findById(
+      accessTokenId,
+    );
+
+  if (
+    accessToken &&
+    !accessToken.isRevoked()
+  ) {
+
+    accessToken.revoke();
+
+    await this.accessTokens.update(
+      accessToken,
+    );
+
+  }
+
+  const refreshToken =
+    await this.refreshTokens.findByAccessTokenId(
+      accessTokenId,
+    );
+
+  if (
+    refreshToken &&
+    !refreshToken.isRevoked()
+  ) {
+
+    refreshToken.revoke();
+
+    await this.refreshTokens.update(
+      refreshToken,
+    );
+
+  }
+
+}
+
+  /**
+ * RFC7662
+ * OAuth Token Introspection.
  */
 async introspect(
   token: string,
-): Promise<{
-
-  active: boolean;
-
-  accountId?: string;
-
-  clientId?: string;
-
-  scopes?: readonly string[];
-
-  expiresAt?: Date;
-
-}> {
+): Promise<TokenIntrospection> {
 
   const accessToken =
     await this.accessTokens.findByToken(
@@ -379,31 +548,42 @@ async introspect(
     !accessToken.isActive()
   ) {
 
-    return {
+    return new TokenIntrospection(
 
-      active: false,
+      false,
 
-    };
+      null,
+
+      null,
+
+      null,
+
+      null,
+
+    );
 
   }
 
-  return {
+  return new TokenIntrospection(
 
-    active: true,
+    true,
 
-    accountId:
-      accessToken.accountId,
+    accessToken.clientId,
 
-    clientId:
-      accessToken.clientId,
+    accessToken.accountId,
 
-    scopes:
-      accessToken.scopes(),
+    accessToken
+      .scopes()
+      .join(" "),
 
-    expiresAt:
-      accessToken.expiresAt,
+    Math.floor(
 
-  };
+      accessToken.expiresAt.getTime() /
+      1000,
+
+    ),
+
+  );
 
 }
 

@@ -116,12 +116,19 @@ export class ServiceFactory {
     // ==========================================================
 
     const authorizationCodes =
-      new AuthorizationCodeService(
-        repositories.authorizationCodes,
-        platform.ids,
-        platform.authorizationCodes,
-        platform.clock
-      );
+  new AuthorizationCodeService(
+
+    repositories.authorizationCodes,
+
+    platform.ids,
+
+    platform.authorizationCodes,
+
+    platform.clock,
+
+    platform.security,
+
+  );
 
 
     const tokens =

@@ -7,6 +7,19 @@ import {
   ClientService,
 } from "../client";
 
+import {
+  TokenResponse,
+  OAuthTokenType,
+} from "../oauth";
+
+import {
+  InvalidGrantError,
+} from "../oauth/errors";
+
+import {
+  PkceVerifier,
+} from "../platform/PkceVerifier";
+
 /**
  * Exchanges an OAuth
  * Authorization Code
@@ -22,6 +35,8 @@ export class ExchangeAuthorizationCodeWorkflow {
 
     private readonly tokens: TokenService,
 
+    private readonly pkce: PkceVerifier,
+
   ) {}
 
   /**
@@ -36,29 +51,19 @@ export class ExchangeAuthorizationCodeWorkflow {
 
     code: string;
 
+    codeVerifier: string;
+
     redirectUri: string;
 
     accessTokenLifetime: number;
 
     refreshTokenLifetime: number;
 
-  }): Promise<{
+  }): Promise<TokenResponse> {
 
-    accessToken: string;
-
-    refreshToken: string;
-
-    tokenType: "Bearer";
-
-    expiresIn: number;
-
-    scope: string;
-
-  }> {
-
-    // ----------------------------------------------------------
-    // Authenticate OAuth Client.
-    // ----------------------------------------------------------
+    // ==========================================================
+    // Authenticate Client
+    // ==========================================================
 
     const client =
       await this.clients.authenticate({
@@ -71,55 +76,90 @@ export class ExchangeAuthorizationCodeWorkflow {
 
       });
 
-    // ----------------------------------------------------------
-    // Load Authorization Code.
-    // ----------------------------------------------------------
+    // ==========================================================
+    // Load Authorization Code
+    // ==========================================================
 
     const authorizationCode =
       await this.authorizationCodes.findActive(
-        params.code
+
+        params.code,
+
       );
 
-    // ----------------------------------------------------------
-    // Ensure the Authorization Code
-    // belongs to the authenticated
-    // OAuth Client.
-    // ----------------------------------------------------------
+    // ==========================================================
+    // Ensure Client owns Code
+    // ==========================================================
 
     if (
       authorizationCode.clientId !==
       client.id
     ) {
-      throw new Error(
-        "Authorization Code does not belong to this client."
+
+      throw new InvalidGrantError(
+
+        "Authorization Code does not belong to this client.",
+
       );
+
     }
 
-    // ----------------------------------------------------------
-    // Validate Redirect URI.
-    // ----------------------------------------------------------
+    // ==========================================================
+    // Validate Redirect URI
+    // ==========================================================
 
     if (
       authorizationCode
         .redirectUri
-        .value() !== params.redirectUri
+        .value() !==
+      params.redirectUri
     ) {
-      throw new Error(
-        "Invalid redirect URI."
+
+      throw new InvalidGrantError(
+
+        "Invalid redirect URI.",
+
       );
+
     }
 
-    // ----------------------------------------------------------
-    // Consume Authorization Code.
-    // ----------------------------------------------------------
+    const validPkce =
+      await this.pkce.verify({
+
+        codeVerifier:
+          params.codeVerifier,
+
+        codeChallenge:
+          authorizationCode.codeChallenge,
+
+        method:
+          authorizationCode.codeChallengeMethod,
+
+      });
+
+    if (!validPkce) {
+
+      throw new InvalidGrantError(
+
+        "PKCE verification failed.",
+
+      );
+
+    }
+
+    // ==========================================================
+    // Consume Code
+    // ==========================================================
 
     await this.authorizationCodes.consume(
-      authorizationCode
+
+      authorizationCode,
+
     );
 
-    // ----------------------------------------------------------
-    // Issue OAuth Tokens.
-    // ----------------------------------------------------------
+    // ==========================================================
+    // Issue Tokens
+    // ==========================================================
 
     const issued =
       await this.tokens.issue({
@@ -141,28 +181,29 @@ export class ExchangeAuthorizationCodeWorkflow {
 
       });
 
-    return {
+    // ==========================================================
+    // OAuth Response
+    // ==========================================================
 
-      accessToken:
-        issued.accessToken.token,
+    return new TokenResponse(
 
-      refreshToken:
-        issued.refreshToken.token,
+      issued.accessToken.token,
 
-      tokenType:
-        "Bearer",
+      OAuthTokenType.BEARER,
 
-      expiresIn:
-        Math.floor(
-          params.accessTokenLifetime / 1000
-        ),
+      Math.floor(
 
-      scope:
-        issued.accessToken
-          .scopes()
-          .join(" "),
+        params.accessTokenLifetime / 1000,
 
-    };
+      ),
+
+      issued.refreshToken.token,
+
+      issued.accessToken
+        .scopes()
+        .join(" "),
+
+    );
 
   }
 

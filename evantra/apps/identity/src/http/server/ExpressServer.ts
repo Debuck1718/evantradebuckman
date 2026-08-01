@@ -1,9 +1,18 @@
 import { Express } from "express";
 import { Server } from "http";
 
+/**
+ * Wraps the Node.js HTTP server.
+ *
+ * Responsible for:
+ * - Starting Express
+ * - Graceful shutdown
+ * - Connection timeouts
+ */
 export class ExpressServer {
 
-  private server?: Server;
+  private server: Server | null =
+    null;
 
   constructor(
 
@@ -16,23 +25,42 @@ export class ExpressServer {
   /**
    * Starts the HTTP server.
    */
-  start(): Promise<void> {
+  async start(): Promise<void> {
 
-    return new Promise(
+    if (this.server) {
 
-      resolve => {
+      return;
 
-        this.server =
+    }
+
+    await new Promise<void>(
+
+      (resolve, reject) => {
+
+        const server =
           this.app.listen(
 
             this.port,
 
             () => {
 
-              console.log(
+              this.server =
+                server;
 
+              //
+              // Production timeouts
+              //
+              server.requestTimeout =
+                30_000;
+
+              server.headersTimeout =
+                35_000;
+
+              server.keepAliveTimeout =
+                5_000;
+
+              console.info(
                 `🚀 Evantra Identity listening on port ${this.port}`,
-
               );
 
               resolve();
@@ -41,6 +69,14 @@ export class ExpressServer {
 
           );
 
+        server.on(
+
+          "error",
+
+          reject,
+
+        );
+
       },
 
     );
@@ -48,23 +84,30 @@ export class ExpressServer {
   }
 
   /**
-   * Stops the HTTP server.
+   * Stops accepting new
+   * connections and waits
+   * for existing requests
+   * to finish.
    */
-  stop(): Promise<void> {
+  async stop(): Promise<void> {
 
-    return new Promise(
+    if (!this.server) {
+
+      return;
+
+    }
+
+    const server =
+      this.server;
+
+    this.server =
+      null;
+
+    await new Promise<void>(
 
       (resolve, reject) => {
 
-        if (!this.server) {
-
-          resolve();
-
-          return;
-
-        }
-
-        this.server.close(
+        server.close(
 
           error => {
 
@@ -76,6 +119,10 @@ export class ExpressServer {
 
             }
 
+            console.info(
+              "HTTP server stopped.",
+            );
+
             resolve();
 
           },
@@ -85,6 +132,16 @@ export class ExpressServer {
       },
 
     );
+
+  }
+
+  /**
+   * Returns true when
+   * the server is running.
+   */
+  isRunning(): boolean {
+
+    return this.server !== null;
 
   }
 
