@@ -21,6 +21,10 @@ import {
 } from "../../infrastructure/database/PostgresSessionRepository";
 
 import {
+  PostgresBrowserSessionRepository,
+} from "../../infrastructure/database/PostgresBrowserSessionRepository";
+
+import {
   PostgresClientRepository,
 } from "../../infrastructure/database/PostgresClientRepository";
 
@@ -50,8 +54,12 @@ export class RepositoryFactory {
    * Builds every repository.
    */
   static create(
-    db: Pool
+    db: Pool,
   ) {
+
+    // ======================================================
+    // Accounts
+    // ======================================================
 
     const accounts =
       new PostgresAccountRepository(db);
@@ -68,11 +76,22 @@ export class RepositoryFactory {
     const sessions =
       new PostgresSessionRepository(db);
 
+    const browserSessions =
+      new PostgresBrowserSessionRepository(db);
+
+    // ======================================================
+    // OAuth Clients
+    // ======================================================
+
     const clients =
       new PostgresClientRepository(db);
 
     const redirectUris =
       new PostgresClientRedirectUriRepository(db);
+
+    // ======================================================
+    // OAuth
+    // ======================================================
 
     const authorizationCodes =
       new PostgresAuthorizationCodeRepository(db);
@@ -85,6 +104,8 @@ export class RepositoryFactory {
 
     return {
 
+      // Identity
+
       accounts,
 
       credentials,
@@ -95,9 +116,15 @@ export class RepositoryFactory {
 
       sessions,
 
+      browserSessions,
+
+      // OAuth Clients
+
       clients,
 
       redirectUris,
+
+      // OAuth
 
       authorizationCodes,
 

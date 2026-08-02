@@ -17,6 +17,7 @@ import {
 
 import {
   SessionService,
+  BrowserSessionService,
 } from "../session";
 
 import {
@@ -95,6 +96,12 @@ export class ServiceFactory {
         platform.ids,
         platform.clock
       );
+    const browserSessions =
+  new BrowserSessionService(
+
+    repositories.browserSessions,
+
+  );  
 
     // ==========================================================
     // OAuth Clients
@@ -159,6 +166,8 @@ export class ServiceFactory {
   recoveries,
 
   sessions,
+
+  browserSessions,
 
   clients,
 

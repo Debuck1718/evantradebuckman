@@ -8,6 +8,17 @@ export * from "./ExchangeAuthorizationCodeWorkflow"
 export * from "./RefreshAccessTokenWorkflow"
 export * from "./RevokeTokenWorkflow"
 export * from "./IntrospectTokenWorkflow"
+export * from "./CreateBrowserSessionWorkflow"
+export * from "./ListBrowserSessionsWorkflow"
+export * from "./RevokeAllBrowserSessionsWorkflow"
+export * from "./RefreshBrowserSessionWorkflow"
+export * from "./RevokeBrowserSessionWorkflow"
+export * from "./RotateBrowserSessionWorkflow"
+export * from "./TerminateBrowserSessionWorkflow"
+export * from "./TouchBrowserSessionWorkflow"
+export * from "./ValidateBrowserSessionWorkflow"
+
+
 
 
 

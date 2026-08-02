@@ -12,6 +12,16 @@ import {
   RevokeTokenWorkflow,
   IntrospectTokenWorkflow,
 
+  CreateBrowserSessionWorkflow,
+  ValidateBrowserSessionWorkflow,
+  TouchBrowserSessionWorkflow,
+  RefreshBrowserSessionWorkflow,
+  RotateBrowserSessionWorkflow,
+  RevokeBrowserSessionWorkflow,
+  RevokeAllBrowserSessionsWorkflow,
+  TerminateBrowserSessionWorkflow,
+  ListBrowserSessionsWorkflow,
+
 } from "../workflows";
 
 import { ServiceFactory } from "./ServiceFactory";
@@ -168,45 +178,133 @@ export class WorkflowFactory {
       );
 
     // ==========================================================
+// Browser Sessions
+// ==========================================================
+
+const createBrowserSession =
+  new CreateBrowserSessionWorkflow(
+
+    services.browserSessions,
+
+  );
+
+const validateBrowserSession =
+  new ValidateBrowserSessionWorkflow(
+
+    services.browserSessions,
+
+  );
+
+const touchBrowserSession =
+  new TouchBrowserSessionWorkflow(
+
+    services.browserSessions,
+
+  );
+
+const refreshBrowserSession =
+  new RefreshBrowserSessionWorkflow(
+
+    services.browserSessions,
+
+  );
+
+const rotateBrowserSession =
+  new RotateBrowserSessionWorkflow(
+
+    services.browserSessions,
+
+  );
+
+const revokeBrowserSession =
+  new RevokeBrowserSessionWorkflow(
+
+    services.browserSessions,
+
+  );
+
+const revokeAllBrowserSessions =
+  new RevokeAllBrowserSessionsWorkflow(
+
+    services.browserSessions,
+
+  );
+
+const terminateBrowserSession =
+  new TerminateBrowserSessionWorkflow(
+
+    services.browserSessions,
+
+  );
+
+const listBrowserSessions =
+  new ListBrowserSessionsWorkflow(
+
+    services.browserSessions,
+
+  );  
+
+    // ==========================================================
     // Registry
     // ==========================================================
 
     return {
 
-      identity: {
+  identity: {
 
-        registerAccount,
+    registerAccount,
 
-        verifyAccount,
+    verifyAccount,
 
-        authenticate,
+    authenticate,
 
-      },
+  },
 
-      clients: {
+  clients: {
 
-        registerClient,
+    registerClient,
 
-        registerClientRedirectUri,
+    registerClientRedirectUri,
 
-      },
+  },
 
-      oauth: {
+  oauth: {
 
-        authorize,
+    authorize,
 
-        exchangeAuthorizationCode,
+    exchangeAuthorizationCode,
 
-        refreshAccessToken,
+    refreshAccessToken,
 
-        revokeToken,
+    revokeToken,
 
-        introspectToken,
+    introspectToken,
 
-      },
+  },
 
-    };
+  session: {
 
+    createBrowserSession,
+
+    validateBrowserSession,
+
+    touchBrowserSession,
+
+    refreshBrowserSession,
+
+    rotateBrowserSession,
+
+    revokeBrowserSession,
+
+    revokeAllBrowserSessions,
+
+    terminateBrowserSession,
+
+    listBrowserSessions,
+
+  },
+
+};
   }
 
 }
