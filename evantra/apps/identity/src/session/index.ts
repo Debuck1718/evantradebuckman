@@ -6,5 +6,7 @@ export * from "./BrowserSessionRepository";
 export * from "./BrowserSession";
 export * from "./valueObjects";
 export * from "./errors";
+export * from "./BrowserSessionFactory";
+
 
 

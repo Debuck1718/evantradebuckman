@@ -27,9 +27,6 @@ import {
 
 import {
   AuthorizationCodeService,
-} from "../authorization";
-
-import {
   TokenService,
 } from "../authorization";
 
@@ -62,46 +59,66 @@ export class ServiceFactory {
 
     const accounts =
       new AccountService(
-        repositories.accounts
+
+        repositories.accounts,
+
       );
 
     const credentials =
       new CredentialService(
+
         repositories.credentials,
-        platform.passwordHasher
+
+        platform.passwordHasher,
+
       );
 
     const authentication =
       new AuthenticationService(
+
         repositories.accounts,
-        credentials
+
+        credentials,
+
       );
 
     const verifications =
       new VerificationService(
-        repositories.verifications
+
+        repositories.verifications,
+
       );
 
     const recoveries =
       new RecoveryService(
+
         repositories.recoveries,
+
         platform.ids,
+
         platform.tokens,
-        platform.clock
+
+        platform.clock,
+
       );
 
     const sessions =
       new SessionService(
+
         repositories.sessions,
+
         platform.ids,
-        platform.clock
+
+        platform.clock,
+
       );
+
     const browserSessions =
-  new BrowserSessionService(
+      new BrowserSessionService(
 
-    repositories.browserSessions,
+        repositories.browserSessions,
 
-  );  
+      );
 
     // ==========================================================
     // OAuth Clients
@@ -109,13 +126,18 @@ export class ServiceFactory {
 
     const clients =
       new ClientService(
+
         repositories.clients,
-        platform.passwordHasher
+
+        platform.passwordHasher,
+
       );
 
     const redirectUris =
       new ClientRedirectUriService(
-        repositories.redirectUris
+
+        repositories.redirectUris,
+
       );
 
     // ==========================================================
@@ -123,61 +145,70 @@ export class ServiceFactory {
     // ==========================================================
 
     const authorizationCodes =
-  new AuthorizationCodeService(
+      new AuthorizationCodeService(
 
-    repositories.authorizationCodes,
+        repositories.authorizationCodes,
 
-    platform.ids,
+        platform.ids,
 
-    platform.authorizationCodes,
+        platform.authorizationCodes,
 
-    platform.clock,
+        platform.clock,
 
-    platform.security,
+        platform.security,
 
-  );
-
+      );
 
     const tokens =
-  new TokenService(
+      new TokenService(
 
-    repositories.accessTokens,
+        repositories.accessTokens,
 
-    repositories.refreshTokens,
+        repositories.refreshTokens,
 
-    platform.ids,
+        platform.ids,
 
-    platform.oauthTokens,
+        platform.oauthTokens,
 
-    platform.clock,
+        platform.clock,
 
-  );  
+      );
+
+    // ==========================================================
+    // Registry
+    // ==========================================================
 
     return {
 
-  accounts,
+      // Identity
 
-  authentication,
+      accounts,
 
-  credentials,
+      credentials,
 
-  verifications,
+      authentication,
 
-  recoveries,
+      verifications,
 
-  sessions,
+      recoveries,
 
-  browserSessions,
+      sessions,
 
-  clients,
+      browserSessions,
 
-  redirectUris,
+      // OAuth Clients
 
-  authorizationCodes,
+      clients,
 
-  tokens,
+      redirectUris,
 
-};
+      // OAuth
+
+      authorizationCodes,
+
+      tokens,
+
+    };
 
   }
 

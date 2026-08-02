@@ -53,6 +53,52 @@ export class SessionIdentity {
   ) {}
 
   /**
+ * Creates a new
+ * Session Identity.
+ */
+static create(params: {
+
+  sessionId: string;
+
+  accountId: string;
+
+  evantraId: EvantraId;
+
+  clientId?: string | null;
+
+  applicationId?: string | null;
+
+  organizationId?: string | null;
+
+  workspaceId?: string | null;
+
+  tenantId?: string | null;
+
+}): SessionIdentity {
+
+  return new SessionIdentity(
+
+    params.sessionId,
+
+    params.accountId,
+
+    params.evantraId,
+
+    params.clientId ?? null,
+
+    params.applicationId ?? null,
+
+    params.organizationId ?? null,
+
+    params.workspaceId ?? null,
+
+    params.tenantId ?? null,
+
+  );
+
+}
+
+  /**
  * Restores a persisted
  * Session Identity.
  */

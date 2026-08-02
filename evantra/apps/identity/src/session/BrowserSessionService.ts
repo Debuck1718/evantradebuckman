@@ -1,5 +1,10 @@
-import { BrowserSession } from "./BrowserSession";
-import { BrowserSessionRepository } from "./BrowserSessionRepository";
+import {
+  BrowserSession,
+} from "./BrowserSession";
+
+import {
+  BrowserSessionRepository,
+} from "./BrowserSessionRepository";
 
 import {
   EvantraId,
@@ -47,7 +52,22 @@ export class BrowserSessionService {
   }
 
   /**
-   * Finds a Browser Session.
+   * Finds a Browser Session
+   * by its identifier.
+   */
+  async findById(
+    id: string,
+  ): Promise<BrowserSession | null> {
+
+    return this.repository.findById(
+      id,
+    );
+
+  }
+
+  /**
+   * Finds a Browser Session
+   * by its Session ID.
    */
   async findBySessionId(
     sessionId: string,
@@ -59,10 +79,10 @@ export class BrowserSessionService {
 
   }
 
+
   /**
-   * Returns every active
-   * Browser Session for an
-   * Evantra Identity.
+   * Returns every Browser Session
+   * belonging to an Evantra ID.
    */
   async findByEvantraId(
     evantraId: EvantraId,
@@ -70,6 +90,20 @@ export class BrowserSessionService {
 
     return this.repository.findByEvantraId(
       evantraId,
+    );
+
+  }
+
+  /**
+   * Returns every Browser Session
+   * belonging to an OAuth Client.
+   */
+  async findByClientId(
+    clientId: string,
+  ): Promise<BrowserSession[]> {
+
+    return this.repository.findByClientId(
+      clientId,
     );
 
   }
@@ -97,6 +131,25 @@ export class BrowserSessionService {
   ): Promise<void> {
 
     session.terminate();
+
+    await this.repository.update(
+      session,
+    );
+
+  }
+
+  /**
+   * Updates Browser Session
+   * activity.
+   */
+  async touch(
+    session: BrowserSession,
+    idleTimeoutAt: Date,
+  ): Promise<void> {
+
+    session.touch(
+      idleTimeoutAt,
+    );
 
     await this.repository.update(
       session,

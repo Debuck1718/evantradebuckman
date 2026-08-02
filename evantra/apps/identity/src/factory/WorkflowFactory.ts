@@ -84,13 +84,15 @@ export class WorkflowFactory {
       );
 
     const authenticate =
-      new AuthenticateWorkflow(
+  new AuthenticateWorkflow(
 
-        services.authentication,
+    services.authentication,
 
-        services.sessions,
+    services.sessions,
 
-      );
+    services.browserSessions,
+
+  );
 
     // ==========================================================
     // OAuth Clients
