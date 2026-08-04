@@ -1,50 +1,127 @@
 import {
-
   Router,
-
 } from "express";
 
 import {
-
-  ExpressHttpAdapter,
-
-} from "./ExpressHttpAdapter";
+  Application,
+} from "../../../bootstrap/Application";
 
 import {
-
-  AuthenticateController,
-
-} from "../../../authentication/controllers/AuthenticateController";
+  ExpressHttpAdapter,
+} from "./ExpressHttpAdapter";
 
 /**
- * Registers
- * Evantra routes.
+ * Creates every HTTP route
+ * exposed by Evantra Identity.
  */
 export class ExpressRouter {
 
   static create(
-
-    authenticate:
-
-      AuthenticateController,
-
+    application: ReturnType<typeof Application.create>,
   ): Router {
 
     const router =
-
       Router();
+
+    // ======================================================
+    // Identity
+    // ======================================================
 
     router.post(
 
-      "/login",
+      "/identity/authenticate",
 
       ExpressHttpAdapter.adapt(
 
-        authenticate,
+        application
+          .identity
+          .controllers
+          .authentication
+          .authenticate,
 
       ),
 
     );
+
+    router.post(
+
+  "/identity/register",
+
+  ExpressHttpAdapter.adapt(
+
+    application
+      .identity
+      .controllers
+      .authentication
+      .register,
+
+  ),
+
+);
+
+router.post(
+
+  "/identity/verify",
+
+  ExpressHttpAdapter.adapt(
+
+    application
+      .identity
+      .controllers
+      .authentication
+      .verify,
+
+  ),
+
+);
+
+router.post(
+
+  "/identity/logout",
+
+  ExpressHttpAdapter.adapt(
+
+    application
+      .identity
+      .controllers
+      .authentication
+      .logout,
+
+  ),
+
+);
+
+router.post(
+
+  "/identity/session",
+
+  ExpressHttpAdapter.adapt(
+
+    application
+      .identity
+      .controllers
+      .authentication
+      .validateSession,
+
+  ),
+
+);
+
+router.post(
+
+  "/identity/session/refresh",
+
+  ExpressHttpAdapter.adapt(
+
+    application
+      .identity
+      .controllers
+      .authentication
+      .refreshSession,
+
+  ),
+
+);
 
     return router;
 

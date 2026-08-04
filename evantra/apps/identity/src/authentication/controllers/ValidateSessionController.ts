@@ -5,47 +5,47 @@ import {
 } from "../../http";
 
 import {
-  RefreshBrowserSessionWorkflow,
+  ValidateBrowserSessionWorkflow,
 } from "../../workflows";
 
 import {
-  RefreshSessionRequest,
+  ValidateSessionRequest,
 } from "../requests";
 
 import {
-  RefreshSessionRequestValidator,
+  ValidateSessionRequestValidator,
 } from "../validation";
 
 import {
-  RefreshSessionResponseMapper,
+  ValidateSessionResponseMapper,
 } from "../responses";
 
 /**
  * Handles Browser
- * Session refresh.
+ * Session validation.
  */
-export class RefreshSessionController
+export class ValidateSessionController
   implements HttpController {
 
   constructor(
 
-    private readonly refresh:
-      RefreshBrowserSessionWorkflow,
+    private readonly validate:
+      ValidateBrowserSessionWorkflow,
 
-) {}
+  ) {}
 
   /**
-   * Refreshes the
+   * Validates the current
    * Browser Session.
    */
   async handle(
     request:
       HttpRequest<
-        RefreshSessionRequest
+        ValidateSessionRequest
       >,
   ): Promise<HttpResponse> {
 
-    RefreshSessionRequestValidator
+    ValidateSessionRequestValidator
       .validate(
 
         request.body,
@@ -53,14 +53,15 @@ export class RefreshSessionController
       );
 
     const session =
-      await this.refresh.execute({
+      await this.validate.execute({
 
-    sessionId:
-      request.body.sessionId,
+        sessionId:
 
-});
+          request.body.sessionId,
 
-    return RefreshSessionResponseMapper
+      });
+
+    return ValidateSessionResponseMapper
       .success(
 
         session,

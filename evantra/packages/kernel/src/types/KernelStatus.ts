@@ -1,11 +1,18 @@
+/**
+ * Represents the current
+ * runtime status of the
+ * Evantra Kernel.
+ */
 export interface KernelStatus {
+
   /**
    * Kernel version.
    */
   version: string;
 
   /**
-   * Runtime state.
+   * Indicates whether the
+   * runtime is active.
    */
   running: boolean;
 
@@ -44,8 +51,4 @@ export interface KernelStatus {
    */
   workflows: number;
 
-  /**
-   * Registered identities.
-   */
-  users: number;
 }

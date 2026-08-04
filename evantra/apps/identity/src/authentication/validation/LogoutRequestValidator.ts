@@ -4,22 +4,24 @@ import {
 } from "../../http";
 
 import {
-  VerifyAccountRequest,
+  LogoutRequest,
 } from "../requests";
 
 /**
- * Validates account
- * verification requests.
+ * Validates Logout requests.
  */
-export class VerifyAccountRequestValidator {
+export class LogoutRequestValidator {
 
+  /**
+   * Validates the request.
+   */
   static validate(
-    request: VerifyAccountRequest,
+    request: LogoutRequest,
   ): void {
 
     if (
 
-      !request.token?.trim()
+      !request.sessionId?.trim()
 
     ) {
 
@@ -27,7 +29,7 @@ export class VerifyAccountRequestValidator {
 
         HttpStatus.BAD_REQUEST,
 
-        "Verification token is required.",
+        "Session ID is required.",
 
       );
 

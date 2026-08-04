@@ -12,6 +12,10 @@ import {
   SessionLockedError,
 } from "../session/errors";
 
+import {
+  Clock,
+} from "../platform/Clock";
+
 /**
  * Refreshes a Browser Session.
  *
@@ -26,7 +30,10 @@ export class RefreshBrowserSessionWorkflow {
     private readonly sessions:
       BrowserSessionService,
 
-  ) {}
+    private readonly clock:
+      Clock,
+
+) {}
 
   /**
    * Refreshes the Browser Session.
@@ -34,8 +41,6 @@ export class RefreshBrowserSessionWorkflow {
   async execute(params: {
 
     sessionId: string;
-
-    idleTimeoutAt: Date;
 
   }): Promise<BrowserSession> {
 
@@ -104,10 +109,10 @@ export class RefreshBrowserSessionWorkflow {
     // Refresh Session
     // ==================================================
 
+    const idleTimeoutAt = this.clock.now();
+
     session.touch(
-
-      params.idleTimeoutAt,
-
+      idleTimeoutAt,
     );
 
     await this.sessions.update(

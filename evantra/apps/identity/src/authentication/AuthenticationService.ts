@@ -8,6 +8,11 @@ import {
   CredentialService,
 } from "./CredentialService";
 
+import {
+  InvalidCredentialsError,
+  InactiveAccountError,
+} from "./errors";
+
 /**
  * Coordinates account authentication.
  *
@@ -21,7 +26,7 @@ export class AuthenticationService {
 
   constructor(
     private readonly accounts: AccountRepository,
-    private readonly credentialService: CredentialService
+    private readonly credentialService: CredentialService,
   ) {}
 
   /**
@@ -34,33 +39,29 @@ export class AuthenticationService {
 
     const account =
       await this.accounts.findByEvantraId(
-        params.evantraId
+        params.evantraId,
       );
 
     if (!account) {
-      throw new Error(
-        "Invalid credentials."
-      );
+      throw new InvalidCredentialsError();
     }
 
     if (!account.isActive()) {
-      throw new Error(
-        "Account is not active."
-      );
+      throw new InactiveAccountError();
     }
 
     const valid =
       await this.credentialService.verify(
         account.id,
-        params.password
+        params.password,
       );
 
     if (!valid) {
-      throw new Error(
-        "Invalid credentials."
-      );
+      throw new InvalidCredentialsError();
     }
 
     return account;
+
   }
+
 }

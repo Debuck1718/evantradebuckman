@@ -22,10 +22,17 @@ import {
   ScheduleOptions,
 } from "../scheduler";
 
-import { KernelStatus } from "../types/KernelStatus";
+import {
+  KernelStatus,
+} from "../types/KernelStatus";
 
-import { StateEngine } from "../state/StateEngine";
-import { TransitionHistory } from "../state/history/TransitionHistory";
+import {
+  StateEngine,
+} from "../state/StateEngine";
+
+import {
+  TransitionHistory,
+} from "../state/history/TransitionHistory";
 
 import {
   ApplicationContext,
@@ -38,24 +45,23 @@ import {
   WorkflowRegistry,
 } from "../workflow";
 
-import {
-  IdentityManager,
-  IdentityRegistry,
-} from "../identity";
-
 /**
  * Evantra Kernel
  *
  * The Kernel coordinates every
  * subsystem shared across the
  * Evantra ecosystem.
+ *
+ * It intentionally contains no
+ * Identity implementation.
  */
 export class Kernel {
+
   /**
- * Current kernel version.
- */
-public static readonly VERSION =
-  "0.1.0";
+   * Current kernel version.
+   */
+  public static readonly VERSION =
+    "0.1.0";
 
   /**
    * Runtime.
@@ -76,6 +82,7 @@ public static readonly VERSION =
     new ExecutionPipeline();
 
   constructor() {
+
     this.registerCoreServices();
 
     this.registerHandlers();
@@ -85,28 +92,35 @@ public static readonly VERSION =
     this.registerPipeline();
 
     this.runtime.start();
+
   }
 
   /**
-   * Executes a command immediately.
+   * Executes a command.
    */
   async execute<T extends Command>(
-    request: T
+    request: T,
   ): Promise<void> {
 
     const context =
-      new ExecutionContext(request);
+      new ExecutionContext(
+        request,
+      );
 
     await this.pipeline.execute(
+
       context,
+
       async () => {
 
         await this.services
           .resolve(CommandBus)
           .execute(context);
 
-      }
+      },
+
     );
+
   }
 
   /**
@@ -114,13 +128,17 @@ public static readonly VERSION =
    */
   async schedule<T extends Command>(
     command: T,
-    options: ScheduleOptions
+    options: ScheduleOptions,
   ): Promise<string> {
 
     return this.scheduler.schedule(
+
       command,
-      options
+
+      options,
+
     );
+
   }
 
   /**
@@ -128,126 +146,163 @@ public static readonly VERSION =
    * pipeline step.
    */
   use(
-    step: PipelineStep
+    step: PipelineStep,
   ): this {
 
-    this.pipeline.use(step);
+    this.pipeline.use(
+      step,
+    );
 
     return this;
+
   }
 
   /**
    * Entity Registry.
    */
   get entities(): EntityRegistry {
+
     return this.services.resolve(
-      EntityRegistry
+
+      EntityRegistry,
+
     );
+
   }
 
   /**
    * Event Bus.
    */
   get events(): EventBus {
+
     return this.services.resolve(
-      EventBus
+
+      EventBus,
+
     );
+
   }
 
   /**
    * Scheduler.
    */
   get scheduler(): Scheduler {
+
     return this.services.resolve(
-      Scheduler
+
+      Scheduler,
+
     );
+
   }
 
   /**
    * State Engine.
    */
   get states(): StateEngine {
+
     return this.services.resolve(
-      StateEngine
+
+      StateEngine,
+
     );
+
   }
 
   /**
    * Transition History.
    */
   get history(): TransitionHistory {
+
     return this.services.resolve(
-      TransitionHistory
+
+      TransitionHistory,
+
     );
+
   }
 
   /**
    * Application Runtime.
    */
   get applications(): ApplicationManager {
-    return this.services.resolve(
-      ApplicationManager
-    );
-  }
 
-  get identity(): IdentityManager {
-  return this.services.resolve(
-    IdentityManager
-  );
-}
+    return this.services.resolve(
+
+      ApplicationManager,
+
+    );
+
+  }
 
   /**
    * Workflow Registry.
    */
   get workflows(): WorkflowRegistry {
+
     return this.services.resolve(
-      WorkflowRegistry
+
+      WorkflowRegistry,
+
     );
+
   }
 
   /**
- * Returns the current
- * kernel runtime status.
- */
-status(): KernelStatus {
-  return {
-    version:
-      Kernel.VERSION,
+   * Returns the current
+   * kernel status.
+   */
+  status(): KernelStatus {
 
-    running:
-      this.runtime.isRunning(),
+    return {
 
-    services:
-      this.services.size,
+      version:
 
-    entities:
-      this.entities.count(),
+        Kernel.VERSION,
 
-    events:
-      this.events.count(),
+      running:
 
-    scheduled:
-      this.scheduler.count(),
+        this.runtime.isRunning(),
 
-    stateMachines:
-      this.states.count(),
+      services:
 
-    applications:
-      this.applications.count(),
+        this.services.size,
 
-    workflows:
-  this.workflows.count(),
+      entities:
 
-    users:
-  this.identity.count(),
-  };
-}
+        this.entities.count(),
+
+      events:
+
+        this.events.count(),
+
+      scheduled:
+
+        this.scheduler.count(),
+
+      stateMachines:
+
+        this.states.count(),
+
+      applications:
+
+        this.applications.count(),
+
+      workflows:
+
+        this.workflows.count(),
+
+    };
+
+  }
 
   /**
    * Stops the runtime.
    */
   stop(): void {
+
     this.runtime.stop();
+
   }
 
   // ------------------------------------------------------------------
@@ -271,7 +326,6 @@ status(): KernelStatus {
 
   this.registerWorkflowServices();
 
-  this.registerIdentityServices();
 }
 
   /**
@@ -418,29 +472,6 @@ status(): KernelStatus {
 
   }
 
-  /**
- * Registers identity services.
- */
-private registerIdentityServices(): void {
-
-  const registry =
-    new IdentityRegistry();
-
-  this.services.register(
-    IdentityRegistry,
-    registry
-  );
-
-  const manager =
-    new IdentityManager(
-      registry
-    );
-
-  this.services.register(
-    IdentityManager,
-    manager
-  );
-}
 
   // ------------------------------------------------------------------
   // Part 3 starts here

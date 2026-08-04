@@ -185,63 +185,53 @@ export class WorkflowFactory {
 
 const createBrowserSession =
   new CreateBrowserSessionWorkflow(
-
     services.browserSessions,
-
   );
 
 const validateBrowserSession =
   new ValidateBrowserSessionWorkflow(
-
     services.browserSessions,
 
   );
 
 const touchBrowserSession =
   new TouchBrowserSessionWorkflow(
-
     services.browserSessions,
-
   );
 
 const refreshBrowserSession =
   new RefreshBrowserSessionWorkflow(
-
     services.browserSessions,
 
+    platform.clock,
   );
 
 const rotateBrowserSession =
   new RotateBrowserSessionWorkflow(
-
     services.browserSessions,
 
   );
 
 const revokeBrowserSession =
   new RevokeBrowserSessionWorkflow(
-
     services.browserSessions,
 
   );
 
 const revokeAllBrowserSessions =
   new RevokeAllBrowserSessionsWorkflow(
-
     services.browserSessions,
 
   );
 
 const terminateBrowserSession =
   new TerminateBrowserSessionWorkflow(
-
     services.browserSessions,
 
   );
 
 const listBrowserSessions =
   new ListBrowserSessionsWorkflow(
-
     services.browserSessions,
 
   );  
