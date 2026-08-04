@@ -12,4 +12,9 @@ export * from "./ValidateSessionRequest";
 
 export * from "./RefreshSessionRequest";
 
+export * from "./TouchSessionRequest";
+
+export * from "./ListBrowserSessionsRequest";
+
+
 

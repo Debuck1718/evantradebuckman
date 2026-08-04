@@ -21,10 +21,14 @@ import {
   RefreshSessionController,
 } from "../authentication/controllers/RefreshSessionController";
 
+import {
+  TouchSessionController,
+} from "../authentication/controllers/TouchSessionController";
 
 import {
   WorkflowFactory,
 } from "../factory/WorkflowFactory";
+import { ListBrowserSessionsController } from "../authentication/controllers/ListBrowserSessionsController";
 
 type WorkflowRegistry =
   ReturnType<
@@ -93,6 +97,22 @@ const refreshSession =
 
   );
 
+const touchSession =
+  new TouchSessionController(
+
+    workflows.session
+      .touchBrowserSession,
+
+  );
+
+  const listSessions =
+  new ListBrowserSessionsController(
+
+    workflows.session
+      .listBrowserSessions,
+
+  );
+
     // ======================================================
     // Registry
     // ======================================================
@@ -112,6 +132,10 @@ const refreshSession =
     validateSession,
 
     refreshSession,
+
+    touchSession,
+
+    listSessions,
 
   },
 

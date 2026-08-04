@@ -123,6 +123,38 @@ router.post(
 
 );
 
+router.post(
+
+  "/identity/session/touch",
+
+  ExpressHttpAdapter.adapt(
+
+    application
+      .identity
+      .controllers
+      .authentication
+      .touchSession,
+
+  ),
+
+);
+
+router.post(
+
+  "/identity/sessions",
+
+  ExpressHttpAdapter.adapt(
+
+    application
+      .identity
+      .controllers
+      .authentication
+      .listSessions,
+
+  ),
+
+);
+
     return router;
 
   }

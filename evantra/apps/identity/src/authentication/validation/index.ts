@@ -12,6 +12,9 @@ export * from "./ValidateSessionRequestValidator"
 
 export * from "./RefreshSessionRequestValidator";
 
+export * from "./TouchSessionRequestValidator";
+
+export * from "./ListBrowserSessionsRequestValidator";
 
 
 

@@ -7,9 +7,17 @@ import {
   SessionNotFoundError,
 } from "../session/errors";
 
+import {
+  Clock,
+} from "../platform/Clock";
+
 /**
  * Updates Browser Session
  * activity.
+ *
+ * Extends the idle timeout
+ * and records the latest
+ * activity timestamp.
  */
 export class TouchBrowserSessionWorkflow {
 
@@ -17,6 +25,9 @@ export class TouchBrowserSessionWorkflow {
 
     private readonly sessions:
       BrowserSessionService,
+
+    private readonly clock:
+      Clock,
 
   ) {}
 
@@ -28,9 +39,11 @@ export class TouchBrowserSessionWorkflow {
 
     sessionId: string;
 
-    idleTimeoutAt: Date;
-
   }): Promise<BrowserSession> {
+
+    // ======================================================
+    // Find Session
+    // ======================================================
 
     const session =
       await this.sessions.findBySessionId(
@@ -45,9 +58,24 @@ export class TouchBrowserSessionWorkflow {
 
     }
 
+    // ======================================================
+    // Compute New Idle Timeout
+    // ======================================================
+
+    const idleTimeoutAt =
+      this.clock.afterMinutes(
+
+        30,
+
+      );
+
+    // ======================================================
+    // Update Session Activity
+    // ======================================================
+
     session.touch(
 
-      params.idleTimeoutAt,
+      idleTimeoutAt,
 
     );
 
@@ -56,6 +84,10 @@ export class TouchBrowserSessionWorkflow {
       session,
 
     );
+
+    // ======================================================
+    // Result
+    // ======================================================
 
     return session;
 

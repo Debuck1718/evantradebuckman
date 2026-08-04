@@ -109,4 +109,20 @@ export class EvantraId {
   toString(): string {
     return this.id;
   }
+
+  /**
+ * Alias for from().
+ *
+ * Improves readability in
+ * application code.
+ */
+static create(
+  value: string,
+): EvantraId {
+
+  return EvantraId.from(
+    value,
+  );
+
+}
 }

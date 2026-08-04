@@ -5,6 +5,9 @@ export * from "./LogoutResponseMapper"
 export * from "./ValidateSessionResponseMapper"
 export * from "./LogoutResponseMapper"
 export * from "./RefreshSessionResponseMapper"
+export * from "./TouchSessionResponseMapper";
+export * from "./ListBrowserSessionsResponseMapper";
+
 
 
 

@@ -197,6 +197,7 @@ const validateBrowserSession =
 const touchBrowserSession =
   new TouchBrowserSessionWorkflow(
     services.browserSessions,
+    platform.clock,
   );
 
 const refreshBrowserSession =
@@ -232,6 +233,7 @@ const terminateBrowserSession =
 
 const listBrowserSessions =
   new ListBrowserSessionsWorkflow(
+
     services.browserSessions,
 
   );  
