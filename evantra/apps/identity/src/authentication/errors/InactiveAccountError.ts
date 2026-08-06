@@ -1,13 +1,18 @@
+import { HttpStatus } from "../../http";
 import {
   AuthenticationError,
 } from "./AuthenticationError";
 
-/**
- * Thrown when an account
- * has not been activated.
- */
 export class InactiveAccountError
   extends AuthenticationError {
+
+  readonly code =
+    "inactive_account";
+
+  readonly status =
+    HttpStatus.UNAUTHORIZED;
+  error: any;
+  description: any;
 
   constructor() {
 

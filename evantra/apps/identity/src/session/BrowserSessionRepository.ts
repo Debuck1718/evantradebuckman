@@ -58,6 +58,14 @@ export interface BrowserSessionRepository {
   ): Promise<BrowserSession[]>;
 
   /**
+ * Returns every Browser Session
+ * belonging to an Account.
+ */
+findByAccountId(
+  accountId: string,
+): Promise<BrowserSession[]>;
+
+  /**
    * Deletes a Browser Session.
    */
   delete(

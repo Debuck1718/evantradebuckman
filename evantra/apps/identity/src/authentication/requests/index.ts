@@ -34,6 +34,9 @@ export * from "./RequestContactEmailChangeRequest";
 
 export * from "./VerifyContactEmailChangeRequest";
 
+export * from "./TerminateBrowserSessionRequest";
+
+
 
 
 

@@ -4,30 +4,23 @@ import {
 } from "../../http";
 
 import {
-  ListBrowserSessionsRequest,
+  TerminateBrowserSessionRequest,
 } from "../requests";
 
-/**
- * Validates List Browser
- * Session requests.
- */
-export class ListBrowserSessionsRequestValidator {
+export class TerminateBrowserSessionRequestValidator {
 
   static validate(
-    request: ListBrowserSessionsRequest,
+    request: TerminateBrowserSessionRequest,
   ): void {
 
     if (!request.sessionId?.trim()) {
 
-    throw new HttpError(
-
+      throw new HttpError(
         HttpStatus.BAD_REQUEST,
-
         "Session ID is required.",
+      );
 
-    );
-
-}
+    }
 
   }
 

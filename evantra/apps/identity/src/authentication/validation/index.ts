@@ -34,6 +34,9 @@ export * from "./RequestContactEmailChangeRequestValidator";
 
 export * from "./VerifyContactEmailChangeRequestValidator";
 
+export * from "./TerminateBrowserSessionRequestValidator";
+
+
 
 
 

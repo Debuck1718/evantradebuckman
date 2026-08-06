@@ -60,6 +60,11 @@ import {
 import {
   VerifyContactEmailChangeController,
 } from "../authentication/controllers/VerifyContactEmailChangeController";
+import { TerminateBrowserSessionController } from "../authentication/controllers/TerminateBrowserSessionController";
+
+export {
+  TerminateBrowserSessionController,
+} from "../authentication/controllers/TerminateBrowserSessionController";
 
 type WorkflowRegistry =
   ReturnType<
@@ -139,8 +144,9 @@ const touchSession =
   const listSessions =
   new ListBrowserSessionsController(
 
-    workflows.session
-      .listBrowserSessions,
+    workflows.session.validateBrowserSession,
+
+    workflows.session.listBrowserSessions,
 
   );
 
@@ -218,6 +224,11 @@ const verifyContactEmailChange =
 
   );
 
+  const terminateSession =
+  new TerminateBrowserSessionController(
+    workflows.session.terminateBrowserSession,
+  );
+
     // ======================================================
     // Registry
     // ======================================================
@@ -247,6 +258,8 @@ const verifyContactEmailChange =
     revokeAllSessions,
 
     rotateSession,
+
+    terminateSession,
 
     forgotPassword,
 

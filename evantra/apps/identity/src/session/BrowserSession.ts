@@ -534,4 +534,17 @@ export class BrowserSession {
 
 }
 
+static async findByAccountId(
+  repository: {
+    findByAccountId(accountId: string): Promise<BrowserSession[]>;
+  },
+  accountId: string,
+): Promise<BrowserSession[]> {
+
+  return repository.findByAccountId(
+    accountId,
+  );
+
+}
+
 }

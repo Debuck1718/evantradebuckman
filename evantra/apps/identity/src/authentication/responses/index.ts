@@ -16,6 +16,9 @@ export * from "./ChangePasswordResponseMapper";
 export * from "./ResendVerificationResponseMapper";
 export * from "./RequestContactEmailChangeResponseMapper";
 export * from "./VerifyContactEmailChangeResponseMapper";
+export * from "./TerminateBrowserSessionResponseMapper";
+
+
 
 
 

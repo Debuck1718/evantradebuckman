@@ -5,10 +5,7 @@ import {
 } from "../../http";
 
 import {
-  EvantraId,
-} from "../../account";
-
-import {
+  ValidateBrowserSessionWorkflow,
   ListBrowserSessionsWorkflow,
 } from "../../workflows";
 
@@ -27,12 +24,15 @@ import {
 /**
  * Returns every Browser
  * Session belonging to
- * an Evantra Account.
+ * the authenticated Account.
  */
 export class ListBrowserSessionsController
   implements HttpController {
 
   constructor(
+
+    private readonly validateSession:
+      ValidateBrowserSessionWorkflow,
 
     private readonly list:
       ListBrowserSessionsWorkflow,
@@ -41,36 +41,42 @@ export class ListBrowserSessionsController
 
   async handle(
     request:
-      HttpRequest<
-        ListBrowserSessionsRequest
-      >,
+      HttpRequest<ListBrowserSessionsRequest>,
   ): Promise<HttpResponse> {
 
     ListBrowserSessionsRequestValidator
       .validate(
-
         request.body,
-
       );
+
+    // ======================================================
+    // Validate the current Browser Session
+    // ======================================================
+
+    const browserSession =
+      await this.validateSession.execute({
+
+        sessionId:
+          request.body.sessionId,
+
+      });
+
+    // ======================================================
+    // List every Browser Session
+    // for the authenticated Account
+    // ======================================================
 
     const sessions =
       await this.list.execute({
 
-        evantraId:
-
-         EvantraId.from(
-
-    request.body.evantraId,
-
-),
+        accountId:
+          browserSession.identity.accountId,
 
       });
 
     return ListBrowserSessionsResponseMapper
       .success(
-
         sessions,
-
       );
 
   }

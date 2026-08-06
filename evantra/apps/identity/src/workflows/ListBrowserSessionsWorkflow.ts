@@ -3,14 +3,10 @@ import {
   BrowserSessionService,
 } from "../session";
 
-import {
-  EvantraId,
-} from "../account";
-
 /**
  * Returns every Browser
  * Session belonging to
- * an Evantra Identity.
+ * an Account.
  */
 export class ListBrowserSessionsWorkflow {
 
@@ -23,17 +19,18 @@ export class ListBrowserSessionsWorkflow {
 
   /**
    * Returns every Browser
-   * Session.
+   * Session belonging to
+   * the specified Account.
    */
   async execute(params: {
 
-    evantraId: EvantraId;
+    accountId: string;
 
   }): Promise<BrowserSession[]> {
 
-    return this.sessions.findByEvantraId(
+    return this.sessions.findByAccountId(
 
-      params.evantraId,
+      params.accountId,
 
     );
 

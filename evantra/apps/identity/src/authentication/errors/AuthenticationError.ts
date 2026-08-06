@@ -1,26 +1,23 @@
 import {
-  HttpError,
   HttpStatus,
 } from "../../http";
 
-/**
- * Base authentication error.
- *
- * Represents an authentication
- * failure returned to clients.
- */
-export class AuthenticationError
-  extends HttpError {
+export abstract class AuthenticationError
+  extends Error {
+
+  abstract readonly code: string;
+
+  readonly status =
+    HttpStatus.UNAUTHORIZED;
 
   constructor(
-    message = "Authentication failed.",
-    status = HttpStatus.UNAUTHORIZED,
+    message: string,
   ) {
 
-    super(
-      status,
-      message,
-    );
+    super(message);
+
+    this.name =
+      this.constructor.name;
 
   }
 

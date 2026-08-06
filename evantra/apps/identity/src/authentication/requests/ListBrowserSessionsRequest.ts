@@ -4,9 +4,6 @@
  */
 export interface ListBrowserSessionsRequest {
 
-  /**
-   * Evantra ID.
-   */
-  evantraId: string;
+    sessionId: string;
 
 }

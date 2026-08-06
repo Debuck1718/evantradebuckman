@@ -205,6 +205,22 @@ router.post(
 
 router.post(
 
+  "/identity/session/terminate",
+
+  ExpressHttpAdapter.adapt(
+
+    application
+      .identity
+      .controllers
+      .authentication
+      .terminateSession,
+
+  ),
+
+);
+
+router.post(
+
   "/identity/forgot-password",
 
   ExpressHttpAdapter.adapt(

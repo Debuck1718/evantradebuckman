@@ -1,22 +1,27 @@
 import {
-
   NextFunction,
-
   Request,
-
   Response,
-
 } from "express";
 
 import {
-
   HttpError,
-
   HttpErrorResponse,
-
   HttpStatus,
-
 } from "../../";
+
+import {
+  SessionExpiredError,
+  SessionNotFoundError,
+  SessionRevokedError,
+  SessionTerminatedError,
+} from "../../../session/errors";
+
+import {
+  InvalidCredentialsError,
+  InactiveAccountError,
+  AccountLockedError,
+} from "../../../authentication/errors";
 
 /**
  * Global Express
@@ -36,11 +41,11 @@ export class ExpressErrorHandler {
 
   ): void {
 
-    if (
+    // ======================================================
+    // HTTP Errors
+    // ======================================================
 
-      error instanceof HttpError
-
-    ) {
+    if (error instanceof HttpError) {
 
       const body: HttpErrorResponse = {
 
@@ -49,13 +54,10 @@ export class ExpressErrorHandler {
           code:
 
             HttpStatus[
-
               error.status
-
             ],
 
           message:
-
             error.message,
 
         },
@@ -63,46 +65,129 @@ export class ExpressErrorHandler {
       };
 
       response
-
-        .status(
-
-          error.status,
-
-        )
-
+        .status(error.status)
         .json(body);
 
       return;
 
     }
 
+    // ======================================================
+    // Session Errors
+    // ======================================================
+
+    if (
+      error instanceof SessionNotFoundError
+    ) {
+
+      response
+        .status(HttpStatus.NOT_FOUND)
+        .json({
+          error: {
+            code: error.error,
+            message: error.description,
+          },
+        });
+
+      return;
+
+    }
+
+    if (
+      error instanceof SessionExpiredError ||
+      error instanceof SessionRevokedError ||
+      error instanceof SessionTerminatedError
+    ) {
+
+      response
+        .status(HttpStatus.UNAUTHORIZED)
+        .json({
+          error: {
+            code: error.error,
+            message: error.description,
+          },
+        });
+
+      return;
+
+    }
+
+    // ======================================================
+    // Authentication Errors
+    // ======================================================
+
+    if (
+      error instanceof InvalidCredentialsError
+    ) {
+
+      response
+        .status(HttpStatus.UNAUTHORIZED)
+        .json({
+          error: {
+            code: error.error,
+            message: error.description,
+          },
+        });
+
+      return;
+
+    }
+
+    if (
+      error instanceof InactiveAccountError
+    ) {
+
+      response
+        .status(HttpStatus.FORBIDDEN)
+        .json({
+          error: {
+            code: error.error,
+            message: error.description,
+          },
+        });
+
+      return;
+
+    }
+
+    if (
+      error instanceof AccountLockedError
+    ) {
+
+      response
+        .status(HttpStatus.LOCKED)
+        .json({
+          error: {
+            code: error.error,
+            message: error.description,
+          },
+        });
+
+      return;
+
+    }
+
+    // ======================================================
+    // Unknown Error
+    // ======================================================
+
     console.error(error);
 
-    const body: HttpErrorResponse = {
-
-      error: {
-
-        code:
-
-          "INTERNAL_SERVER_ERROR",
-
-        message:
-
-          "An unexpected error occurred.",
-
-      },
-
-    };
-
     response
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({
 
-      .status(
+        error: {
 
-        HttpStatus.INTERNAL_SERVER_ERROR,
+          code:
+            "INTERNAL_SERVER_ERROR",
 
-      )
+          message:
+            "An unexpected error occurred.",
 
-      .json(body);
+        },
+
+      });
 
   }
 

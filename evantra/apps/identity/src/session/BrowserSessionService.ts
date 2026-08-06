@@ -79,10 +79,25 @@ export class BrowserSessionService {
 
   }
 
+  /**
+   * Returns every Browser Session
+   * belonging to an Account.
+   */
+  async findByAccountId(
+    accountId: string,
+  ): Promise<BrowserSession[]> {
+
+    return this.repository.findByAccountId(
+      accountId,
+    );
+
+  }
 
   /**
    * Returns every Browser Session
    * belonging to an Evantra ID.
+   *
+   * @deprecated Prefer findByAccountId().
    */
   async findByEvantraId(
     evantraId: EvantraId,

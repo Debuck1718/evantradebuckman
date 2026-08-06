@@ -2,12 +2,13 @@ import {
   AuthenticationError,
 } from "./AuthenticationError";
 
-/**
- * Thrown when supplied
- * credentials are invalid.
- */
 export class InvalidCredentialsError
   extends AuthenticationError {
+
+  readonly code =
+    "invalid_credentials";
+  error: any;
+  description: any;
 
   constructor() {
 
