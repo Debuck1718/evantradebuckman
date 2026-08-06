@@ -52,6 +52,10 @@ import {
   PostgresAuditRepository,
 } from "../../infrastructure/database/PostgresAuditRepository";
 
+import {
+  PostgresLoginAttemptRepository,
+} from "../../infrastructure/database/PostgresLoginAttemptRepository";
+
 /**
  * Creates every repository used
  * by Evantra Identity.
@@ -120,6 +124,11 @@ export class RepositoryFactory {
     db,
   );
 
+  const loginAttempts =
+  new PostgresLoginAttemptRepository(
+    db,
+  );
+
     return {
 
       // Identity
@@ -139,6 +148,8 @@ export class RepositoryFactory {
       browserSessions,
 
       audits,
+
+      loginAttempts,
 
       // OAuth Clients
 

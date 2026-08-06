@@ -43,6 +43,10 @@ import {
   AuditService,
 } from "../audit";
 
+import {
+  LoginAttemptService,
+} from "../loginAttempt";
+
 import { RepositoryFactory } from "./RepositoryFactory";
 import { PlatformFactory } from "./PlatformFactory";
 
@@ -86,14 +90,27 @@ export class ServiceFactory {
 
       );
 
+      const loginAttempts =
+  new LoginAttemptService(
+
+    repositories.loginAttempts,
+
+  );
+
     const authentication =
-      new AuthenticationService(
+  new AuthenticationService(
 
-        repositories.accounts,
+    repositories.accounts,
 
-        credentials,
+    credentials,
 
-      );
+    loginAttempts,
+
+    platform.security,
+
+    platform.clock,
+
+  );
 
     const verifications =
       new VerificationService(
@@ -218,6 +235,8 @@ export class ServiceFactory {
 
   );
 
+  
+
     // ==========================================================
     // Registry
     // ==========================================================
@@ -245,6 +264,8 @@ export class ServiceFactory {
       emailChanges,
 
       audit,
+
+      loginAttempts,
 
       // OAuth Clients
 
