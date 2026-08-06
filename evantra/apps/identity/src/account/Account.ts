@@ -15,13 +15,20 @@ export class Account {
    * Creates a new Account.
    */
   private constructor(
-    public readonly id: string,
-    public readonly evantraId: EvantraId,
-    public readonly contactEmail: ContactEmail,
-    private status: AccountStatus,
-    public readonly createdAt: Date,
-    private updatedAt: Date
-  ) {}
+
+  public readonly id: string,
+
+  public readonly evantraId: EvantraId,
+
+  public contactEmail: ContactEmail,
+
+  private status: AccountStatus,
+
+  public readonly createdAt: Date,
+
+  private updatedAt: Date,
+
+) {}
 
   /**
    * Creates a brand-new Account.
@@ -82,6 +89,16 @@ export class Account {
   }
 
   /**
+ * Returns the account's
+ * contact email.
+ */
+getContactEmail(): ContactEmail {
+
+  return this.contactEmail;
+
+}
+
+  /**
    * Returns true if the account
    * is active.
    */
@@ -104,6 +121,21 @@ export class Account {
 
     this.touch();
   }
+
+  /**
+ * Changes the account's
+ * contact email.
+ */
+changeContactEmail(
+  contactEmail: ContactEmail,
+): void {
+
+  this.contactEmail =
+    contactEmail;
+
+  this.touch();
+
+}
 
   /**
    * Suspends the account.

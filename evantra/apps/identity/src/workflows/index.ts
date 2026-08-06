@@ -17,6 +17,18 @@ export * from "./RotateBrowserSessionWorkflow"
 export * from "./TerminateBrowserSessionWorkflow"
 export * from "./TouchBrowserSessionWorkflow"
 export * from "./ValidateBrowserSessionWorkflow"
+export * from "./ForgotPasswordWorkflow"
+export * from "./ResetPasswordWorkflow"
+export * from "./ChangePasswordWorkflow"
+export * from "./ResendVerificationWorkflow"
+export * from "./RequestContactEmailChangeWorkflow"
+export * from "./VerifyContactEmailChangeWorkflow"
+
+
+
+
+
+
 
 
 

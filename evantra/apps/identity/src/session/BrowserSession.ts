@@ -238,6 +238,248 @@ export class BrowserSession {
 
   }
 
+    /**
+   * Creates a replacement
+   * Browser Session.
+   *
+   * Used during Session
+   * Rotation to prevent
+   * session fixation attacks.
+   */
+  rotate(params: {
+
+    sessionId: string;
+
+    authenticatedAt: Date;
+
+    expiresAt: Date;
+
+    idleTimeoutAt: Date;
+
+  }): BrowserSession {
+
+    return BrowserSession.create({
+
+      identity:
+
+        SessionIdentity.create({
+
+          sessionId:
+
+            params.sessionId,
+
+          accountId:
+
+            this.identity.accountId,
+
+          evantraId:
+
+            this.identity.evantraId,
+
+          clientId:
+
+            this.identity.clientId,
+
+          applicationId:
+
+            this.identity.applicationId,
+
+          organizationId:
+
+            this.identity.organizationId,
+
+          workspaceId:
+
+            this.identity.workspaceId,
+
+          tenantId:
+
+            this.identity.tenantId,
+
+        }),
+
+      authentication:
+
+        SessionAuthentication.create({
+
+          method:
+
+            this.authentication.method,
+
+          level:
+
+            this.authentication.level,
+
+          authenticatedAt:
+
+            params.authenticatedAt,
+
+          mfaVerified:
+
+            this.authentication.isMfaVerified(),
+
+          stepUpRequired:
+
+            false,
+
+          verified:
+
+            this.authentication.isVerified(),
+
+        }),
+
+      device:
+
+        SessionDevice.restore({
+
+          deviceId:
+
+            this.device.deviceId,
+
+          fingerprint:
+
+            this.device.getFingerprint(),
+
+          name:
+
+            this.device.getName(),
+
+          type:
+
+            this.device.type,
+
+          operatingSystem:
+
+            this.device.operatingSystem,
+
+          operatingSystemVersion:
+
+            this.device.operatingSystemVersion,
+
+          browser:
+
+            this.device.browser,
+
+          browserVersion:
+
+            this.device.browserVersion,
+
+          platform:
+
+            this.device.platform,
+
+          trusted:
+
+            this.device.isTrusted(),
+
+          verified:
+
+            this.device.isVerified(),
+
+          lastSeenAt:
+
+            params.authenticatedAt,
+
+        }),
+
+      network:
+
+        SessionNetwork.create({
+
+          ipAddress:
+
+            this.network.ipAddress,
+
+          forwardedIpAddress:
+
+            this.network.forwardedIpAddress,
+
+          country:
+
+            this.network.country,
+
+          region:
+
+            this.network.region,
+
+          city:
+
+            this.network.city,
+
+          internetServiceProvider:
+
+            this.network.internetServiceProvider,
+
+          autonomousSystemNumber:
+
+            this.network.autonomousSystemNumber,
+
+          networkType:
+
+            this.network.networkType,
+
+          vpnDetected:
+
+            this.network.isVpn(),
+
+          proxyDetected:
+
+            this.network.isProxy(),
+
+          torDetected:
+
+            this.network.isTor(),
+
+        }),
+
+      security:
+
+        SessionSecurity.create({
+
+          trustLevel:
+
+            this.security.trust(),
+
+          rememberMe:
+
+            this.security.remembers(),
+
+          continuousValidation:
+
+            this.security.usesContinuousValidation(),
+
+          cookieVersion:
+
+            this.security.cookieVersion,
+
+          keyVersion:
+
+            this.security.keyVersion,
+
+          sessionVersion:
+
+            this.security.sessionVersion,
+
+        }),
+
+      lifecycle:
+
+        SessionLifecycle.create({
+
+          expiresAt:
+
+            params.expiresAt,
+
+          idleTimeoutAt:
+
+            params.idleTimeoutAt,
+
+        }),
+
+    });
+
+  }
+
   /**
    * Returns true if the
    * Browser Session can

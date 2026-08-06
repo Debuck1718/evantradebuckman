@@ -26,9 +26,40 @@ import {
 } from "../authentication/controllers/TouchSessionController";
 
 import {
+  RevokeBrowserSessionController,
+} from "../authentication/controllers/RevokeBrowserSessionController";
+import {
   WorkflowFactory,
 } from "../factory/WorkflowFactory";
 import { ListBrowserSessionsController } from "../authentication/controllers/ListBrowserSessionsController";
+
+import {
+  RevokeAllBrowserSessionsController,
+} from "../authentication/controllers/RevokeAllBrowserSessionsController";
+
+import {
+  RotateBrowserSessionController,
+} from "../authentication/controllers/RotateBrowserSessionController";
+
+import {
+  ForgotPasswordController,
+} from "../authentication/controllers/ForgotPasswordController";
+
+import {
+  ResetPasswordController,
+} from "../authentication/controllers/ResetPasswordController";
+
+import {
+  ChangePasswordController,
+} from "../authentication/controllers/ChangePasswordController";
+import { ResendVerificationController } from "../authentication/controllers/ResendVerificationController";
+
+import {
+  RequestContactEmailChangeController,
+} from "../authentication/controllers/RequestContactEmailChangeController";
+import {
+  VerifyContactEmailChangeController,
+} from "../authentication/controllers/VerifyContactEmailChangeController";
 
 type WorkflowRegistry =
   ReturnType<
@@ -113,6 +144,80 @@ const touchSession =
 
   );
 
+  const revokeSession =
+  new RevokeBrowserSessionController(
+
+    workflows.session
+      .revokeBrowserSession,
+
+  );
+
+  const revokeAllSessions =
+  new RevokeAllBrowserSessionsController(
+
+    workflows.session
+      .revokeAllBrowserSessions,
+
+  );
+
+  const rotateSession =
+  new RotateBrowserSessionController(
+
+    workflows.session
+      .rotateBrowserSession,
+
+  );
+
+  const forgotPassword =
+  new ForgotPasswordController(
+
+    workflows.identity
+      .forgotPassword,
+
+  );
+
+  const resetPassword =
+  new ResetPasswordController(
+
+    workflows.identity.resetPassword,
+
+  );
+
+  const changePassword =
+  new ChangePasswordController(
+
+    workflows.identity.changePassword,
+
+  );
+
+  const resendVerification =
+  new ResendVerificationController(
+
+    workflows.identity
+      .resendVerification,
+
+  );
+
+  // ==========================================================
+// Contact Email
+// ==========================================================
+
+const requestContactEmailChange =
+  new RequestContactEmailChangeController(
+
+    workflows.identity
+      .requestContactEmailChange,
+
+  );
+
+const verifyContactEmailChange =
+  new VerifyContactEmailChangeController(
+
+    workflows.identity
+      .verifyContactEmailChange,
+
+  );
+
     // ======================================================
     // Registry
     // ======================================================
@@ -136,6 +241,24 @@ const touchSession =
     touchSession,
 
     listSessions,
+
+    revokeSession,
+
+    revokeAllSessions,
+
+    rotateSession,
+
+    forgotPassword,
+
+    resetPassword,
+
+    changePassword,
+
+    resendVerification,
+
+    requestContactEmailChange,
+
+    verifyContactEmailChange,
 
   },
 

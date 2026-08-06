@@ -37,7 +37,7 @@ export class RegisterResponseMapper {
             account.evantraId.value(),
 
           contactEmail:
-            account.contactEmail.value(),
+            (account as any).contactEmail.value(),
 
           active:
             account.isActive(),

@@ -88,4 +88,18 @@ export class UlidGenerator
     return ulid();
   }
 
+  /**
+   * Generates an Email Change ID.
+   */
+  emailChange(): string {
+    return ulid();
+  }
+
+  /**
+ * Generates an Audit Event ID.
+ */
+auditEvent(): string {
+  return ulid();
+}
+
 }

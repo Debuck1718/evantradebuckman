@@ -16,6 +16,16 @@ import {
   SessionService,
 } from "../session";
 
+import {
+
+  AuditAction,
+
+  AuditSeverity,
+
+  AuditService,
+
+} from "../audit";
+
 /**
  * Coordinates user authentication.
  *
@@ -36,6 +46,9 @@ export class AuthenticateWorkflow {
 
     private readonly browserSessions:
       BrowserSessionService,
+
+     private readonly audit:
+  AuditService, 
 
   ) {}
 
@@ -122,6 +135,22 @@ export class AuthenticateWorkflow {
 
     );
 
+    await this.audit.record({
+
+  accountId:
+
+    account.id,
+
+  action:
+
+    AuditAction.LOGIN_SUCCESS,
+
+  severity:
+
+    AuditSeverity.INFO,
+
+});
+
     // ========================================================
     // Result
     // ========================================================
@@ -136,6 +165,9 @@ export class AuthenticateWorkflow {
 
     };
 
+
   }
+
+  
 
 }

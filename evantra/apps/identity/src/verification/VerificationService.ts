@@ -64,6 +64,16 @@ export class VerificationService {
     );
   }
 
+  async findByAccountId(
+  accountId: string,
+): Promise<Verification | null> {
+
+  return this.repository.findByAccountId(
+    accountId,
+  );
+
+}
+
   /**
    * Deletes a verification request.
    */

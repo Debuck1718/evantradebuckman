@@ -6,6 +6,15 @@ import {
   VerificationService,
 } from "../verification";
 
+import {
+
+  AuditAction,
+
+  AuditSeverity,
+
+  AuditService,
+
+} from "../audit";
 /**
  * Coordinates the verification
  * of an Evantra Account.
@@ -18,6 +27,8 @@ export class VerifyAccountWorkflow {
 
   constructor(
     private readonly accounts: AccountService,
+    private readonly audit:
+  AuditService,
     private readonly verifications: VerificationService
   ) {}
 
@@ -62,5 +73,21 @@ export class VerifyAccountWorkflow {
     await this.accounts.activate(
       account
     );
+
+    await this.audit.record({
+
+  accountId:
+
+    account.id,
+
+  action:
+
+    AuditAction.ACCOUNT_VERIFIED,
+
+  severity:
+
+    AuditSeverity.INFO,
+
+});
   }
 }

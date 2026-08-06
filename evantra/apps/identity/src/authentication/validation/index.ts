@@ -16,5 +16,30 @@ export * from "./TouchSessionRequestValidator";
 
 export * from "./ListBrowserSessionsRequestValidator";
 
+export * from "./RevokeBrowserSessionRequestValidator";
+
+export * from "./RevokeAllBrowserSessionsRequestValidator";
+
+export * from "./RotateBrowserSessionRequestValidator";
+
+export * from "./ForgotPasswordValidator";
+
+export * from "./ResetPasswordValidator";
+
+export * from "./ChangePasswordValidator";
+
+export * from "./ResendVerificationRequestValidator";
+
+export * from "./RequestContactEmailChangeRequestValidator";
+
+export * from "./VerifyContactEmailChangeRequestValidator";
+
+
+
+
+
+
+
+
 
 

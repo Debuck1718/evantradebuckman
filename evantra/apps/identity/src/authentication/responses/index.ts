@@ -7,6 +7,23 @@ export * from "./LogoutResponseMapper"
 export * from "./RefreshSessionResponseMapper"
 export * from "./TouchSessionResponseMapper";
 export * from "./ListBrowserSessionsResponseMapper";
+export * from "./RevokeBrowserSessionResponseMapper";
+export * from "./RevokeAllBrowserSessionsResponseMapper";
+export * from "./RotateBrowserSessionResponseMapper";
+export * from "./ForgotPasswordResponseMapper";
+export * from "./ResetPasswordResponseMapper";
+export * from "./ChangePasswordResponseMapper";
+export * from "./ResendVerificationResponseMapper";
+export * from "./RequestContactEmailChangeResponseMapper";
+export * from "./VerifyContactEmailChangeResponseMapper";
+
+
+
+
+
+
+
+
 
 
 

@@ -30,6 +30,19 @@ import {
   TokenService,
 } from "../authorization";
 
+import {
+  CommunicationService,
+  ConsoleCommunicationProvider,
+} from "../communication";
+
+import {
+  EmailChangeService,
+} from "../emailChange";
+
+import {
+  AuditService,
+} from "../audit";
+
 import { RepositoryFactory } from "./RepositoryFactory";
 import { PlatformFactory } from "./PlatformFactory";
 
@@ -174,6 +187,37 @@ export class ServiceFactory {
 
       );
 
+      const communication =
+  new CommunicationService(
+
+    new ConsoleCommunicationProvider(),
+
+  );
+
+  const emailChanges =
+  new EmailChangeService(
+
+    repositories.emailChanges,
+
+    platform.ids,
+
+    platform.tokens,
+
+    platform.clock,
+
+  );
+
+  const audit =
+  new AuditService(
+
+    repositories.audits,
+
+    platform.ids,
+
+    platform.clock,
+
+  );
+
     // ==========================================================
     // Registry
     // ==========================================================
@@ -194,7 +238,13 @@ export class ServiceFactory {
 
       sessions,
 
+      communication,
+
       browserSessions,
+      
+      emailChanges,
+
+      audit,
 
       // OAuth Clients
 

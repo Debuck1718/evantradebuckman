@@ -28,4 +28,4 @@ export * from "./PostgresSessionRepository";
 
 export * from "./PostgresVerificationRepository";
 
-export * from ".";
+export * from "./PostgresEmailChangeRepository";

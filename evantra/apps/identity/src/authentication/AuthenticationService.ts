@@ -64,4 +64,36 @@ export class AuthenticationService {
 
   }
 
+    /**
+   * Verifies an account password.
+   *
+   * Used by authenticated
+   * operations such as changing
+   * a password.
+   */
+  async verifyPassword(params: {
+
+    accountId: string;
+
+    password: string;
+
+  }): Promise<void> {
+
+    const valid =
+      await this.credentialService.verify(
+
+        params.accountId,
+
+        params.password,
+
+      );
+
+    if (!valid) {
+
+      throw new InvalidCredentialsError();
+
+    }
+
+  }
+
 }

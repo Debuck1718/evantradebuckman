@@ -26,4 +26,8 @@ export interface IdGenerator {
 
   refreshToken(): string;
 
+  emailChange(): string;
+
+  auditEvent(): string;
+
 }

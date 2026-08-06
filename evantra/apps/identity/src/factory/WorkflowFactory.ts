@@ -21,6 +21,12 @@ import {
   RevokeAllBrowserSessionsWorkflow,
   TerminateBrowserSessionWorkflow,
   ListBrowserSessionsWorkflow,
+  ForgotPasswordWorkflow,
+  ResetPasswordWorkflow,
+  ChangePasswordWorkflow,
+  ResendVerificationWorkflow,
+  RequestContactEmailChangeWorkflow,
+  VerifyContactEmailChangeWorkflow,
 
 } from "../workflows";
 
@@ -60,24 +66,30 @@ export class WorkflowFactory {
     const registerAccount =
       new RegisterAccountWorkflow(
 
-        services.accounts,
+    services.accounts,
 
-        services.credentials,
+    services.credentials,
 
-        services.verifications,
+    services.verifications,
 
-        platform.ids,
+    services.communication,
 
-        platform.tokens,
+    platform.ids,
 
-        platform.clock,
+    platform.tokens,
 
-      );
+    platform.clock,
+
+    services.audit,
+
+);
 
     const verifyAccount =
       new VerifyAccountWorkflow(
 
         services.accounts,
+
+        services.audit,
 
         services.verifications,
 
@@ -92,7 +104,9 @@ export class WorkflowFactory {
 
     services.browserSessions,
 
-  );
+    services.audit,
+
+);
 
     // ==========================================================
     // OAuth Clients
@@ -209,7 +223,12 @@ const refreshBrowserSession =
 
 const rotateBrowserSession =
   new RotateBrowserSessionWorkflow(
+
     services.browserSessions,
+
+    platform.ids,
+
+    platform.clock,
 
   );
 
@@ -238,6 +257,102 @@ const listBrowserSessions =
 
   );  
 
+  const forgotPassword =
+  new ForgotPasswordWorkflow(
+
+    services.accounts,
+
+    services.recoveries,
+
+    services.communication,
+
+  );
+
+  const resetPassword =
+  new ResetPasswordWorkflow(
+
+    services.recoveries,
+
+    services.credentials,
+
+    services.accounts,
+
+    revokeAllBrowserSessions,
+
+    services.communication,
+
+    services.audit
+
+  );
+
+  const changePassword =
+  new ChangePasswordWorkflow(
+
+    validateBrowserSession,
+
+    services.accounts,
+
+    services.authentication,
+
+    services.credentials,
+
+    revokeAllBrowserSessions,
+
+    services.communication,
+
+    services.audit
+
+  );
+
+  const resendVerification =
+  new ResendVerificationWorkflow(
+
+    services.accounts,
+
+    services.verifications,
+
+    services.communication,
+
+    platform.ids,
+
+    platform.tokens,
+
+    platform.clock,
+
+  );
+
+  // ==========================================================
+// Contact Email
+// ==========================================================
+
+const requestContactEmailChange =
+  new RequestContactEmailChangeWorkflow(
+
+    validateBrowserSession,
+
+    services.accounts,
+
+    services.authentication,
+
+    services.emailChanges,
+
+    services.communication,
+
+  );
+
+const verifyContactEmailChange =
+  new VerifyContactEmailChangeWorkflow(
+
+    services.accounts,
+
+    services.emailChanges,
+
+    services.communication,
+
+    services.audit,
+
+  );
+
     // ==========================================================
     // Registry
     // ==========================================================
@@ -251,6 +366,18 @@ const listBrowserSessions =
     verifyAccount,
 
     authenticate,
+
+    forgotPassword,
+
+    resetPassword,
+
+    changePassword,
+
+    resendVerification,
+
+    requestContactEmailChange,
+
+    verifyContactEmailChange,
 
   },
 

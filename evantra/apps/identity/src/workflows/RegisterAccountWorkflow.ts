@@ -1,5 +1,7 @@
-import { Account } from "../account";
-import { AccountService } from "../account";
+import {
+  Account,
+  AccountService,
+} from "../account";
 
 import {
   CredentialService,
@@ -8,6 +10,10 @@ import {
 import {
   VerificationService,
 } from "../verification";
+
+import {
+  CommunicationService,
+} from "../communication";
 
 import {
   IdGenerator,
@@ -21,6 +27,16 @@ import {
   Clock,
 } from "../platform/Clock";
 
+import {
+
+  AuditAction,
+
+  AuditSeverity,
+
+  AuditService,
+
+} from "../audit";
+
 /**
  * Coordinates the registration
  * of a new Evantra Account.
@@ -28,24 +44,51 @@ import {
 export class RegisterAccountWorkflow {
 
   constructor(
-    private readonly accounts: AccountService,
-    private readonly credentials: CredentialService,
-    private readonly verifications: VerificationService,
-    private readonly ids: IdGenerator,
-    private readonly tokens: TokenGenerator,
-    private readonly clock: Clock
+
+    private readonly accounts:
+      AccountService,
+
+    private readonly credentials:
+      CredentialService,
+
+    private readonly verifications:
+      VerificationService,
+
+    private readonly communication:
+      CommunicationService,
+
+    private readonly ids:
+      IdGenerator,
+
+    private readonly tokens:
+      TokenGenerator,
+
+    private readonly clock:
+      Clock,
+
+     private readonly audit:
+  AuditService, 
+
   ) {}
 
   /**
-   * Registers a new account.
+   * Registers a new
+   * Evantra Account.
    */
   async execute(params: {
+
     evantraId: string;
+
     contactEmail: string;
+
     password: string;
+
   }): Promise<Account> {
 
+    // ======================================================
     // Platform-generated values
+    // ======================================================
+
     const accountId =
       this.ids.account();
 
@@ -56,30 +99,110 @@ export class RegisterAccountWorkflow {
       this.tokens.verification();
 
     const expiresAt =
-      this.clock.afterMinutes(30);
+      this.clock.afterMinutes(
 
-    // Register account
+        30,
+
+      );
+
+    // ======================================================
+    // Register Account
+    // ======================================================
+
     const account =
       await this.accounts.register({
-        id: accountId,
-        evantraId: params.evantraId,
-        contactEmail: params.contactEmail,
+
+        id:
+          accountId,
+
+        evantraId:
+          params.evantraId,
+
+        contactEmail:
+          params.contactEmail,
+
       });
 
-    // Create credential
+    // ======================================================
+    // Create Credential
+    // ======================================================
+
     await this.credentials.create({
+
       accountId,
-      password: params.password,
+
+      password:
+        params.password,
+
     });
 
-    // Create verification
-    await this.verifications.create({
-      id: verificationId,
-      accountId,
-      token,
-      expiresAt,
-    });
+    // ======================================================
+    // Create Verification
+    // ======================================================
+
+    const verification =
+      await this.verifications.create({
+
+        id:
+          verificationId,
+
+        accountId,
+
+        token,
+
+        expiresAt,
+
+      });
+
+    // ======================================================
+    // Send Verification Email
+    // ======================================================
+
+    await this.communication
+      .sendAccountVerification({
+
+        contactEmail:
+
+          account.contactEmail.value(),
+
+        evantraId:
+
+          account
+            .evantraId
+            .value(),
+
+        token:
+
+          verification.token,
+
+        expiresAt:
+
+          verification.expiresAt,
+
+      });
+
+      await this.audit.record({
+
+  accountId:
+
+    account.id,
+
+  action:
+
+    AuditAction.ACCOUNT_REGISTERED,
+
+  severity:
+
+    AuditSeverity.INFO,
+
+});
+
+    // ======================================================
+    // Result
+    // ======================================================
 
     return account;
+
   }
+
 }

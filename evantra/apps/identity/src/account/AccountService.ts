@@ -111,6 +111,31 @@ export class AccountService {
   }
 
   /**
+ * Changes an account's
+ * contact email.
+ */
+async changeContactEmail(
+  account: Account,
+  contactEmail: string,
+): Promise<void> {
+
+  account.changeContactEmail(
+
+    ContactEmail.from(
+      contactEmail,
+    ),
+
+  );
+
+  await this.repository.update(
+
+    account,
+
+  );
+
+}
+
+  /**
    * Activates an account.
    */
   async activate(
@@ -148,6 +173,18 @@ export class AccountService {
       account
     );
   }
+
+  async update(
+  account: Account,
+): Promise<void> {
+
+  await this.repository.update(
+
+    account,
+
+  );
+
+}
 
   /**
    * Deletes an account.

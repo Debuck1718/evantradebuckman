@@ -44,6 +44,14 @@ import {
   PostgresRefreshTokenRepository,
 } from "../../infrastructure/database/PostgresRefreshTokenRepository";
 
+import {
+  PostgresEmailChangeRepository,
+} from "../../infrastructure/database/PostgresEmailChangeRepository";
+
+import {
+  PostgresAuditRepository,
+} from "../../infrastructure/database/PostgresAuditRepository";
+
 /**
  * Creates every repository used
  * by Evantra Identity.
@@ -102,6 +110,16 @@ export class RepositoryFactory {
     const refreshTokens =
       new PostgresRefreshTokenRepository(db);
 
+    const emailChanges =
+  new PostgresEmailChangeRepository(
+    db,
+  );  
+
+  const audits =
+  new PostgresAuditRepository(
+    db,
+  );
+
     return {
 
       // Identity
@@ -114,9 +132,13 @@ export class RepositoryFactory {
 
       recoveries,
 
+      emailChanges,
+
       sessions,
 
       browserSessions,
+
+      audits,
 
       // OAuth Clients
 

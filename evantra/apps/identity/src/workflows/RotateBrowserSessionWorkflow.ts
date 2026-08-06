@@ -4,27 +4,27 @@ import {
 } from "../session";
 
 import {
-  SessionIdentity,
-  SessionAuthentication,
-  SessionDevice,
-  SessionNetwork,
-  SessionSecurity,
-  SessionLifecycle,
-} from "../session";
-
-import {
   SessionNotFoundError,
   SessionRevokedError,
+  SessionTerminatedError,
 } from "../session/errors";
+
+import {
+  IdGenerator,
+} from "../platform/IdGenerator";
+
+import {
+  Clock,
+} from "../platform/Clock";
 
 /**
  * Rotates a Browser Session.
  *
- * A new Browser Session is issued
- * while the previous session is
- * revoked.
+ * The current Browser Session
+ * is revoked and replaced with
+ * a newly issued Browser Session.
  *
- * This protects against session
+ * Protects against session
  * fixation attacks.
  */
 export class RotateBrowserSessionWorkflow {
@@ -33,6 +33,12 @@ export class RotateBrowserSessionWorkflow {
 
     private readonly sessions:
       BrowserSessionService,
+
+    private readonly ids:
+      IdGenerator,
+
+    private readonly clock:
+      Clock,
 
   ) {}
 
@@ -43,23 +49,11 @@ export class RotateBrowserSessionWorkflow {
 
     currentSessionId: string;
 
-    identity: SessionIdentity;
-
-    authentication: SessionAuthentication;
-
-    device: SessionDevice;
-
-    network: SessionNetwork;
-
-    security: SessionSecurity;
-
-    lifecycle: SessionLifecycle;
-
   }): Promise<BrowserSession> {
 
-    // ==================================================
-    // Existing Session
-    // ==================================================
+    // ======================================================
+    // Locate Current Session
+    // ======================================================
 
     const current =
       await this.sessions.findBySessionId(
@@ -74,17 +68,62 @@ export class RotateBrowserSessionWorkflow {
 
     }
 
+    // ======================================================
+    // Validate Current Session
+    // ======================================================
+
     if (
+
       current.lifecycle.isRevoked()
+
     ) {
 
       throw new SessionRevokedError();
 
     }
 
-    // ==================================================
+    if (
+
+      current.lifecycle.isTerminated()
+
+    ) {
+
+      throw new SessionTerminatedError();
+
+    }
+
+    // ======================================================
+    // Create Replacement Session
+    // ======================================================
+
+    const replacement =
+      current.rotate({
+
+        sessionId:
+
+          this.ids.session(),
+
+        authenticatedAt:
+
+          this.clock.now(),
+
+        expiresAt:
+
+          current.lifecycle.getExpiresAt(),
+
+        idleTimeoutAt:
+
+          this.clock.afterMinutes(
+
+            30,
+
+          ),
+
+      });
+
+    // ======================================================
     // Revoke Current Session
-    // ==================================================
+    // ======================================================
 
     current.revoke();
 
@@ -94,38 +133,19 @@ export class RotateBrowserSessionWorkflow {
 
     );
 
-    // ==================================================
-    // Create Replacement Session
-    // ==================================================
-
-    const replacement =
-      BrowserSession.create({
-
-        identity:
-          params.identity,
-
-        authentication:
-          params.authentication,
-
-        device:
-          params.device,
-
-        network:
-          params.network,
-
-        security:
-          params.security,
-
-        lifecycle:
-          params.lifecycle,
-
-      });
+    // ======================================================
+    // Persist Replacement
+    // ======================================================
 
     await this.sessions.create(
 
       replacement,
 
     );
+
+    // ======================================================
+    // Return New Session
+    // ======================================================
 
     return replacement;
 
