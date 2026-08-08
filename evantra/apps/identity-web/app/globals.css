@@ -1,0 +1,196 @@
+@import "tailwindcss";
+
+/* ==========================================================
+   EVANTRA IDENTITY
+   Shared Evantra Design System
+========================================================== */
+
+:root {
+  --background: #06131f;
+  --foreground: #ffffff;
+
+  --ev-blue: #0b4f71;
+  --ev-blue-dark: #06131f;
+
+  --ev-teal: #0f766e;
+
+  --ev-gold-light: #f7d97f;
+  --ev-gold: #e6b24a;
+  --ev-gold-dark: #c99322;
+  --ev-gold-deep: #9f6d0d;
+
+  --glass-light: rgba(255, 255, 255, 0.055);
+  --glass-medium: rgba(255, 255, 255, 0.085);
+  --glass-heavy: rgba(255, 255, 255, 0.12);
+
+  --glass-border: rgba(255, 255, 255, 0.11);
+
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.76);
+  --text-muted: rgba(255, 255, 255, 0.48);
+
+  --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.18);
+  --shadow-medium: 0 20px 60px rgba(0, 0, 0, 0.28);
+  --shadow-large: 0 40px 100px rgba(0, 0, 0, 0.42);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+
+  background:
+    radial-gradient(
+      circle at 15% 10%,
+      rgba(11, 79, 113, 0.26),
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at 85% 85%,
+      rgba(15, 118, 110, 0.12),
+      transparent 32%
+    ),
+    #06131f;
+
+  color: var(--foreground);
+
+  font-family:
+    Inter,
+    "Segoe UI",
+    Helvetica,
+    Arial,
+    sans-serif;
+
+  text-rendering: optimizeLegibility;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+::selection {
+  background: rgba(230, 178, 74, 0.28);
+  color: #ffffff;
+}
+
+/* ==========================================================
+   SCROLLBAR
+========================================================== */
+
+::-webkit-scrollbar {
+  width: 9px;
+}
+
+::-webkit-scrollbar-track {
+  background: #06131f;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ev-gold);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ev-gold-dark);
+}
+
+/* ==========================================================
+   EVANTRA UTILITIES
+========================================================== */
+
+.text-ev-gold {
+  color: var(--ev-gold);
+}
+
+.text-ev-gold-light {
+  color: var(--ev-gold-light);
+}
+
+.text-ev-gold-dark {
+  color: var(--ev-gold-dark);
+}
+
+.text-ev-gold-gradient {
+  background: linear-gradient(
+    135deg,
+    var(--ev-gold-light) 0%,
+    var(--ev-gold) 50%,
+    var(--ev-gold-dark) 100%
+  );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  color: transparent;
+}
+
+.bg-ev-gold-gradient {
+  background: linear-gradient(
+    135deg,
+    var(--ev-gold-light) 0%,
+    var(--ev-gold) 50%,
+    var(--ev-gold-dark) 100%
+  );
+}
+
+.border-ev-gold {
+  border-color: rgba(230, 178, 74, 0.35);
+}
+
+.bg-ev-gold-soft {
+  background: rgba(230, 178, 74, 0.1);
+}
+
+.bg-ev-glass {
+  background: var(--glass-light);
+}
+
+.border-ev-glass {
+  border-color: var(--glass-border);
+}
+
+.glass-card {
+  background: var(--glass-light);
+
+  border: 1px solid var(--glass-border);
+
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+.ev-gold-shadow {
+  filter: drop-shadow(0 2px 12px rgba(230, 178, 74, 0.3));
+}
+
+/* ==========================================================
+   PREMIUM TRANSITIONS
+========================================================== */
+
+.transition-premium {
+  transition:
+    transform 300ms ease,
+    box-shadow 300ms ease,
+    opacity 300ms ease,
+    background 300ms ease,
+    border-color 300ms ease;
+}

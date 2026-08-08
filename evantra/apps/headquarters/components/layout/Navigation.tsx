@@ -5,17 +5,40 @@ import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 
 const navigation = [
-  { label: "Home", href: "/" },
-  { label: "About", href: "/about" },
-  { label: "Companies", href: "/companies" },
-  { label: "Innovation", href: "/innovation" },
-  { label: "Research", href: "/research" },
-  { label: "Impact", href: "/impact" },
-  { label: "Contact", href: "/contact" },
+  {
+    label: "Home",
+    href: "/",
+  },
+  {
+    label: "About",
+    href: "/about",
+  },
+  {
+    label: "Company",
+    href: "/company",
+  },
+  {
+    label: "Innovation",
+    href: "/companies/innovation",
+  },
+  {
+    label: "Research",
+    href: "/research",
+  },
+  {
+    label: "Resources",
+    href: "/resources",
+  },
+  {
+    label: "Contact",
+    href: "/contact",
+  },
 ];
 
 interface NavigationProps {
-  /** True when header is on a light background (after scrolling). */
+  /**
+   * True when header is on a light background.
+   */
   dark?: boolean;
 }
 
@@ -24,37 +47,39 @@ export default function Navigation({
 }: NavigationProps) {
   const pathname = usePathname();
 
+  const isActive = (href: string) => {
+    if (href === "/") {
+      return pathname === "/";
+    }
+
+    return (
+      pathname === href ||
+      pathname.startsWith(`${href}/`)
+    );
+  };
+
   return (
     <nav
-      className="
-        hidden
-        items-center
-        gap-10
-        lg:flex
-      "
+      aria-label="Primary navigation"
+      className="flex items-center gap-7"
     >
       {navigation.map((item) => {
-        const active = pathname === item.href;
+        const active = isActive(item.href);
 
         return (
           <Link
             key={item.href}
             href={item.href}
-            className="
-              group
-              relative
-              py-2
-            "
+            className="group relative py-2"
+            aria-current={active ? "page" : undefined}
           >
             <span
               className={`
                 relative
                 z-10
-
                 text-[15px]
                 font-semibold
                 tracking-[0.01em]
-
                 transition-all
                 duration-300
 
@@ -72,8 +97,6 @@ export default function Navigation({
               {item.label}
             </span>
 
-            {/* Gold Underline */}
-
             <motion.span
               layoutId="navigation-indicator"
               transition={{
@@ -85,21 +108,17 @@ export default function Navigation({
                 absolute
                 bottom-0
                 left-0
-
                 h-[3px]
-
                 rounded-full
-
                 bg-[hsl(var(--accent))]
+                transition-all
+                duration-300
 
                 ${
                   active
                     ? "w-full"
                     : "w-0 group-hover:w-full"
                 }
-
-                transition-all
-                duration-300
               `}
             />
           </Link>

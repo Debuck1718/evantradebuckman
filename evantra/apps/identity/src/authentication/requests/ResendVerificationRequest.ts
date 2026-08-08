@@ -1,12 +1,7 @@
 /**
- * Requests a new account
- * verification email.
+ * Request body for resending
+ * account verification.
  */
 export interface ResendVerificationRequest {
-
-  /**
-   * Account contact email.
-   */
-  contactEmail: string;
-
+  readonly contactEmail: string;
 }

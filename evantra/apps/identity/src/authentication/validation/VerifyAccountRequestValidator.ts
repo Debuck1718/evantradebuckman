@@ -1,15 +1,9 @@
 import {
-  HttpError,
-  HttpStatus,
-} from "../../http";
-
-import {
   VerifyAccountRequest,
 } from "../requests";
 
 /**
- * Validates account
- * verification requests.
+ * Validates an account verification request.
  */
 export class VerifyAccountRequestValidator {
 
@@ -18,21 +12,12 @@ export class VerifyAccountRequestValidator {
   ): void {
 
     if (
-
-      !request.token?.trim()
-
+      !request.token ||
+      !request.token.trim()
     ) {
-
-      throw new HttpError(
-
-        HttpStatus.BAD_REQUEST,
-
+      throw new Error(
         "Verification token is required.",
-
       );
-
     }
-
   }
-
 }

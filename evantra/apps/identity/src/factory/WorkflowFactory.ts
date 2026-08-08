@@ -137,61 +137,59 @@ export class WorkflowFactory {
       );
 
     // ==========================================================
-    // OAuth Authorization
-    // ==========================================================
+// OAuth Authorization
+// ==========================================================
 
-    const authorize =
-      new AuthorizeWorkflow(
+const authorize =
+  new AuthorizeWorkflow(
 
-        services.clients,
+    services.clients,
 
-        services.redirectUris,
+    services.redirectUris,
 
-        services.authorizationCodes,
+    services.authorizationCodes,
 
-        platform.security,
+  );
 
-      );
+const exchangeAuthorizationCode =
+  new ExchangeAuthorizationCodeWorkflow(
 
-    const exchangeAuthorizationCode =
-      new ExchangeAuthorizationCodeWorkflow(
+    services.clients,
 
-        services.clients,
+    services.authorizationCodes,
 
-        services.authorizationCodes,
+    services.tokens,
 
-        services.tokens,
+    platform.pkce,
 
-        platform.pkce,
+  );
 
-      );
+const refreshAccessToken =
+  new RefreshAccessTokenWorkflow(
 
-    const refreshAccessToken =
-      new RefreshAccessTokenWorkflow(
+    services.clients,
 
-        services.clients,
+    services.tokens,
 
-        services.tokens,
+  );
 
-      );
+const revokeToken =
+  new RevokeTokenWorkflow(
 
-    const revokeToken =
-      new RevokeTokenWorkflow(
+    services.clients,
 
-        services.clients,
+    services.tokens,
 
-        services.tokens,
+  );
 
-      );
+const introspectToken =
+  new IntrospectTokenWorkflow(
 
-    const introspectToken =
-      new IntrospectTokenWorkflow(
+    services.clients,
 
-        services.clients,
+    services.tokens,
 
-        services.tokens,
-
-      );
+  );
 
     // ==========================================================
 // Browser Sessions

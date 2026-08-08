@@ -16,58 +16,52 @@ import {
   TokenResponseSerializer,
 } from "../oauth/serializers/TokenResponseSerializer";
 
+import {
+  validateTokenRequest,
+} from "../oauth/validation/validateTokenRequest";
+
 /**
  * OAuth Token Endpoint.
+ *
+ * POST /oauth/token
  */
 export class TokenController {
 
   constructor(
-
     private readonly dispatcher:
       TokenGrantDispatcher,
-
   ) {}
 
-  /**
-   * Handles POST /oauth/token.
-   */
   async handle(
-
     request: Request,
-
     response: Response,
-
     next: NextFunction,
-
   ): Promise<void> {
 
     try {
 
-      const tokenResponse =
-        await this.dispatcher.dispatch(
-
+      const tokenRequest =
+        validateTokenRequest(
           request.body as TokenRequest,
-
         );
 
-      response.json(
+      const tokenResponse =
+        await this.dispatcher.dispatch(
+          tokenRequest,
+        );
 
-        TokenResponseSerializer.serialize(
+      response
+        .status(200)
+        .json(
+          TokenResponseSerializer.serialize(
+            tokenResponse,
+          ),
+        );
 
-          tokenResponse,
-
-        ),
-
-      );
-
-    }
-
-    catch (error) {
+    } catch (error) {
 
       next(error);
 
     }
-
   }
-
 }

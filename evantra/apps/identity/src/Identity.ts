@@ -51,6 +51,10 @@ export class Identity {
    */
   async register(params: {
 
+    firstName: string;
+
+    lastName: string;
+
     evantraId: string;
 
     contactEmail: string;

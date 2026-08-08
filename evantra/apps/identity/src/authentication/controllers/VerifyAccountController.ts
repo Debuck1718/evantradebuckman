@@ -21,17 +21,14 @@ import {
 } from "../responses";
 
 /**
- * Handles account
- * verification.
+ * Handles account verification.
  */
 export class VerifyAccountController
-  implements HttpController {
-
+  implements HttpController
+{
   constructor(
-
     private readonly verify:
       VerifyAccountWorkflow,
-
   ) {}
 
   async handle(
@@ -39,19 +36,13 @@ export class VerifyAccountController
   ): Promise<HttpResponse> {
 
     VerifyAccountRequestValidator.validate(
-
       request.body,
-
     );
 
     await this.verify.execute(
-
       request.body.token,
-
     );
 
     return VerificationResponseMapper.success();
-
   }
-
 }

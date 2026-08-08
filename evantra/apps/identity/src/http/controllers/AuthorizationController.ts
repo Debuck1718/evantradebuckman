@@ -13,6 +13,10 @@ import {
 } from "../../authorization";
 
 import {
+  InvalidRequestError,
+} from "../../oauth/errors";
+
+import {
   AuthorizationResponseSerializer,
 } from "../oauth/serializers/AuthorizationResponseSerializer";
 
@@ -27,10 +31,8 @@ import {
 export class AuthorizationController {
 
   constructor(
-
     private readonly workflow:
       AuthorizeWorkflow,
-
   ) {}
 
   /**
@@ -38,13 +40,9 @@ export class AuthorizationController {
    * Authorization Request.
    */
   async handle(
-
     request: Request,
-
     response: Response,
-
     next: NextFunction,
-
   ): Promise<void> {
 
     try {
@@ -53,40 +51,52 @@ export class AuthorizationController {
       // Authentication
       // ======================================================
 
-      //
-      // Temporary.
-      //
-      // Eventually this will be
-      // resolved from the authenticated
-      // Evantra Session.
-      //
+      /**
+       * Temporary authentication bridge.
+       *
+       * Eventually this should come from
+       * the authenticated Evantra browser/session
+       * middleware rather than a request header.
+       */
       const accountId =
-  request.headers[
-    "x-account-id"
-  ] as string | undefined;
+        request.headers[
+          "x-account-id"
+        ] as string | undefined;
 
-if (!accountId) {
+      if (!accountId) {
 
-  throw new Error(
-    "Authenticated account is required."
-  );
+        throw new InvalidRequestError(
+          "Authenticated account is required.",
+        );
 
-}
+      }
 
-const authorizationRequest =
+      // ======================================================
+      // Build Authorization Request
+      // ======================================================
+
+      const authorizationRequest =
   AuthorizationRequest.from({
 
     clientId:
-      String(request.query.client_id ?? ""),
+      String(
+        request.query.client_id ?? "",
+      ),
 
     redirectUri:
-      String(request.query.redirect_uri ?? ""),
+      String(
+        request.query.redirect_uri ?? "",
+      ),
 
     responseType:
-      String(request.query.response_type ?? ""),
+      String(
+        request.query.response_type ?? "",
+      ),
 
     codeChallenge:
-      String(request.query.code_challenge ?? ""),
+      String(
+        request.query.code_challenge ?? "",
+      ),
 
     codeChallengeMethod:
       String(
@@ -95,19 +105,28 @@ const authorizationRequest =
 
     ...(request.query.scope !== undefined
       ? {
-          scope: String(request.query.scope),
+          scope:
+            String(
+              request.query.scope,
+            ),
         }
       : {}),
 
     ...(request.query.state !== undefined
       ? {
-          state: String(request.query.state),
+          state:
+            String(
+              request.query.state,
+            ),
         }
       : {}),
 
     ...(request.query.nonce !== undefined
       ? {
-          nonce: String(request.query.nonce),
+          nonce:
+            String(
+              request.query.nonce,
+            ),
         }
       : {}),
 
@@ -134,21 +153,15 @@ const authorizationRequest =
       response.redirect(
 
         AuthorizationResponseSerializer.serialize(
-
           authorizationResponse,
-
         ),
 
       );
 
-    }
-
-    catch (error) {
+    } catch (error) {
 
       next(error);
 
     }
-
   }
-
 }

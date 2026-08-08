@@ -2,11 +2,8 @@ import { z } from "zod";
 
 export const AuthorizationCodeGrantSchema =
   z.object({
-
     grant_type:
-      z.literal(
-        "authorization_code",
-      ),
+      z.literal("authorization_code"),
 
     client_id:
       z.string().min(1),
@@ -21,8 +18,7 @@ export const AuthorizationCodeGrantSchema =
       z.string().url(),
 
     code_verifier:
-      z.string().optional(),
-
+      z.string().min(1),
   });
 
 export type AuthorizationCodeGrantRequest =

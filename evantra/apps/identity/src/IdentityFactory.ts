@@ -50,11 +50,18 @@ export class IdentityFactory {
     // Workflows
     // ==========================================================
 
-    const workflows =
+    const workflowGroups =
       WorkflowFactory.create(
         services,
         platform
       );
+
+    const workflows = {
+      ...workflowGroups.identity,
+      ...workflowGroups.clients,
+      ...workflowGroups.oauth,
+      ...workflowGroups.session,
+    };
 
     // ==========================================================
     // Identity Engine

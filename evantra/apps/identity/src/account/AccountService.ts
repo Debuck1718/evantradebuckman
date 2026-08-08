@@ -1,7 +1,18 @@
-import { Account } from "./Account";
-import { AccountRepository } from "./AccountRepository";
-import { ContactEmail } from "./ContactEmail";
-import { EvantraId } from "./EvantraId";
+import {
+  Account,
+} from "./Account";
+
+import {
+  AccountRepository,
+} from "./AccountRepository";
+
+import {
+  ContactEmail,
+} from "./ContactEmail";
+
+import {
+  EvantraId,
+} from "./EvantraId";
 
 /**
  * Coordinates operations involving
@@ -17,73 +28,95 @@ import { EvantraId } from "./EvantraId";
  * - OAuth
  */
 export class AccountService {
+
   constructor(
-    private readonly repository: AccountRepository
+    private readonly repository:
+      AccountRepository,
   ) {}
 
   /**
-   * Registers a new account.
-   */
-  async register(params: {
-    id: string;
-    evantraId: string;
-    contactEmail: string;
-  }): Promise<Account> {
-    const evantraId =
-      EvantraId.from(
-        params.evantraId
-      );
+ * Registers a new account.
+ */
+async register(params: {
+  id: string;
 
-    const contactEmail =
-      ContactEmail.from(
-        params.contactEmail
-      );
+  firstName: string;
 
-    const existingIdentity =
-      await this.repository.findByEvantraId(
-        evantraId
-      );
+  lastName: string;
 
-    if (existingIdentity) {
-      throw new Error(
-        "Evantra ID already exists."
-      );
-    }
+  evantraId: string;
 
-    const existingEmail =
-      await this.repository.findByContactEmail(
-        contactEmail
-      );
+  contactEmail: string;
+}): Promise<Account> {
 
-    if (existingEmail) {
-      throw new Error(
-        "Contact email already exists."
-      );
-    }
-
-    const account =
-      Account.create({
-        id: params.id,
-        evantraId,
-        contactEmail,
-      });
-
-    await this.repository.create(
-      account
+  const evantraId =
+    EvantraId.from(
+      params.evantraId,
     );
 
-    return account;
+  const contactEmail =
+    ContactEmail.from(
+      params.contactEmail,
+    );
+
+  const existingIdentity =
+    await this.repository.findByEvantraId(
+      evantraId,
+    );
+
+  if (existingIdentity) {
+    throw new Error(
+      "Evantra ID already exists.",
+    );
   }
+
+  const existingEmail =
+    await this.repository.findByContactEmail(
+      contactEmail,
+    );
+
+  if (existingEmail) {
+    throw new Error(
+      "Contact email already exists.",
+    );
+  }
+
+  const account =
+    Account.create({
+
+      id:
+        params.id,
+
+      firstName:
+        params.firstName,
+
+      lastName:
+        params.lastName,
+
+      evantraId,
+
+      contactEmail,
+
+    });
+
+  await this.repository.create(
+    account,
+  );
+
+  return account;
+}
 
   /**
    * Finds an account by ID.
    */
   async findById(
-    id: string
+    id: string,
   ): Promise<Account | null> {
+
     return this.repository.findById(
-      id
+      id,
     );
+
   }
 
   /**
@@ -91,11 +124,15 @@ export class AccountService {
    * Evantra ID.
    */
   async findByEvantraId(
-    value: string
+    value: string,
   ): Promise<Account | null> {
+
     return this.repository.findByEvantraId(
-      EvantraId.from(value)
+      EvantraId.from(
+        value,
+      ),
     );
+
   }
 
   /**
@@ -103,99 +140,111 @@ export class AccountService {
    * contact email.
    */
   async findByContactEmail(
-    value: string
+    value: string,
   ): Promise<Account | null> {
+
     return this.repository.findByContactEmail(
-      ContactEmail.from(value)
+      ContactEmail.from(
+        value,
+      ),
     );
+
   }
 
   /**
- * Changes an account's
- * contact email.
- */
-async changeContactEmail(
-  account: Account,
-  contactEmail: string,
-): Promise<void> {
+   * Changes an account's
+   * contact email.
+   */
+  async changeContactEmail(
+    account: Account,
+    contactEmail: string,
+  ): Promise<void> {
 
-  account.changeContactEmail(
+    account.changeContactEmail(
 
-    ContactEmail.from(
-      contactEmail,
-    ),
+      ContactEmail.from(
+        contactEmail,
+      ),
 
-  );
+    );
 
-  await this.repository.update(
+    await this.repository.update(
+      account,
+    );
 
-    account,
-
-  );
-
-}
+  }
 
   /**
-   * Activates an account.
+   * Activates the account.
    */
   async activate(
-    account: Account
+    account: Account,
   ): Promise<void> {
+
     account.activate();
 
     await this.repository.update(
-      account
+      account,
     );
+
   }
 
   /**
-   * Suspends an account.
+   * Suspends the account.
    */
   async suspend(
-    account: Account
+    account: Account,
   ): Promise<void> {
+
     account.suspend();
 
     await this.repository.update(
-      account
+      account,
     );
+
   }
 
   /**
-   * Disables an account.
+   * Disables the account.
    */
   async disable(
-    account: Account
+    account: Account,
   ): Promise<void> {
+
     account.disable();
 
     await this.repository.update(
-      account
+      account,
     );
+
   }
 
+  /**
+   * Updates an account.
+   */
   async update(
-  account: Account,
-): Promise<void> {
+    account: Account,
+  ): Promise<void> {
 
-  await this.repository.update(
+    await this.repository.update(
+      account,
+    );
 
-    account,
-
-  );
-
-}
+  }
 
   /**
    * Deletes an account.
    */
   async delete(
-    account: Account
+    account: Account,
   ): Promise<void> {
+
     account.delete();
 
     await this.repository.update(
-      account
+      account,
     );
+
   }
+
 }

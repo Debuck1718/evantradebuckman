@@ -1,6 +1,6 @@
 import { ZodSchema } from "zod";
 
-import { InvalidRequestError } from "../../domain/errors/InvalidRequestError";
+import { InvalidRequestError } from "../../../domain/errors/InvalidRequestError";
 
 export function validate<T>(
   schema: ZodSchema<T>,

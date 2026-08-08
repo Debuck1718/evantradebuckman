@@ -28,13 +28,9 @@ import {
 } from "../platform/Clock";
 
 import {
-
   AuditAction,
-
   AuditSeverity,
-
   AuditService,
-
 } from "../audit";
 
 /**
@@ -66,143 +62,138 @@ export class RegisterAccountWorkflow {
     private readonly clock:
       Clock,
 
-     private readonly audit:
-  AuditService, 
+    private readonly audit:
+      AuditService,
 
   ) {}
 
-  /**
-   * Registers a new
-   * Evantra Account.
-   */
-  async execute(params: {
+ /**
+ * Registers a new
+ * Evantra Account.
+ */
+async execute(params: {
+  firstName: string;
+  lastName: string;
+  evantraId: string;
+  contactEmail: string;
+  password: string;
+}): Promise<Account> {
 
-    evantraId: string;
+  // ======================================================
+  // Platform-generated values
+  // ======================================================
 
-    contactEmail: string;
+  const accountId =
+    this.ids.account();
 
-    password: string;
+  const verificationId =
+    this.ids.verification();
 
-  }): Promise<Account> {
+  const token =
+    this.tokens.verification();
 
-    // ======================================================
-    // Platform-generated values
-    // ======================================================
+  const expiresAt =
+    this.clock.afterMinutes(
+      30,
+    );
 
-    const accountId =
-      this.ids.account();
+  // ======================================================
+  // Register Account
+  // ======================================================
 
-    const verificationId =
-      this.ids.verification();
+  const account =
+    await this.accounts.register({
 
-    const token =
-      this.tokens.verification();
+      id:
+        accountId,
 
-    const expiresAt =
-      this.clock.afterMinutes(
+      firstName:
+        params.firstName,
 
-        30,
+      lastName:
+        params.lastName,
 
-      );
+      evantraId:
+        params.evantraId,
 
-    // ======================================================
-    // Register Account
-    // ======================================================
-
-    const account =
-      await this.accounts.register({
-
-        id:
-          accountId,
-
-        evantraId:
-          params.evantraId,
-
-        contactEmail:
-          params.contactEmail,
-
-      });
-
-    // ======================================================
-    // Create Credential
-    // ======================================================
-
-    await this.credentials.create({
-
-      accountId,
-
-      password:
-        params.password,
+      contactEmail:
+        params.contactEmail,
 
     });
 
-    // ======================================================
-    // Create Verification
-    // ======================================================
+  // ======================================================
+  // Create Credential
+  // ======================================================
 
-    const verification =
-      await this.verifications.create({
+  await this.credentials.create({
 
-        id:
-          verificationId,
+    accountId,
 
-        accountId,
+    password:
+      params.password,
 
-        token,
+  });
 
-        expiresAt,
+  // ======================================================
+  // Create Verification
+  // ======================================================
 
-      });
+  const verification =
+    await this.verifications.create({
 
-    // ======================================================
-    // Send Verification Email
-    // ======================================================
+      id:
+        verificationId,
 
-    await this.communication
-      .sendAccountVerification({
+      accountId,
 
-        contactEmail:
+      token,
 
-          account.contactEmail.value(),
+      expiresAt,
 
-        evantraId:
+    });
 
-          account
-            .evantraId
-            .value(),
+  // ======================================================
+  // Send Verification Email
+  // ======================================================
 
-        token:
+  await this.communication
+    .sendAccountVerification({
 
-          verification.token,
+      contactEmail:
+        account.contactEmail.value(),
 
-        expiresAt:
+      evantraId:
+        account.evantraId.value(),
 
-          verification.expiresAt,
+      token:
+        verification.token,
 
-      });
+      expiresAt:
+        verification.expiresAt,
 
-      await this.audit.record({
+    });
 
-  accountId:
+  // ======================================================
+  // Audit
+  // ======================================================
 
-    account.id,
+  await this.audit.record({
 
-  action:
+    accountId:
+      account.id,
 
-    AuditAction.ACCOUNT_REGISTERED,
+    action:
+      AuditAction.ACCOUNT_REGISTERED,
 
-  severity:
+    severity:
+      AuditSeverity.INFO,
 
-    AuditSeverity.INFO,
+  });
 
-});
+  // ======================================================
+  // Result
+  // ======================================================
 
-    // ======================================================
-    // Result
-    // ======================================================
-
-    return account;
-
-  }
-
+  return account;
+}
 }

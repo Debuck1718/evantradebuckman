@@ -7,7 +7,6 @@ import {
   AuthorizationCodeService,
   AuthorizationRequest,
   AuthorizationResponse,
-  PkceMethod,
 } from "../authorization";
 
 import {
@@ -15,12 +14,6 @@ import {
   InvalidRequestError,
   InvalidScopeError,
 } from "../oauth/errors";
-
-import {
-  SecurityConfiguration,
-} from "../platform/SecurityConfiguration";
-
-
 
 /**
  * Begins the OAuth
@@ -32,15 +25,14 @@ import {
 export class AuthorizeWorkflow {
 
   constructor(
+    private readonly clients:
+      ClientService,
 
-    private readonly clients: ClientService,
+    private readonly redirects:
+      ClientRedirectUriService,
 
-    private readonly redirects: ClientRedirectUriService,
-
-    private readonly authorizationCodes: AuthorizationCodeService,
-
-    private readonly security: SecurityConfiguration,
-
+    private readonly authorizationCodes:
+      AuthorizationCodeService,
   ) {}
 
   /**
@@ -50,30 +42,12 @@ export class AuthorizeWorkflow {
    * Authorization Code.
    */
   async execute(params: {
-
     accountId: string;
-
     request: AuthorizationRequest;
-
   }): Promise<AuthorizationResponse> {
 
     const request =
       params.request;
-
-    // ======================================================
-    // Response Type
-    // ======================================================
-
-    if (
-      request.responseType !==
-      "code"
-    ) {
-
-      throw new InvalidRequestError(
-        "Unsupported response_type.",
-      );
-
-    }
 
     // ======================================================
     // OAuth Client
@@ -85,15 +59,11 @@ export class AuthorizeWorkflow {
       );
 
     if (!client) {
-
       throw new InvalidClientError();
-
     }
 
     if (!client.isActive()) {
-
       throw new InvalidClientError();
-
     }
 
     // ======================================================
@@ -102,34 +72,14 @@ export class AuthorizeWorkflow {
 
     const redirect =
       await this.redirects.findByRedirectUri(
-
         client.id,
-
         request.redirectUri,
-
       );
 
     if (!redirect) {
-
       throw new InvalidRequestError(
         "Redirect URI is not registered.",
       );
-
-    }
-
-    // ======================================================
-    // PKCE
-    // ======================================================
-
-    if (
-      this.security.requirePkce &&
-      !request.codeChallenge
-    ) {
-
-      throw new InvalidRequestError(
-        "PKCE code_challenge is required.",
-      );
-
     }
 
     // ======================================================
@@ -139,12 +89,8 @@ export class AuthorizeWorkflow {
     const scopes =
       request.scopes();
 
-    if (
-      scopes.length === 0
-    ) {
-
+    if (scopes.length === 0) {
       throw new InvalidScopeError();
-
     }
 
     // ======================================================
@@ -152,33 +98,32 @@ export class AuthorizeWorkflow {
     // ======================================================
 
     const authorizationCode =
-  await this.authorizationCodes.issue({
+      await this.authorizationCodes.issue({
 
-    clientId:
-      client.id,
+        clientId:
+          client.id,
 
-    accountId:
-      params.accountId,
+        accountId:
+          params.accountId,
 
-    redirectUri:
-      redirect.redirectUri,
+        redirectUri:
+          redirect.redirectUri,
 
-    codeChallenge:
-      request.codeChallenge,
+        codeChallenge:
+          request.codeChallenge,
 
-    codeChallengeMethod:
-      request.codeChallengeMethod,
+        codeChallengeMethod:
+          request.codeChallengeMethod,
 
-    nonce:
-      request.nonce,
+        nonce:
+          request.nonce,
 
-    scopes:
-      request.scopes(),
-
-  });
+        scopes:
+          scopes,
+      });
 
     // ======================================================
-    // Response
+    // OAuth Authorization Response
     // ======================================================
 
     return new AuthorizationResponse(
@@ -194,7 +139,5 @@ export class AuthorizeWorkflow {
       request.state,
 
     );
-
   }
-
 }

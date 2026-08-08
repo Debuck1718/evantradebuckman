@@ -13,12 +13,23 @@ import {
  * returned from PostgreSQL.
  */
 interface AccountRow {
+
   id: string;
+
+  first_name: string;
+
+  last_name: string;
+
   evantra_id: string;
+
   contact_email: string;
+
   status: AccountStatus;
+
   created_at: Date;
+
   updated_at: Date;
+
 }
 
 /**
@@ -29,36 +40,40 @@ export class PostgresAccountRepository
   implements AccountRepository {
 
   constructor(
-    private readonly db: Pool
+    private readonly db: Pool,
   ) {}
 
   /**
    * Creates a new account.
    */
   async create(
-    account: Account
+    account: Account,
   ): Promise<void> {
 
     await this.db.query(
       `
       INSERT INTO identity.accounts (
         id,
+        first_name,
+        last_name,
         evantra_id,
         contact_email,
         status,
         created_at,
         updated_at
       )
-      VALUES ($1, $2, $3, $4, $5, $6)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
       `,
       [
         account.id,
+        account.firstName,
+        account.lastName,
         account.evantraId.value(),
         account.contactEmail.value(),
         account.getStatus(),
         account.createdAt,
         account.updated(),
-      ]
+      ],
     );
   }
 
@@ -66,24 +81,28 @@ export class PostgresAccountRepository
    * Updates an existing account.
    */
   async update(
-    account: Account
+    account: Account,
   ): Promise<void> {
 
     await this.db.query(
       `
       UPDATE identity.accounts
       SET
-        contact_email = $2,
-        status = $3,
-        updated_at = $4
+        first_name = $2,
+        last_name = $3,
+        contact_email = $4,
+        status = $5,
+        updated_at = $6
       WHERE id = $1
       `,
       [
         account.id,
+        account.firstName,
+        account.lastName,
         account.contactEmail.value(),
         account.getStatus(),
         account.updated(),
-      ]
+      ],
     );
   }
 
@@ -91,7 +110,7 @@ export class PostgresAccountRepository
    * Finds an account by ID.
    */
   async findById(
-    id: string
+    id: string,
   ): Promise<Account | null> {
 
     const result =
@@ -102,16 +121,19 @@ export class PostgresAccountRepository
         WHERE id = $1
         LIMIT 1
         `,
-        [id]
+        [id],
       );
 
-    if (result.rows.length === 0) {
+    if (
+      result.rows.length === 0
+    ) {
       return null;
     }
 
-    const row = result.rows[0]!;
+    const row =
+      result.rows[0]!;
 
-return this.restore(row);
+    return this.restore(row);
   }
 
   /**
@@ -119,7 +141,7 @@ return this.restore(row);
    * Evantra ID.
    */
   async findByEvantraId(
-    evantraId: EvantraId
+    evantraId: EvantraId,
   ): Promise<Account | null> {
 
     const result =
@@ -130,14 +152,17 @@ return this.restore(row);
         WHERE evantra_id = $1
         LIMIT 1
         `,
-        [evantraId.value()]
+        [evantraId.value()],
       );
 
-    if (result.rows.length === 0) {
+    if (
+      result.rows.length === 0
+    ) {
       return null;
     }
 
-    const row = result.rows[0]!;
+    const row =
+      result.rows[0]!;
 
     return this.restore(row);
   }
@@ -147,7 +172,7 @@ return this.restore(row);
    * contact email.
    */
   async findByContactEmail(
-    contactEmail: ContactEmail
+    contactEmail: ContactEmail,
   ): Promise<Account | null> {
 
     const result =
@@ -158,14 +183,17 @@ return this.restore(row);
         WHERE contact_email = $1
         LIMIT 1
         `,
-        [contactEmail.value()]
+        [contactEmail.value()],
       );
 
-    if (result.rows.length === 0) {
+    if (
+      result.rows.length === 0
+    ) {
       return null;
     }
 
-    const row = result.rows[0]!;
+    const row =
+      result.rows[0]!;
 
     return this.restore(row);
   }
@@ -174,7 +202,7 @@ return this.restore(row);
    * Deletes an account.
    */
   async delete(
-    id: string
+    id: string,
   ): Promise<void> {
 
     await this.db.query(
@@ -183,7 +211,7 @@ return this.restore(row);
       FROM identity.accounts
       WHERE id = $1
       `,
-      [id]
+      [id],
     );
   }
 
@@ -192,21 +220,39 @@ return this.restore(row);
    * from PostgreSQL.
    */
   private restore(
-    row: AccountRow
+    row: AccountRow,
   ): Account {
 
     return Account.restore({
-      id: row.id,
-      evantraId: EvantraId.from(
-        row.evantra_id
-      ),
-      contactEmail: ContactEmail.from(
-        row.contact_email
-      ),
-      status: row.status,
-      createdAt: row.created_at,
-      updatedAt: row.updated_at,
+
+      id:
+        row.id,
+
+      firstName:
+        row.first_name,
+
+      lastName:
+        row.last_name,
+
+      evantraId:
+        EvantraId.from(
+          row.evantra_id,
+        ),
+
+      contactEmail:
+        ContactEmail.from(
+          row.contact_email,
+        ),
+
+      status:
+        row.status,
+
+      createdAt:
+        row.created_at,
+
+      updatedAt:
+        row.updated_at,
+
     });
   }
-
 }

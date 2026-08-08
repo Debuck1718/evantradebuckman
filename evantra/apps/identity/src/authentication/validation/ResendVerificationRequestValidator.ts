@@ -1,15 +1,9 @@
 import {
-  HttpError,
-  HttpStatus,
-} from "../../http";
-
-import {
   ResendVerificationRequest,
 } from "../requests";
 
 /**
- * Validates Resend Verification
- * requests.
+ * Validates a resend verification request.
  */
 export class ResendVerificationRequestValidator {
 
@@ -18,21 +12,12 @@ export class ResendVerificationRequestValidator {
   ): void {
 
     if (
-
-      !request.contactEmail?.trim()
-
+      !request.contactEmail ||
+      !request.contactEmail.trim()
     ) {
-
-      throw new HttpError(
-
-        HttpStatus.BAD_REQUEST,
-
+      throw new Error(
         "Contact email is required.",
-
       );
-
     }
-
   }
-
 }

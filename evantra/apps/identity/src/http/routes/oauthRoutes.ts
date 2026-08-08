@@ -22,15 +22,12 @@ export function createOAuthRoutes(
   // ==========================================================
 
   router.get(
-
     "/authorize",
-
     oauth.controllers.authorization
       .handle
       .bind(
         oauth.controllers.authorization,
       ),
-
   );
 
   // ==========================================================
@@ -38,17 +35,13 @@ export function createOAuthRoutes(
   // ==========================================================
 
   router.post(
-
     "/token",
-
     oauth.controllers.token
       .handle
       .bind(
         oauth.controllers.token,
       ),
-
   );
 
   return router;
-
 }

@@ -2,16 +2,20 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, motion } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+} from "framer-motion";
+
 import {
   ArrowRight,
   Building2,
   FlaskConical,
-  Globe2,
   Home,
+  Info,
   Lightbulb,
   Mail,
-  Info,
+  BookOpen,
 } from "lucide-react";
 
 import { EvantraButton } from "@/components/shared/EvantraButton";
@@ -33,13 +37,13 @@ const navigation = [
     icon: Info,
   },
   {
-    label: "Companies",
-    href: "/companies",
+    label: "Company",
+    href: "/company",
     icon: Building2,
   },
   {
     label: "Innovation",
-    href: "/innovation",
+    href: "/companies/innovation",
     icon: Lightbulb,
   },
   {
@@ -48,9 +52,9 @@ const navigation = [
     icon: FlaskConical,
   },
   {
-    label: "Impact",
-    href: "/impact",
-    icon: Globe2,
+    label: "Resources",
+    href: "/resources",
+    icon: BookOpen,
   },
   {
     label: "Contact",
@@ -65,6 +69,17 @@ export default function MobileNavigation({
 }: MobileNavigationProps) {
   const pathname = usePathname();
 
+  const isActive = (href: string) => {
+    if (href === "/") {
+      return pathname === "/";
+    }
+
+    return (
+      pathname === href ||
+      pathname.startsWith(`${href}/`)
+    );
+  };
+
   return (
     <AnimatePresence>
       {open && (
@@ -72,14 +87,22 @@ export default function MobileNavigation({
           {/* Backdrop */}
 
           <motion.div
-            className="fixed inset-0 z-40 bg-slate-950/40 backdrop-blur-sm lg:hidden"
+            className="
+              fixed
+              inset-0
+              z-40
+              bg-slate-950/40
+              backdrop-blur-sm
+              lg:hidden
+            "
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
+            aria-hidden="true"
           />
 
-          {/* Panel */}
+          {/* Navigation Panel */}
 
           <motion.div
             initial={{
@@ -102,22 +125,14 @@ export default function MobileNavigation({
               top-[105px]
               left-4
               right-4
-
               z-50
-
               overflow-hidden
-
               rounded-[28px]
-
               border
               border-white/10
-
               bg-[#081521]/96
-
               shadow-[0_30px_80px_rgba(0,0,0,.35)]
-
               backdrop-blur-3xl
-
               lg:hidden
             "
           >
@@ -125,13 +140,13 @@ export default function MobileNavigation({
 
               {/* Navigation */}
 
-              <nav className="space-y-2">
-
+              <nav
+                aria-label="Mobile primary navigation"
+                className="space-y-2"
+              >
                 {navigation.map((item, index) => {
                   const Icon = item.icon;
-
-                  const active =
-                    pathname === item.href;
+                  const active = isActive(item.href);
 
                   return (
                     <motion.div
@@ -151,18 +166,18 @@ export default function MobileNavigation({
                       <Link
                         href={item.href}
                         onClick={onClose}
+                        aria-current={
+                          active
+                            ? "page"
+                            : undefined
+                        }
                         className={`
                           flex
-
                           items-center
-
                           justify-between
-
                           rounded-2xl
-
                           px-4
                           py-4
-
                           transition-all
 
                           ${
@@ -170,51 +185,48 @@ export default function MobileNavigation({
                               ? `
                                 border
                                 border-[hsl(var(--accent))]/30
-
                                 bg-[hsl(var(--accent))]/10
-
                                 text-[hsl(var(--accent))]
                               `
                               : `
                                 text-white/85
-
                                 hover:bg-white/5
-
                                 hover:text-white
                               `
                           }
                         `}
                       >
                         <div className="flex items-center gap-4">
-
                           <Icon size={20} />
 
                           <span className="font-medium">
                             {item.label}
                           </span>
-
                         </div>
 
                         <ArrowRight size={18} />
-
                       </Link>
                     </motion.div>
                   );
                 })}
-
               </nav>
 
               {/* CTA */}
 
               <div className="mt-8">
-
-                <EvantraButton
-                  fullWidth
-                  rightIcon={<ArrowRight size={18} />}
+                <Link
+                  href="/contact"
+                  onClick={onClose}
                 >
-                  Work With Us
-                </EvantraButton>
-
+                  <EvantraButton
+                    fullWidth
+                    rightIcon={
+                      <ArrowRight size={18} />
+                    }
+                  >
+                    Work With Us
+                  </EvantraButton>
+                </Link>
               </div>
 
             </div>

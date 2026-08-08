@@ -44,5 +44,4 @@ export interface TokenRequest {
    * Requested scopes.
    */
   scope?: string;
-
 }

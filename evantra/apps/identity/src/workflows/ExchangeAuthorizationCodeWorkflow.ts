@@ -28,15 +28,16 @@ import {
 export class ExchangeAuthorizationCodeWorkflow {
 
   constructor(
-
     private readonly clients: ClientService,
 
-    private readonly authorizationCodes: AuthorizationCodeService,
+    private readonly authorizationCodes:
+      AuthorizationCodeService,
 
-    private readonly tokens: TokenService,
+    private readonly tokens:
+      TokenService,
 
-    private readonly pkce: PkceVerifier,
-
+    private readonly pkce:
+      PkceVerifier,
   ) {}
 
   /**
@@ -44,25 +45,18 @@ export class ExchangeAuthorizationCodeWorkflow {
    * Authorization Code Grant.
    */
   async execute(params: {
-
     clientId: string;
-
     clientSecret: string;
-
     code: string;
-
     codeVerifier: string;
-
     redirectUri: string;
 
     accessTokenLifetime: number;
-
     refreshTokenLifetime: number;
-
   }): Promise<TokenResponse> {
 
     // ==========================================================
-    // Authenticate Client
+    // Authenticate OAuth Client
     // ==========================================================
 
     const client =
@@ -77,18 +71,17 @@ export class ExchangeAuthorizationCodeWorkflow {
       });
 
     // ==========================================================
-    // Load Authorization Code
+    // Load Active Authorization Code
     // ==========================================================
 
     const authorizationCode =
       await this.authorizationCodes.findActive(
-
         params.code,
-
       );
 
     // ==========================================================
-    // Ensure Client owns Code
+    // Ensure Authorization Code
+    // belongs to this Client
     // ==========================================================
 
     if (
@@ -97,9 +90,7 @@ export class ExchangeAuthorizationCodeWorkflow {
     ) {
 
       throw new InvalidGrantError(
-
         "Authorization Code does not belong to this client.",
-
       );
 
     }
@@ -116,12 +107,14 @@ export class ExchangeAuthorizationCodeWorkflow {
     ) {
 
       throw new InvalidGrantError(
-
         "Invalid redirect URI.",
-
       );
 
     }
+
+    // ==========================================================
+    // Verify PKCE
+    // ==========================================================
 
     const validPkce =
       await this.pkce.verify({
@@ -140,25 +133,21 @@ export class ExchangeAuthorizationCodeWorkflow {
     if (!validPkce) {
 
       throw new InvalidGrantError(
-
         "PKCE verification failed.",
-
       );
 
     }
 
     // ==========================================================
-    // Consume Code
+    // Consume Authorization Code
     // ==========================================================
 
     await this.authorizationCodes.consume(
-
       authorizationCode,
-
     );
 
     // ==========================================================
-    // Issue Tokens
+    // Issue Access + Refresh Tokens
     // ==========================================================
 
     const issued =
@@ -182,7 +171,7 @@ export class ExchangeAuthorizationCodeWorkflow {
       });
 
     // ==========================================================
-    // OAuth Response
+    // OAuth Token Response
     // ==========================================================
 
     return new TokenResponse(
@@ -192,9 +181,7 @@ export class ExchangeAuthorizationCodeWorkflow {
       OAuthTokenType.BEARER,
 
       Math.floor(
-
         params.accessTokenLifetime / 1000,
-
       ),
 
       issued.refreshToken.token,
@@ -204,7 +191,5 @@ export class ExchangeAuthorizationCodeWorkflow {
         .join(" "),
 
     );
-
   }
-
 }

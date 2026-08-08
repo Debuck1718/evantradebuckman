@@ -6,9 +6,8 @@ import { VerificationRepository } from "./VerificationRepository";
  * requests.
  */
 export class VerificationService {
-
   constructor(
-    private readonly repository: VerificationRepository
+    private readonly repository: VerificationRepository,
   ) {}
 
   /**
@@ -20,18 +19,14 @@ export class VerificationService {
     token: string;
     expiresAt: Date;
   }): Promise<Verification> {
+    const verification = Verification.create({
+      id: params.id,
+      accountId: params.accountId,
+      token: params.token,
+      expiresAt: params.expiresAt,
+    });
 
-    const verification =
-      Verification.create({
-        id: params.id,
-        accountId: params.accountId,
-        token: params.token,
-        expiresAt: params.expiresAt,
-      });
-
-    await this.repository.create(
-      verification
-    );
+    await this.repository.create(verification);
 
     return verification;
   }
@@ -41,12 +36,19 @@ export class VerificationService {
    * using its token.
    */
   async findByToken(
-    token: string
+    token: string,
   ): Promise<Verification | null> {
+    return this.repository.findByToken(token);
+  }
 
-    return this.repository.findByToken(
-      token
-    );
+  /**
+   * Finds the verification request
+   * belonging to an account.
+   */
+  async findByAccountId(
+    accountId: string,
+  ): Promise<Verification | null> {
+    return this.repository.findByAccountId(accountId);
   }
 
   /**
@@ -54,35 +56,19 @@ export class VerificationService {
    * as verified.
    */
   async verify(
-    verification: Verification
+    verification: Verification,
   ): Promise<void> {
-
     verification.verify();
 
-    await this.repository.update(
-      verification
-    );
+    await this.repository.update(verification);
   }
-
-  async findByAccountId(
-  accountId: string,
-): Promise<Verification | null> {
-
-  return this.repository.findByAccountId(
-    accountId,
-  );
-
-}
 
   /**
    * Deletes a verification request.
    */
   async delete(
-    id: string
+    id: string,
   ): Promise<void> {
-
-    await this.repository.delete(
-      id
-    );
+    await this.repository.delete(id);
   }
 }

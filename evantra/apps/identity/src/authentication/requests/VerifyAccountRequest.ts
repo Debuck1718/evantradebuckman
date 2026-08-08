@@ -1,11 +1,6 @@
 /**
- * Verify account request.
+ * Request body for account verification.
  */
 export interface VerifyAccountRequest {
-
-  /**
-   * Verification token.
-   */
-  token: string;
-
+  readonly token: string;
 }

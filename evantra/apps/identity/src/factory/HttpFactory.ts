@@ -15,7 +15,7 @@ type WorkflowRegistry =
 
 type PlatformRegistry =
   ReturnType<typeof PlatformFactory.create>;
-
+  
 /**
  * Builds the complete HTTP layer.
  *

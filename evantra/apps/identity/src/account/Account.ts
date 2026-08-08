@@ -1,6 +1,14 @@
-import { AccountStatus } from "./AccountStatus";
-import { ContactEmail } from "./ContactEmail";
-import { EvantraId } from "./EvantraId";
+import {
+  AccountStatus,
+} from "./AccountStatus";
+
+import {
+  ContactEmail,
+} from "./ContactEmail";
+
+import {
+  EvantraId,
+} from "./EvantraId";
 
 /**
  * Represents an Evantra Account.
@@ -16,19 +24,23 @@ export class Account {
    */
   private constructor(
 
-  public readonly id: string,
+    public readonly id: string,
 
-  public readonly evantraId: EvantraId,
+    public readonly firstName: string,
 
-  public contactEmail: ContactEmail,
+    public readonly lastName: string,
 
-  private status: AccountStatus,
+    public readonly evantraId: EvantraId,
 
-  public readonly createdAt: Date,
+    public contactEmail: ContactEmail,
 
-  private updatedAt: Date,
+    private status: AccountStatus,
 
-) {}
+    public readonly createdAt: Date,
+
+    private updatedAt: Date,
+
+  ) {}
 
   /**
    * Creates a brand-new Account.
@@ -37,21 +49,42 @@ export class Account {
    * PENDING_VERIFICATION state.
    */
   static create(params: {
+
     id: string;
+
+    firstName: string;
+
+    lastName: string;
+
     evantraId: EvantraId;
+
     contactEmail: ContactEmail;
+
   }): Account {
 
-    const now = new Date();
+    const now =
+      new Date();
 
     return new Account(
+
       params.id,
+
+      params.firstName,
+
+      params.lastName,
+
       params.evantraId,
+
       params.contactEmail,
+
       AccountStatus.PENDING_VERIFICATION,
+
       now,
-      now
+
+      now,
+
     );
+
   }
 
   /**
@@ -63,47 +96,81 @@ export class Account {
    * implementations.
    */
   static restore(params: {
+
     id: string;
+
+    firstName: string;
+
+    lastName: string;
+
     evantraId: EvantraId;
+
     contactEmail: ContactEmail;
+
     status: AccountStatus;
+
     createdAt: Date;
+
     updatedAt: Date;
+
   }): Account {
 
     return new Account(
+
       params.id,
+
+      params.firstName,
+
+      params.lastName,
+
       params.evantraId,
+
       params.contactEmail,
+
       params.status,
-      new Date(params.createdAt),
-      new Date(params.updatedAt)
+
+      new Date(
+        params.createdAt,
+      ),
+
+      new Date(
+        params.updatedAt,
+      ),
+
     );
+
   }
 
   /**
    * Returns the current account status.
    */
   getStatus(): AccountStatus {
+
     return this.status;
+
   }
 
   /**
- * Returns the account's
- * contact email.
- */
-getContactEmail(): ContactEmail {
+   * Returns the account's
+   * contact email.
+   */
+  getContactEmail(): ContactEmail {
 
-  return this.contactEmail;
+    return this.contactEmail;
 
-}
+  }
 
   /**
    * Returns true if the account
    * is active.
    */
   isActive(): boolean {
-    return this.status === AccountStatus.ACTIVE;
+
+    return (
+      this.status ===
+      AccountStatus.ACTIVE
+    );
+
   }
 
   /**
@@ -111,46 +178,60 @@ getContactEmail(): ContactEmail {
    */
   activate(): void {
 
-    if (this.status === AccountStatus.DELETED) {
+    if (
+      this.status ===
+      AccountStatus.DELETED
+    ) {
+
       throw new Error(
-        "Deleted accounts cannot be activated."
+        "Deleted accounts cannot be activated.",
       );
+
     }
 
-    this.status = AccountStatus.ACTIVE;
+    this.status =
+      AccountStatus.ACTIVE;
 
     this.touch();
+
   }
 
   /**
- * Changes the account's
- * contact email.
- */
-changeContactEmail(
-  contactEmail: ContactEmail,
-): void {
+   * Changes the account's
+   * contact email.
+   */
+  changeContactEmail(
+    contactEmail: ContactEmail,
+  ): void {
 
-  this.contactEmail =
-    contactEmail;
+    this.contactEmail =
+      contactEmail;
 
-  this.touch();
+    this.touch();
 
-}
+  }
 
   /**
    * Suspends the account.
    */
   suspend(): void {
 
-    if (this.status === AccountStatus.DELETED) {
+    if (
+      this.status ===
+      AccountStatus.DELETED
+    ) {
+
       throw new Error(
-        "Deleted accounts cannot be suspended."
+        "Deleted accounts cannot be suspended.",
       );
+
     }
 
-    this.status = AccountStatus.SUSPENDED;
+    this.status =
+      AccountStatus.SUSPENDED;
 
     this.touch();
+
   }
 
   /**
@@ -158,15 +239,22 @@ changeContactEmail(
    */
   disable(): void {
 
-    if (this.status === AccountStatus.DELETED) {
+    if (
+      this.status ===
+      AccountStatus.DELETED
+    ) {
+
       throw new Error(
-        "Deleted accounts cannot be disabled."
+        "Deleted accounts cannot be disabled.",
       );
+
     }
 
-    this.status = AccountStatus.DISABLED;
+    this.status =
+      AccountStatus.DISABLED;
 
     this.touch();
+
   }
 
   /**
@@ -174,23 +262,30 @@ changeContactEmail(
    */
   delete(): void {
 
-    this.status = AccountStatus.DELETED;
+    this.status =
+      AccountStatus.DELETED;
 
     this.touch();
+
   }
 
   /**
    * Returns the last update time.
    */
   updated(): Date {
+
     return this.updatedAt;
+
   }
 
   /**
    * Updates the modification timestamp.
    */
   private touch(): void {
-    this.updatedAt = new Date();
+
+    this.updatedAt =
+      new Date();
+
   }
 
 }

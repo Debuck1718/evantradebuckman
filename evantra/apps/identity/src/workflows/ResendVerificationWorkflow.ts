@@ -1,7 +1,10 @@
 import {
-    Account,
   AccountService,
 } from "../account";
+
+import {
+  AccountStatus,
+} from "../account/AccountStatus";
 
 import {
   VerificationService,
@@ -30,7 +33,6 @@ import {
 export class ResendVerificationWorkflow {
 
   constructor(
-
     private readonly accounts:
       AccountService,
 
@@ -48,13 +50,10 @@ export class ResendVerificationWorkflow {
 
     private readonly clock:
       Clock,
-
   ) {}
 
   async execute(params: {
-
     contactEmail: string;
-
   }): Promise<void> {
 
     // ======================================================
@@ -63,29 +62,23 @@ export class ResendVerificationWorkflow {
 
     const account =
       await this.accounts.findByContactEmail(
-
         params.contactEmail,
-
       );
 
     // Prevent account enumeration.
     if (!account) {
-
       return;
-
     }
 
     // ======================================================
     // Already Verified
     // ======================================================
 
-    const isVerified =
-      (account as Account & { isVerified?: boolean }).isVerified ?? false;
-
-    if (isVerified) {
-
+    if (
+      account.getStatus() !==
+      AccountStatus.PENDING_VERIFICATION
+    ) {
       return;
-
     }
 
     // ======================================================
@@ -94,19 +87,13 @@ export class ResendVerificationWorkflow {
 
     const existing =
       await this.verifications.findByAccountId(
-
         account.id,
-
       );
 
     if (existing) {
-
       await this.verifications.delete(
-
         existing.id,
-
       );
-
     }
 
     // ======================================================
@@ -117,21 +104,16 @@ export class ResendVerificationWorkflow {
       await this.verifications.create({
 
         id:
-
           this.ids.verification(),
 
         accountId:
-
           account.id,
 
         token:
-
           this.tokens.verification(),
 
         expiresAt:
-
           this.clock.afterMinutes(30),
-
       });
 
     // ======================================================
@@ -142,27 +124,20 @@ export class ResendVerificationWorkflow {
       .sendAccountVerification({
 
         contactEmail:
-
           account
-          .contactEmail
-          .value(),
+            .contactEmail
+            .value(),
 
         evantraId:
-
           account
             .evantraId
             .value(),
 
         token:
-
           verification.token,
 
         expiresAt:
-
           verification.expiresAt,
-
       });
-
   }
-
 }
