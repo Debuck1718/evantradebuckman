@@ -5,6 +5,7 @@ import {
 
   RegisterClientWorkflow,
   RegisterClientRedirectUriWorkflow,
+  RotateClientSecretWorkflow,
 
   AuthorizeWorkflow,
   ExchangeAuthorizationCodeWorkflow,
@@ -124,6 +125,17 @@ export class WorkflowFactory {
         platform.passwordHasher,
 
       );
+
+     const rotateClientSecret =
+  new RotateClientSecretWorkflow(
+
+    services.clients,
+
+    platform.clientCredentials,
+
+    platform.passwordHasher,
+
+  ); 
 
     const registerClientRedirectUri =
       new RegisterClientRedirectUriWorkflow(
@@ -382,6 +394,8 @@ const verifyContactEmailChange =
   clients: {
 
     registerClient,
+
+    rotateClientSecret,
 
     registerClientRedirectUri,
 

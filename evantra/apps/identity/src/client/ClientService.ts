@@ -11,181 +11,173 @@ import { ClientRepository } from "./ClientRepository";
 export class ClientService {
 
   constructor(
-
     private readonly repository: ClientRepository,
-
     private readonly hasher: PasswordHasher,
-
   ) {}
 
-  /**
-   * Registers a new Client.
-   */
   async register(
-    client: Client
+    client: Client,
   ): Promise<Client> {
 
     const existingClientId =
       await this.repository.findByClientId(
-        client.clientId
+        client.clientId,
       );
 
     if (existingClientId) {
       throw new Error(
-        "Client ID already exists."
+        "Client ID already exists.",
       );
     }
 
     const existingSlug =
       await this.repository.findBySlug(
-        client.slug
+        client.slug,
       );
 
     if (existingSlug) {
       throw new Error(
-        "Client slug already exists."
+        "Client slug already exists.",
       );
     }
 
     await this.repository.create(
-      client
+      client,
     );
 
     return client;
-
   }
 
-  /**
-   * Finds a Client.
-   */
   async findById(
-    id: string
+    id: string,
   ): Promise<Client | null> {
 
     return this.repository.findById(
-      id
+      id,
     );
-
   }
 
-  /**
-   * Finds a Client using
-   * its public Client ID.
-   */
   async findByClientId(
-    value: string
+    value: string,
   ): Promise<Client | null> {
 
     return this.repository.findByClientId(
-      ClientId.from(value)
+      ClientId.from(value),
     );
-
   }
 
-  /**
-   * Authenticates an OAuth Client.
-   */
   async authenticate(params: {
-
     clientId: string;
-
     clientSecret: string;
-
   }): Promise<Client> {
 
     const client =
       await this.findByClientId(
-        params.clientId
+        params.clientId,
       );
 
     if (!client) {
       throw new Error(
-        "Invalid client credentials."
+        "Invalid client credentials.",
       );
     }
 
     if (!client.isActive()) {
       throw new Error(
-        "Client is not active."
+        "Client is not active.",
       );
     }
 
     const verified =
       await this.hasher.verify(
-
         params.clientSecret,
-
-        client.secretHash()
-
+        client.secretHash(),
       );
 
     if (!verified) {
       throw new Error(
-        "Invalid client credentials."
+        "Invalid client credentials.",
       );
     }
 
     return client;
-
   }
 
   /**
-   * Returns every Client
-   * owned by an account.
-   */
+ * Rotates an OAuth Client Secret.
+ *
+ * The plaintext secret is never persisted.
+ */
+async rotateSecret(
+  client: Client,
+  newSecret: string,
+  expiresAt: Date | null = null,
+): Promise<void> {
+
+  const hash =
+    await this.hasher.hash(
+      newSecret,
+    );
+
+  client.rotateSecret(
+    hash,
+    expiresAt,
+  );
+
+  await this.repository.update(
+    client,
+  );
+}
+
   async findByOwner(
-    ownerAccountId: string
+    ownerAccountId: string,
   ): Promise<Client[]> {
 
     return this.repository.findByOwner(
-      ownerAccountId
+      ownerAccountId,
     );
-
   }
 
-  /**
-   * Approves a Client.
-   */
   async approve(
-    client: Client
+    client: Client,
   ): Promise<void> {
 
     client.approve();
 
     await this.repository.update(
-      client
+      client,
     );
-
   }
 
-  /**
-   * Disables a Client.
-   */
   async disable(
-    client: Client
+    client: Client,
   ): Promise<void> {
 
     client.disable();
 
     await this.repository.update(
-      client
+      client,
     );
-
   }
 
-  /**
-   * Revokes a Client.
-   */
   async revoke(
-    client: Client
+    client: Client,
   ): Promise<void> {
 
     client.revoke();
 
     await this.repository.update(
-      client
+      client,
     );
-
   }
 
+  async update(
+  client: Client
+): Promise<void> {
+
+  await this.repository.update(
+    client,
+  );
+
+}
 }

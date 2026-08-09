@@ -8,5 +8,7 @@ export * from "./ClientRedirectUriRepository"
 export * from "./ClientRedirectUriService"
 export * from "./RedirectUri"
 export * from "./ClientStatus"
+export * from "./RotateClientSecretController"
+
 
 

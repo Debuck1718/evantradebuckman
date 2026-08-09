@@ -55,6 +55,10 @@ import {
 import { ResendVerificationController } from "../authentication/controllers/ResendVerificationController";
 
 import {
+  RotateClientSecretController,
+} from "../client";
+
+import {
   RequestContactEmailChangeController,
 } from "../authentication/controllers/RequestContactEmailChangeController";
 import {
@@ -229,6 +233,18 @@ const verifyContactEmailChange =
     workflows.session.terminateBrowserSession,
   );
 
+  // ======================================================
+// OAuth Clients
+// ======================================================
+
+const rotateClientSecret =
+  new RotateClientSecretController(
+
+    workflows.clients
+      .rotateClientSecret,
+
+  );
+
     // ======================================================
     // Registry
     // ======================================================
@@ -272,6 +288,12 @@ const verifyContactEmailChange =
     requestContactEmailChange,
 
     verifyContactEmailChange,
+
+  },
+
+  clients: {
+
+    rotateClientSecret,
 
   },
 

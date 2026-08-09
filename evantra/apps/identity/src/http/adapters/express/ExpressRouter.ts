@@ -10,6 +10,10 @@ import {
   ExpressHttpAdapter,
 } from "./ExpressHttpAdapter";
 
+import {
+  createOAuthRoutes,
+} from "../../routes/oauthRoutes";
+
 /**
  * Creates every HTTP route
  * exposed by Evantra Identity.
@@ -45,279 +49,314 @@ export class ExpressRouter {
 
     router.post(
 
-  "/identity/register",
+      "/identity/register",
 
-  ExpressHttpAdapter.adapt(
+      ExpressHttpAdapter.adapt(
 
-    application
-      .identity
-      .controllers
-      .authentication
-      .register,
+        application
+          .identity
+          .controllers
+          .authentication
+          .register,
 
-  ),
+      ),
 
-);
+    );
 
-router.post(
+    router.post(
 
-  "/identity/verify",
+      "/identity/verify",
 
-  ExpressHttpAdapter.adapt(
+      ExpressHttpAdapter.adapt(
 
-    application
-      .identity
-      .controllers
-      .authentication
-      .verify,
+        application
+          .identity
+          .controllers
+          .authentication
+          .verify,
 
-  ),
+      ),
 
-);
+    );
 
-router.post(
+    router.post(
 
-  "/identity/logout",
+      "/identity/logout",
 
-  ExpressHttpAdapter.adapt(
+      ExpressHttpAdapter.adapt(
 
-    application
-      .identity
-      .controllers
-      .authentication
-      .logout,
+        application
+          .identity
+          .controllers
+          .authentication
+          .logout,
 
-  ),
+      ),
 
-);
+    );
 
-router.post(
+    router.post(
 
-  "/identity/session",
+      "/identity/session",
 
-  ExpressHttpAdapter.adapt(
+      ExpressHttpAdapter.adapt(
 
-    application
-      .identity
-      .controllers
-      .authentication
-      .validateSession,
+        application
+          .identity
+          .controllers
+          .authentication
+          .validateSession,
 
-  ),
+      ),
 
-);
+    );
 
-router.post(
+    router.post(
 
-  "/identity/session/refresh",
+      "/identity/session/refresh",
 
-  ExpressHttpAdapter.adapt(
+      ExpressHttpAdapter.adapt(
 
-    application
-      .identity
-      .controllers
-      .authentication
-      .refreshSession,
+        application
+          .identity
+          .controllers
+          .authentication
+          .refreshSession,
 
-  ),
+      ),
 
-);
+    );
 
-router.post(
+    router.post(
 
-  "/identity/session/touch",
+      "/identity/session/touch",
 
-  ExpressHttpAdapter.adapt(
+      ExpressHttpAdapter.adapt(
 
-    application
-      .identity
-      .controllers
-      .authentication
-      .touchSession,
+        application
+          .identity
+          .controllers
+          .authentication
+          .touchSession,
 
-  ),
+      ),
 
-);
+    );
 
-router.post(
+    router.post(
 
-  "/identity/sessions",
+      "/identity/sessions",
 
-  ExpressHttpAdapter.adapt(
+      ExpressHttpAdapter.adapt(
 
-    application
-      .identity
-      .controllers
-      .authentication
-      .listSessions,
+        application
+          .identity
+          .controllers
+          .authentication
+          .listSessions,
 
-  ),
+      ),
 
-);
+    );
 
-router.delete(
+    router.delete(
 
-  "/identity/sessions",
+      "/identity/sessions",
 
-  ExpressHttpAdapter.adapt(
+      ExpressHttpAdapter.adapt(
 
-    application
-      .identity
-      .controllers
-      .authentication
-      .revokeSession,
+        application
+          .identity
+          .controllers
+          .authentication
+          .revokeSession,
 
-  ),
+      ),
 
-);
+    );
 
-router.delete(
+    router.delete(
 
-  "/identity/sessions/all",
+      "/identity/sessions/all",
 
-  ExpressHttpAdapter.adapt(
+      ExpressHttpAdapter.adapt(
 
-    application
-      .identity
-      .controllers
-      .authentication
-      .revokeAllSessions,
+        application
+          .identity
+          .controllers
+          .authentication
+          .revokeAllSessions,
 
-  ),
+      ),
 
-);
+    );
 
-router.post(
+    router.post(
 
-  "/identity/session/rotate",
+      "/identity/session/rotate",
 
-  ExpressHttpAdapter.adapt(
+      ExpressHttpAdapter.adapt(
 
-    application
-      .identity
-      .controllers
-      .authentication
-      .rotateSession,
+        application
+          .identity
+          .controllers
+          .authentication
+          .rotateSession,
 
-  ),
+      ),
 
-);
+    );
 
-router.post(
+    router.post(
 
-  "/identity/session/terminate",
+      "/identity/session/terminate",
 
-  ExpressHttpAdapter.adapt(
+      ExpressHttpAdapter.adapt(
 
-    application
-      .identity
-      .controllers
-      .authentication
-      .terminateSession,
+        application
+          .identity
+          .controllers
+          .authentication
+          .terminateSession,
 
-  ),
+      ),
 
-);
+    );
 
-router.post(
+    router.post(
 
-  "/identity/forgot-password",
+      "/identity/forgot-password",
 
-  ExpressHttpAdapter.adapt(
+      ExpressHttpAdapter.adapt(
 
-    application
-      .identity
-      .controllers
-      .authentication
-      .forgotPassword,
+        application
+          .identity
+          .controllers
+          .authentication
+          .forgotPassword,
 
-  ),
+      ),
 
-);
+    );
 
-router.post(
+    router.post(
 
-  "/identity/reset-password",
+      "/identity/reset-password",
 
-  ExpressHttpAdapter.adapt(
+      ExpressHttpAdapter.adapt(
 
-    application
-      .identity
-      .controllers
-      .authentication
-      .resetPassword,
+        application
+          .identity
+          .controllers
+          .authentication
+          .resetPassword,
 
-  ),
+      ),
 
-);
+    );
 
-router.post(
+    router.post(
 
-  "/identity/change-password",
+      "/identity/change-password",
 
-  ExpressHttpAdapter.adapt(
+      ExpressHttpAdapter.adapt(
 
-    application
-      .identity
-      .controllers
-      .authentication
-      .changePassword,
+        application
+          .identity
+          .controllers
+          .authentication
+          .changePassword,
 
-  ),
+      ),
 
-);
+    );
 
-router.post(
+    router.post(
 
-  "/identity/resend-verification",
+      "/identity/resend-verification",
 
-  ExpressHttpAdapter.adapt(
+      ExpressHttpAdapter.adapt(
 
-    application
-      .identity
-      .controllers
-      .authentication
-      .resendVerification,
+        application
+          .identity
+          .controllers
+          .authentication
+          .resendVerification,
 
-  ),
+      ),
 
-);
+    );
 
-// ======================================================
-// Contact Email
-// ======================================================
+    // ======================================================
+    // Contact Email
+    // ======================================================
 
-router.post(
+    router.post(
 
-  "/identity/contact-email/request",
+      "/identity/contact-email/request",
 
-  ExpressHttpAdapter.adapt(
+      ExpressHttpAdapter.adapt(
 
-    application
-      .identity
-      .controllers
-      .authentication
-      .requestContactEmailChange,
+        application
+          .identity
+          .controllers
+          .authentication
+          .requestContactEmailChange,
 
-  ),
+      ),
 
-);
+    );
 
-router.post(
+    router.post(
 
-  "/identity/contact-email/verify",
+      "/identity/contact-email/verify",
 
-  ExpressHttpAdapter.adapt(
+      ExpressHttpAdapter.adapt(
 
-    application
-      .identity
-      .controllers
-      .authentication
-      .verifyContactEmailChange,
+        application
+          .identity
+          .controllers
+          .authentication
+          .verifyContactEmailChange,
 
-  ),
+      ),
 
-);
+    );
+
+    // ======================================================
+    // TEMPORARY DEVELOPMENT CLIENT ADMINISTRATION
+    // ======================================================
+
+    router.post(
+
+      "/internal/clients/rotate-secret",
+
+      application
+        .identity
+        .controllers
+        .clients
+        .rotateClientSecret
+        .handle
+        .bind(
+          application.identity.controllers.clients.rotateClientSecret,
+        ),
+
+    );
+
+    // ======================================================
+    // OAuth
+    // ======================================================
+
+    router.use(
+
+      "/oauth",
+
+      createOAuthRoutes(
+        application.identity.http.oauth,
+      ),
+
+    );
+
     return router;
 
   }

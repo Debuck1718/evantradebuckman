@@ -23,6 +23,8 @@ export * from "./ChangePasswordWorkflow"
 export * from "./ResendVerificationWorkflow"
 export * from "./RequestContactEmailChangeWorkflow"
 export * from "./VerifyContactEmailChangeWorkflow"
+export * from "./RotateClientSecretWorkflow"
+
 
 
 

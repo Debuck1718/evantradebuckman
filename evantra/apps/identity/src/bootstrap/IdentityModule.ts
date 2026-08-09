@@ -22,6 +22,10 @@ import {
   ControllerFactory,
 } from "./ControllerFactory";
 
+import {
+  HttpFactory,
+} from "../factory/HttpFactory";
+
 type RepositoryRegistry =
   ReturnType<typeof RepositoryFactory.create>;
 
@@ -36,6 +40,9 @@ type WorkflowRegistry =
 
 type ControllerRegistry =
   ReturnType<typeof ControllerFactory.create>;
+
+type HttpRegistry =
+  ReturnType<typeof HttpFactory.create>;
 
 /**
  * Composes the complete
@@ -62,6 +69,8 @@ export class IdentityModule {
 
     controllers: ControllerRegistry;
 
+    http: HttpRegistry;
+
   } {
 
     // ======================================================
@@ -86,11 +95,8 @@ export class IdentityModule {
 
     const services =
       ServiceFactory.create(
-
         repositories,
-
         platform,
-
       );
 
     // ======================================================
@@ -99,11 +105,8 @@ export class IdentityModule {
 
     const workflows =
       WorkflowFactory.create(
-
         services,
-
         platform,
-
       );
 
     // ======================================================
@@ -112,9 +115,17 @@ export class IdentityModule {
 
     const controllers =
       ControllerFactory.create(
-
         workflows,
+      );
 
+    // ======================================================
+    // HTTP Layer
+    // ======================================================
+
+    const http =
+      HttpFactory.create(
+        workflows,
+        platform,
       );
 
     // ======================================================
@@ -132,6 +143,8 @@ export class IdentityModule {
       workflows,
 
       controllers,
+
+      http,
 
     };
 
