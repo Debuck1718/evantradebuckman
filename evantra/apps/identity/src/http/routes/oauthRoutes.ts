@@ -26,7 +26,6 @@ export function createOAuthRoutes(
   // ======================================================
 
   router.get(
-
     "/authorize",
 
     oauth.controllers.authorization
@@ -34,7 +33,6 @@ export function createOAuthRoutes(
       .bind(
         oauth.controllers.authorization,
       ),
-
   );
 
   // ======================================================
@@ -42,7 +40,6 @@ export function createOAuthRoutes(
   // ======================================================
 
   router.post(
-
     "/token",
 
     oauth.controllers.token
@@ -50,9 +47,35 @@ export function createOAuthRoutes(
       .bind(
         oauth.controllers.token,
       ),
+  );
 
+  // ======================================================
+  // Token Revocation
+  // ======================================================
+
+  router.post(
+    "/revoke",
+
+    oauth.controllers.revokeToken
+      .handle
+      .bind(
+        oauth.controllers.revokeToken,
+      ),
+  );
+
+  // ======================================================
+  // Token Introspection
+  // ======================================================
+
+  router.post(
+    "/introspect",
+
+    oauth.controllers.introspectToken
+      .handle
+      .bind(
+        oauth.controllers.introspectToken,
+      ),
   );
 
   return router;
-
 }

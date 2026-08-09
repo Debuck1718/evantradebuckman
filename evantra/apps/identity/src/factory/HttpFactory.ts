@@ -3,6 +3,8 @@ import { PlatformFactory } from "./PlatformFactory";
 
 import { AuthorizationController } from "../http/controllers/AuthorizationController";
 import { TokenController } from "../http/controllers/TokenController";
+import { RevokeTokenController } from "../http/controllers/RevokeTokenController";
+import { IntrospectTokenController } from "../http/controllers/IntrospectTokenController";
 
 import { AuthorizationCodeGrantHandler } from "../http/oauth/grants/AuthorizationCodeGrantHandler";
 import { RefreshTokenGrantHandler } from "../http/oauth/grants/RefreshTokenGrantHandler";
@@ -15,7 +17,7 @@ type WorkflowRegistry =
 
 type PlatformRegistry =
   ReturnType<typeof PlatformFactory.create>;
-  
+
 /**
  * Builds the complete HTTP layer.
  *
@@ -99,6 +101,16 @@ export class HttpFactory {
 
       );
 
+    const revokeTokenController =
+  new RevokeTokenController(
+    workflows.oauth.revokeToken,
+  );
+
+const introspectTokenController =
+  new IntrospectTokenController(
+    workflows.oauth.introspectToken,
+  );  
+
     // ==========================================================
     // HTTP Registry
     // ==========================================================
@@ -118,6 +130,11 @@ export class HttpFactory {
           token:
             tokenController,
 
+          revokeToken:
+              revokeTokenController,  
+              
+          introspectToken:
+              introspectTokenController,
         },
 
         grants: {

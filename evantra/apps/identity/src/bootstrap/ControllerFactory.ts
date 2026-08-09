@@ -59,6 +59,14 @@ import {
 } from "../client";
 
 import {
+  IntrospectTokenController,
+} from "../http/controllers/IntrospectTokenController";
+
+import {
+  RevokeTokenController,
+} from "../http/controllers/RevokeTokenController";
+
+import {
   RequestContactEmailChangeController,
 } from "../authentication/controllers/RequestContactEmailChangeController";
 import {
@@ -245,6 +253,20 @@ const rotateClientSecret =
 
   );
 
+  // ======================================================
+// OAuth
+// ======================================================
+
+const introspectToken =
+  new IntrospectTokenController(
+    workflows.oauth.introspectToken,
+  );
+
+const revokeToken =
+  new RevokeTokenController(
+    workflows.oauth.revokeToken,
+  );
+
     // ======================================================
     // Registry
     // ======================================================
@@ -296,6 +318,11 @@ const rotateClientSecret =
     rotateClientSecret,
 
   },
+
+  oauth: {
+  introspectToken,
+  revokeToken,
+},
 
 };
   }

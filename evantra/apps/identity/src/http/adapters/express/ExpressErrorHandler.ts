@@ -23,6 +23,10 @@ import {
   AccountLockedError,
 } from "../../../authentication/errors";
 
+import {
+  InvalidGrantError,
+} from "../../../oauth/errors";
+
 /**
  * Global Express
  * error handler.
@@ -113,82 +117,101 @@ export class ExpressErrorHandler {
     }
 
     // ======================================================
-    // Authentication Errors
-    // ======================================================
+// Authentication Errors
+// ======================================================
 
-    if (
-      error instanceof InvalidCredentialsError
-    ) {
+if (
+  error instanceof InvalidCredentialsError
+) {
 
-      response
-        .status(HttpStatus.UNAUTHORIZED)
-        .json({
-          error: {
-            code: error.error,
-            message: error.description,
-          },
-        });
+  response
+    .status(HttpStatus.UNAUTHORIZED)
+    .json({
+      error: {
+        code: error.error,
+        message: error.description,
+      },
+    });
 
-      return;
+  return;
 
-    }
+}
 
-    if (
-      error instanceof InactiveAccountError
-    ) {
+if (
+  error instanceof InactiveAccountError
+) {
 
-      response
-        .status(HttpStatus.FORBIDDEN)
-        .json({
-          error: {
-            code: error.error,
-            message: error.description,
-          },
-        });
+  response
+    .status(HttpStatus.FORBIDDEN)
+    .json({
+      error: {
+        code: error.error,
+        message: error.description,
+      },
+    });
 
-      return;
+  return;
 
-    }
+}
 
-    if (
-      error instanceof AccountLockedError
-    ) {
+if (
+  error instanceof AccountLockedError
+) {
 
-      response
-        .status(HttpStatus.LOCKED)
-        .json({
-          error: {
-            code: error.error,
-            message: error.description,
-          },
-        });
+  response
+    .status(HttpStatus.LOCKED)
+    .json({
+      error: {
+        code: error.error,
+        message: error.description,
+      },
+    });
 
-      return;
+  return;
 
-    }
+}
 
-    // ======================================================
-    // Unknown Error
-    // ======================================================
+// ======================================================
+// OAuth Errors
+// ======================================================
 
-    console.error(error);
+if (
+  error instanceof InvalidGrantError
+) {
 
-    response
-      .status(HttpStatus.INTERNAL_SERVER_ERROR)
-      .json({
+  response
+    .status(HttpStatus.BAD_REQUEST)
+    .json({
+      error: {
+        code: error.error,
+        message: error.description,
+      },
+    });
 
-        error: {
+  return;
 
-          code:
-            "INTERNAL_SERVER_ERROR",
+}
 
-          message:
-            "An unexpected error occurred.",
+// ======================================================
+// Unknown Error
+// ======================================================
 
-        },
+console.error(error);
 
-      });
+response
+  .status(HttpStatus.INTERNAL_SERVER_ERROR)
+  .json({
 
-  }
+    error: {
 
+      code:
+        "INTERNAL_SERVER_ERROR",
+
+      message:
+        "An unexpected error occurred.",
+
+    },
+
+  });
+}
 }
