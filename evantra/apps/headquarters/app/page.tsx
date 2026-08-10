@@ -13,6 +13,7 @@ import { CallToActionSection } from "@/components/home/cta";
 
 import { CampusNavigator } from "@/components/campus";
 
+
 export default function HomePage() {
   return (
     <>
