@@ -2,11 +2,15 @@
 
 import {
   FormEvent,
+  Suspense,
   useState,
 } from "react";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import {
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 
 import {
   Eye,
@@ -22,8 +26,10 @@ import {
   IdentityShell,
 } from "../../../components/identity/IdentityShell";
 
-export default function LoginPage() {
+function LoginPageContent() {
   const router = useRouter();
+  const searchParams =
+    useSearchParams();
 
   const [evantraId, setEvantraId] =
     useState("");
@@ -87,7 +93,16 @@ export default function LoginPage() {
         );
       }
 
-      router.push("/account");
+      const returnTo =
+        searchParams.get("returnTo") ?? "";
+
+      const safeReturnTo =
+        returnTo.startsWith("/") &&
+        !returnTo.startsWith("//")
+          ? returnTo
+          : "/workspace/account";
+
+      router.push(safeReturnTo);
       router.refresh();
     } catch (err) {
       setError(
@@ -241,5 +256,24 @@ export default function LoginPage() {
         </Link>
       </div>
     </IdentityShell>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <IdentityShell
+          title="Evantra Identity"
+          description="Secure access to the Evantra digital ecosystem."
+        >
+          <div className="flex items-center justify-center py-10 text-sm text-white/50">
+            Loading...
+          </div>
+        </IdentityShell>
+      }
+    >
+      <LoginPageContent />
+    </Suspense>
   );
 }

@@ -77,5 +77,15 @@ export function createOAuthRoutes(
       ),
   );
 
+  router.get(
+  "/userinfo",
+
+  oauth.controllers.userInfo
+    .handle
+    .bind(
+      oauth.controllers.userInfo,
+    ),
+);
+
   return router;
 }

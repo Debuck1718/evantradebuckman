@@ -6,6 +6,7 @@ import { createOAuthRoutes } from "./oauthRoutes";
 import { createAccountRoutes } from "./accountRoutes";
 import { createClientRoutes } from "./clientRoutes";
 import { createOidcRoutes } from "./oidcRoutes";
+import { createIdentityRoutes } from "./identityRoutes";
 
 type HttpRegistry =
   ReturnType<typeof HttpFactory.create>;
@@ -35,17 +36,21 @@ export function createRoutes(
   );
 
   // ==========================================================
+  // Identity API
+  // ==========================================================
+
+  router.use(
+    "/identity",
+    createIdentityRoutes(http.identity),
+  );
+
+  // ==========================================================
   // Accounts
   // ==========================================================
 
   router.use(
-
     "/accounts",
-
-    createAccountRoutes(
-      http.identity,
-    ),
-
+    createAccountRoutes(http.identity),
   );
 
   // ==========================================================

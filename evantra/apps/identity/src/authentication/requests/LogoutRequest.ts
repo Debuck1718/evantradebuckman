@@ -9,6 +9,6 @@ export interface LogoutRequest {
   /**
    * Browser Session ID.
    */
-  sessionId: string;
+  sessionId?: string;
 
 }

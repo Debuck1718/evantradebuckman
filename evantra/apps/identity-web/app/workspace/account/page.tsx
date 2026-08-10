@@ -223,7 +223,7 @@ export default function AccountPage() {
 
         <header className="mb-12 flex flex-col gap-6 border-b border-white/10 pb-7 sm:flex-row sm:items-center sm:justify-between">
           <Link
-            href="/account"
+            href="/workspace/account"
             className="flex w-fit items-center gap-3"
           >
             <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#e6b24a]/30 bg-[#e6b24a]/10">
@@ -307,6 +307,29 @@ export default function AccountPage() {
             and ready to access the Evantra
             digital ecosystem.
           </p>
+
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Link
+              href="/workspace/hub"
+              className="rounded-xl border border-white/10 px-4 py-2.5 text-xs font-semibold text-white/75 transition hover:border-white/20 hover:bg-white/[0.03] hover:text-white"
+            >
+              Open workspace hub
+            </Link>
+
+            <Link
+              href="/workspace/profile"
+              className="rounded-xl border border-white/10 px-4 py-2.5 text-xs font-semibold text-white/75 transition hover:border-white/20 hover:bg-white/[0.03] hover:text-white"
+            >
+              Manage profile
+            </Link>
+
+            <Link
+              href="/security"
+              className="rounded-xl border border-white/10 px-4 py-2.5 text-xs font-semibold text-white/75 transition hover:border-white/20 hover:bg-white/[0.03] hover:text-white"
+            >
+              Security sessions
+            </Link>
+          </div>
         </section>
 
         {/* ==================================================

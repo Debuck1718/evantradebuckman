@@ -47,8 +47,18 @@ export interface KernelStatus {
   applications: number;
 
   /**
+   * Registered organizations.
+   */
+  organizations: number;
+
+  /**
    * Registered workflows.
    */
   workflows: number;
+
+  /**
+   * Tracked commitments/promises.
+   */
+  promises: number;
 
 }

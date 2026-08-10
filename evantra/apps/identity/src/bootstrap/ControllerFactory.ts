@@ -28,9 +28,11 @@ import {
 import {
   RevokeBrowserSessionController,
 } from "../authentication/controllers/RevokeBrowserSessionController";
+
 import {
   WorkflowFactory,
 } from "../factory/WorkflowFactory";
+
 import { ListBrowserSessionsController } from "../authentication/controllers/ListBrowserSessionsController";
 
 import {
@@ -52,6 +54,7 @@ import {
 import {
   ChangePasswordController,
 } from "../authentication/controllers/ChangePasswordController";
+
 import { ResendVerificationController } from "../authentication/controllers/ResendVerificationController";
 
 import {
@@ -61,6 +64,10 @@ import {
 import {
   IntrospectTokenController,
 } from "../http/controllers/IntrospectTokenController";
+
+import {
+  UserInfoController,
+} from "../http/controllers/UserInfoController";
 
 import {
   RevokeTokenController,
@@ -134,7 +141,7 @@ export class ControllerFactory {
 const validateSession =
   new ValidateSessionController(
 
-    workflows.session.validateBrowserSession,
+    workflows.session.validateIdentitySession,
 
   );
 
@@ -267,6 +274,11 @@ const revokeToken =
     workflows.oauth.revokeToken,
   );
 
+const userInfo =
+  new UserInfoController(
+    workflows.oauth.userInfo,
+  );  
+
     // ======================================================
     // Registry
     // ======================================================
@@ -322,6 +334,7 @@ const revokeToken =
   oauth: {
   introspectToken,
   revokeToken,
+  userInfo,
 },
 
 };

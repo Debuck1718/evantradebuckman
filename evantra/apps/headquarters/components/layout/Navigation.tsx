@@ -30,6 +30,10 @@ const navigation = [
     href: "/resources",
   },
   {
+    label: "Identity",
+    href: "/identity",
+  },
+  {
     label: "Contact",
     href: "/contact",
   },

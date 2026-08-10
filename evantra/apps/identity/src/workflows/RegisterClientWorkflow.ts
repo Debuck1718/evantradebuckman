@@ -16,6 +16,28 @@ import {
   ClientCredentialGenerator,
 } from "../platform/ClientCredentialGenerator";
 
+function parseBoolean(
+  value: string,
+): boolean {
+  const normalized =
+    value.trim().toLowerCase();
+
+  return normalized === "true" ||
+    normalized === "1" ||
+    normalized === "yes";
+}
+
+function shouldAutoApproveFirstParty(): boolean {
+  const configured =
+    process.env.EVANTRA_CLIENT_AUTO_APPROVE_FIRST_PARTY;
+
+  if (configured !== undefined) {
+    return parseBoolean(configured);
+  }
+
+  return process.env.NODE_ENV !== "production";
+}
+
 /**
  * Registers a new OAuth Client.
  *
@@ -129,6 +151,13 @@ export class RegisterClientWorkflow {
           : {}),
 
       });
+
+    if (
+      (params.firstParty ?? false) &&
+      shouldAutoApproveFirstParty()
+    ) {
+      client.approve();
+    }
 
     // ----------------------------------------------------------
     // Persist.

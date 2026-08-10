@@ -1,7 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import {
+  Suspense,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useSearchParams } from "next/navigation";
 
 import {
@@ -21,7 +26,7 @@ type VerificationState =
   | "success"
   | "error";
 
-export default function VerifyContactEmailPage() {
+function VerifyContactEmailPageContent() {
   const searchParams = useSearchParams();
 
   const token = searchParams.get("token");
@@ -94,7 +99,7 @@ export default function VerifyContactEmailPage() {
 
           <header className="mb-12 flex items-center justify-between">
             <Link
-              href="/account"
+              href="/workspace/account"
               className="inline-flex items-center gap-2 text-sm text-white/45 transition hover:text-white"
             >
               <ArrowLeft size={16} />
@@ -189,14 +194,14 @@ export default function VerifyContactEmailPage() {
 
               <div className="mt-8 flex flex-col gap-3">
                 <Link
-                  href="/account"
+                  href="/workspace/account"
                   className="rounded-xl bg-[#e6b24a] px-5 py-3.5 text-sm font-semibold text-[#06131f] transition hover:bg-[#f0c261]"
                 >
                   Return to account
                 </Link>
 
                 <Link
-                  href="/identity/auth/security"
+                  href="/security"
                   className="rounded-xl border border-white/10 px-5 py-3.5 text-sm font-medium text-white/70 transition hover:border-white/20 hover:bg-white/[0.04] hover:text-white"
                 >
                   Security settings
@@ -257,14 +262,14 @@ export default function VerifyContactEmailPage() {
 
               <div className="mt-8 flex flex-col gap-3">
                 <Link
-                  href="/identity/auth/contact-email"
+                  href="/contact-email"
                   className="rounded-xl bg-[#e6b24a] px-5 py-3.5 text-sm font-semibold text-[#06131f] transition hover:bg-[#f0c261]"
                 >
                   Request a new verification
                 </Link>
 
                 <Link
-                  href="/account"
+                  href="/workspace/account"
                   className="rounded-xl border border-white/10 px-5 py-3.5 text-sm font-medium text-white/70 transition hover:border-white/20 hover:bg-white/[0.04] hover:text-white"
                 >
                   Return to account
@@ -280,5 +285,24 @@ export default function VerifyContactEmailPage() {
         </section>
       </div>
     </main>
+  );
+}
+
+export default function VerifyContactEmailPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="min-h-screen bg-[#06131f] text-white">
+          <div className="mx-auto flex min-h-screen max-w-lg items-center justify-center px-6">
+            <Loader2
+              size={28}
+              className="animate-spin text-[#e6b24a]"
+            />
+          </div>
+        </main>
+      }
+    >
+      <VerifyContactEmailPageContent />
+    </Suspense>
   );
 }

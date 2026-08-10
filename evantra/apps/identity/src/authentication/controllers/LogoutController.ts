@@ -1,7 +1,9 @@
 import {
   HttpController,
+  HttpError,
   HttpRequest,
   HttpResponse,
+  HttpStatus,
 } from "../../http";
 
 import {
@@ -11,10 +13,6 @@ import {
 import {
   LogoutRequest,
 } from "../requests";
-
-import {
-  LogoutRequestValidator,
-} from "../validation";
 
 import {
   LogoutResponseMapper,
@@ -44,17 +42,34 @@ export class LogoutController
     request: HttpRequest<LogoutRequest>,
   ): Promise<HttpResponse> {
 
-    LogoutRequestValidator.validate(
+    const sessionIdCandidates = [
+      request.body?.sessionId,
+      request.cookies.evantra_session_id,
+      request.cookies.session_id,
+      request.headers["x-session-id"],
+    ];
 
-      request.body,
+    const sessionId =
+      sessionIdCandidates
+        .map((value) =>
+          typeof value === "string"
+            ? value.trim()
+            : "",
+        )
+        .find((value) => Boolean(value));
 
-    );
+    if (!sessionId) {
+      throw new HttpError(
+        HttpStatus.BAD_REQUEST,
+        "Session ID is required.",
+      );
+    }
 
     await this.terminate.execute({
 
       sessionId:
 
-        request.body.sessionId,
+        sessionId,
 
     });
 

@@ -6,6 +6,7 @@ import {
 
 import {
   AuthorizeWorkflow,
+  ValidateBrowserSessionWorkflow,
 } from "../../workflows";
 
 import {
@@ -33,6 +34,8 @@ export class AuthorizationController {
   constructor(
     private readonly workflow:
       AuthorizeWorkflow,
+    private readonly validateSession:
+      ValidateBrowserSessionWorkflow,
   ) {}
 
   /**
@@ -51,24 +54,40 @@ export class AuthorizationController {
       // Authentication
       // ======================================================
 
-      /**
-       * Temporary authentication bridge.
-       *
-       * Eventually this should come from
-       * the authenticated Evantra browser/session
-       * middleware rather than a request header.
-       */
-      const accountId =
-        request.headers[
-          "x-account-id"
-        ] as string | undefined;
+      const sessionIdCandidates = [
+        request.cookies?.evantra_session_id,
+        request.cookies?.session_id,
+      ];
 
-      if (!accountId) {
+      const sessionId =
+        sessionIdCandidates
+          .map((value) =>
+            typeof value === "string"
+              ? value.trim()
+              : "",
+          )
+          .find((value) => Boolean(value));
 
+      if (!sessionId) {
         throw new InvalidRequestError(
-          "Authenticated account is required.",
+          "Authenticated session is required.",
         );
+      }
 
+      let accountId: string;
+
+      try {
+        const session =
+          await this.validateSession.execute({
+            sessionId,
+          });
+
+        accountId =
+          session.identity.accountId;
+      } catch {
+        throw new InvalidRequestError(
+          "Authenticated session is required.",
+        );
       }
 
       // ======================================================

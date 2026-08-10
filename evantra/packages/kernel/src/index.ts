@@ -17,12 +17,15 @@
 export * from "./core/Kernel";
 export * from "./core/Runtime";
 export * from "./core/ServiceContainer";
+export * from "./core/BootManager";
+export * from "./core/Lifecycle";
 
 /* ============================================================
  * Application Runtime
  * ============================================================ */
 
 export * from "./application";
+export * from "./organization";
 
 
 
@@ -31,6 +34,12 @@ export * from "./application";
  * ============================================================ */
 
 export * from "./workflow";
+
+/* ============================================================
+ * Intelligence
+ * ============================================================ */
+
+export * from "./intelligence";
 
 /* ============================================================
  * Commands
@@ -47,6 +56,7 @@ export * from "./command/CreateEntityCommand";
 
 export * from "./entity/Entity";
 export * from "./entity/EntityRegistry";
+export * from "./entity/EntityFactory";
 
 /* ============================================================
  * Events

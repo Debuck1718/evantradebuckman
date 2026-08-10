@@ -41,9 +41,20 @@ import {
 } from "../application";
 
 import {
+  OrganizationManager,
+  OrganizationRegistry,
+} from "../organization";
+
+import {
   WorkflowEngine,
   WorkflowRegistry,
 } from "../workflow";
+
+import {
+  BurdenEngine,
+  LifeWorkOrchestrator,
+  PromiseGraph,
+} from "../intelligence";
 
 /**
  * Evantra Kernel
@@ -236,6 +247,19 @@ export class Kernel {
   }
 
   /**
+   * Organization Runtime.
+   */
+  get organizations(): OrganizationManager {
+
+    return this.services.resolve(
+
+      OrganizationManager,
+
+    );
+
+  }
+
+  /**
    * Workflow Registry.
    */
   get workflows(): WorkflowRegistry {
@@ -243,6 +267,45 @@ export class Kernel {
     return this.services.resolve(
 
       WorkflowRegistry,
+
+    );
+
+  }
+
+  /**
+   * Burden intelligence runtime.
+   */
+  get burden(): BurdenEngine {
+
+    return this.services.resolve(
+
+      BurdenEngine,
+
+    );
+
+  }
+
+  /**
+   * Promise and accountability runtime.
+   */
+  get promises(): PromiseGraph {
+
+    return this.services.resolve(
+
+      PromiseGraph,
+
+    );
+
+  }
+
+  /**
+   * Unified life-work orchestration runtime.
+   */
+  get lifeWork(): LifeWorkOrchestrator {
+
+    return this.services.resolve(
+
+      LifeWorkOrchestrator,
 
     );
 
@@ -288,9 +351,17 @@ export class Kernel {
 
         this.applications.count(),
 
+      organizations:
+
+        this.organizations.countOrganizations(),
+
       workflows:
 
         this.workflows.count(),
+
+      promises:
+
+        this.promises.count(),
 
     };
 
@@ -323,6 +394,10 @@ export class Kernel {
   this.registerStateServices();
 
   this.registerApplicationServices();
+
+  this.registerOrganizationServices();
+
+  this.registerIntelligenceServices();
 
   this.registerWorkflowServices();
 
@@ -452,25 +527,86 @@ export class Kernel {
   }
 
   /**
+   * Registers organization services.
+   */
+  private registerOrganizationServices(): void {
+
+    const organizationRegistry =
+      new OrganizationRegistry();
+
+    this.services.register(
+      OrganizationRegistry,
+      organizationRegistry,
+    );
+
+    const organizationManager =
+      new OrganizationManager(
+        organizationRegistry,
+      );
+
+    this.services.register(
+      OrganizationManager,
+      organizationManager,
+    );
+
+  }
+
+  /**
+   * Registers intelligence services.
+   */
+  private registerIntelligenceServices(): void {
+    const burdenEngine =
+      new BurdenEngine();
+
+    this.services.register(
+      BurdenEngine,
+      burdenEngine,
+    );
+
+    const promiseGraph =
+      new PromiseGraph();
+
+    this.services.register(
+      PromiseGraph,
+      promiseGraph,
+    );
+
+    const lifeWork =
+      new LifeWorkOrchestrator(
+        burdenEngine,
+        promiseGraph,
+      );
+
+    this.services.register(
+      LifeWorkOrchestrator,
+      lifeWork,
+    );
+  }
+
+  /**
    * Registers workflow services.
    */
   private registerWorkflowServices(): void {
 
-    const registry =
-      new WorkflowRegistry();
+  const registry =
+    new WorkflowRegistry();
 
-    this.services.register(
-      WorkflowRegistry,
+  this.services.register(
+    WorkflowRegistry,
+    registry
+  );
+
+  const engine =
+    new WorkflowEngine(
+      this,
       registry
     );
 
-    const engine =
-      new WorkflowEngine(
-        this,
-        registry
-      );
-
-  }
+  this.services.register(
+    WorkflowEngine,
+    engine
+  );
+}
 
 
   // ------------------------------------------------------------------
@@ -498,17 +634,16 @@ export class Kernel {
    */
   private registerSubscribers(): void {
 
-    this.events.subscribe(
-      new AuditSubscriber()
-    );
+  this.events.subscribe(
+    new AuditSubscriber()
+  );
 
-    this.events.subscribe(
-      new WorkflowEngine(
-        this,
-        this.workflows
-      )
-    );
-  }
+  this.events.subscribe(
+    this.services.resolve(
+      WorkflowEngine
+    )
+  );
+}
 
   /**
    * Registers default pipeline

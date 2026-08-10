@@ -9,5 +9,5 @@
     "outDir": "dist",
     "skipLibCheck": true
   },
-  "include": ["src", "../../apps/identity/src/workflows"]
+  "include": ["src"]
 }

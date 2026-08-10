@@ -16,6 +16,7 @@ import {
   Lightbulb,
   Mail,
   BookOpen,
+  ShieldCheck,
 } from "lucide-react";
 
 import { EvantraButton } from "@/components/shared/EvantraButton";
@@ -55,6 +56,11 @@ const navigation = [
     label: "Resources",
     href: "/resources",
     icon: BookOpen,
+  },
+  {
+    label: "Identity",
+    href: "/identity",
+    icon: ShieldCheck,
   },
   {
     label: "Contact",

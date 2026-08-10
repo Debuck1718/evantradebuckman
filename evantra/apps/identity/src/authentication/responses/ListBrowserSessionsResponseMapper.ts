@@ -54,6 +54,11 @@ export class ListBrowserSessionsResponseMapper {
                 session.authentication
                   .authenticatedAt,
 
+              authenticatedAt:
+
+                session.authentication
+                  .authenticatedAt,
+
               trusted:
 
                 session.device
@@ -67,12 +72,119 @@ export class ListBrowserSessionsResponseMapper {
               expiresAt:
 
                 session.lifecycle
-                  .getExpiresAt,
+                  .getExpiresAt(),
 
               idleTimeoutAt:
 
                 session.lifecycle
-                  .getIdleTimeoutAt,
+                  .getIdleTimeoutAt(),
+
+              createdAt:
+
+                session.lifecycle
+                  .getCreatedAt(),
+
+              lastActivityAt:
+
+                session.lifecycle
+                  .lastActivity(),
+
+              revokedAt:
+
+                session.lifecycle
+                  .getRevokedAt(),
+
+              terminatedAt:
+
+                session.lifecycle
+                  .getTerminatedAt(),
+
+              device: {
+
+                deviceId:
+                  session.device.deviceId,
+
+                name:
+                  session.device.getName(),
+
+                type:
+                  session.device.type,
+
+                operatingSystem:
+                  session.device.operatingSystem,
+
+                operatingSystemVersion:
+                  session.device.operatingSystemVersion,
+
+                browser:
+                  session.device.browser,
+
+                browserVersion:
+                  session.device.browserVersion,
+
+                platform:
+                  session.device.platform,
+
+                trusted:
+                  session.device.isTrusted(),
+
+                verified:
+                  session.device.isVerified(),
+
+                lastSeenAt:
+                  session.device.getLastSeenAt(),
+
+              },
+
+              network: {
+
+                ipAddress:
+                  session.network.ipAddress,
+
+                forwardedIpAddress:
+                  session.network.forwardedIpAddress,
+
+                country:
+                  session.network.country,
+
+                region:
+                  session.network.region,
+
+                city:
+                  session.network.city,
+
+                internetServiceProvider:
+                  session.network.internetServiceProvider,
+
+                autonomousSystemNumber:
+                  session.network.autonomousSystemNumber,
+
+                networkType:
+                  session.network.networkType,
+
+                vpnDetected:
+                  session.network.isVpn(),
+
+                proxyDetected:
+                  session.network.isProxy(),
+
+                torDetected:
+                  session.network.isTor(),
+
+              },
+
+              lifecycle: {
+
+                status:
+                  session.lifecycle.currentStatus(),
+
+                revoked:
+                  session.lifecycle.isRevoked(),
+
+                terminated:
+                  session.lifecycle.isTerminated(),
+
+              },
 
             }),
 

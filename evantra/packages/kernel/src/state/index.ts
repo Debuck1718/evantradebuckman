@@ -3,3 +3,4 @@ export * from "./State";
 export * from "./StateTransition";
 export * from "./StateMachine";
 export * from "./StateEngine";
+export * from "./StateSchema";

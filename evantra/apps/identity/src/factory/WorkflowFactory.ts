@@ -5,6 +5,7 @@ import {
 
   RegisterClientWorkflow,
   RegisterClientRedirectUriWorkflow,
+  ApproveClientWorkflow,
   RotateClientSecretWorkflow,
 
   AuthorizeWorkflow,
@@ -12,9 +13,11 @@ import {
   RefreshAccessTokenWorkflow,
   RevokeTokenWorkflow,
   IntrospectTokenWorkflow,
+  UserInfoWorkflow,
 
   CreateBrowserSessionWorkflow,
   ValidateBrowserSessionWorkflow,
+  ValidateIdentitySessionWorkflow,
   TouchBrowserSessionWorkflow,
   RefreshBrowserSessionWorkflow,
   RotateBrowserSessionWorkflow,
@@ -148,6 +151,11 @@ export class WorkflowFactory {
 
       );
 
+    const approveClient =
+      new ApproveClientWorkflow(
+        services.clients,
+      );
+
     // ==========================================================
 // OAuth Authorization
 // ==========================================================
@@ -203,6 +211,15 @@ const introspectToken =
 
   );
 
+  const userInfo =
+  new UserInfoWorkflow(
+
+    services.tokens,
+
+    services.accounts,
+
+  );
+
     // ==========================================================
 // Browser Sessions
 // ==========================================================
@@ -216,6 +233,12 @@ const validateBrowserSession =
   new ValidateBrowserSessionWorkflow(
     services.browserSessions,
 
+  );
+
+const validateIdentitySession =
+  new ValidateIdentitySessionWorkflow(
+    validateBrowserSession,
+    services.accounts,
   );
 
 const touchBrowserSession =
@@ -395,6 +418,8 @@ const verifyContactEmailChange =
 
     registerClient,
 
+    approveClient,
+
     rotateClientSecret,
 
     registerClientRedirectUri,
@@ -413,6 +438,8 @@ const verifyContactEmailChange =
 
     introspectToken,
 
+    userInfo,
+
   },
 
   session: {
@@ -420,6 +447,8 @@ const verifyContactEmailChange =
     createBrowserSession,
 
     validateBrowserSession,
+
+    validateIdentitySession,
 
     touchBrowserSession,
 

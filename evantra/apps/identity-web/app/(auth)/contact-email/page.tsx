@@ -221,7 +221,7 @@ export default function ContactEmailPage() {
               </button>
 
               <Link
-                href="/account"
+                href="/workspace/account"
                 className="rounded-xl bg-[#e6b24a] px-5 py-3 text-sm font-semibold text-[#06131f] transition hover:bg-[#f0c261]"
               >
                 Return to account
@@ -238,7 +238,7 @@ export default function ContactEmailPage() {
       <div className="mx-auto min-h-screen max-w-lg px-6 py-10">
         <header className="mb-12 flex items-center justify-between">
           <Link
-            href="/account"
+            href="/workspace/account"
             className="inline-flex items-center gap-2 text-sm text-white/45 transition hover:text-white"
           >
             <ArrowLeft size={16} />

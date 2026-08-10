@@ -9,6 +9,6 @@ export interface ValidateSessionRequest {
   /**
    * Browser Session ID.
    */
-  sessionId: string;
+  sessionId?: string;
 
 }

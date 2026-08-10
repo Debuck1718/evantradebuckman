@@ -1,20 +1,18 @@
 import {
   HttpController,
+  HttpError,
   HttpRequest,
   HttpResponse,
+  HttpStatus,
 } from "../../http";
 
 import {
-  ValidateBrowserSessionWorkflow,
+  ValidateIdentitySessionWorkflow,
 } from "../../workflows";
 
 import {
   ValidateSessionRequest,
 } from "../requests";
-
-import {
-  ValidateSessionRequestValidator,
-} from "../validation";
 
 import {
   ValidateSessionResponseMapper,
@@ -30,7 +28,7 @@ export class ValidateSessionController
   constructor(
 
     private readonly validate:
-      ValidateBrowserSessionWorkflow,
+      ValidateIdentitySessionWorkflow,
 
   ) {}
 
@@ -44,27 +42,42 @@ export class ValidateSessionController
         ValidateSessionRequest
       >,
   ): Promise<HttpResponse> {
+    const sessionIdCandidates = [
+      request.body?.sessionId,
+      request.cookies.evantra_session_id,
+      request.cookies.session_id,
+      request.headers["x-session-id"],
+    ];
 
-    ValidateSessionRequestValidator
-      .validate(
+    const sessionId =
+      sessionIdCandidates
+        .map((value) =>
+          typeof value === "string"
+            ? value.trim()
+            : "",
+        )
+        .find((value) => Boolean(value));
 
-        request.body,
-
+    if (!sessionId) {
+      throw new HttpError(
+        HttpStatus.BAD_REQUEST,
+        "Session ID is required.",
       );
+    }
 
-    const session =
+    const identitySession =
       await this.validate.execute({
 
         sessionId:
 
-          request.body.sessionId,
+          sessionId,
 
       });
 
     return ValidateSessionResponseMapper
       .success(
 
-        session,
+        identitySession,
 
       );
 

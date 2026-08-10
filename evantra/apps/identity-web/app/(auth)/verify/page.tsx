@@ -1,6 +1,7 @@
 "use client";
 
 import {
+    Suspense,
     useEffect,
     useState,
 } from "react";
@@ -23,7 +24,7 @@ import {
     verifyAccount,
 } from "../../lib/api";
 
-export default function VerifyPage() {
+function VerifyPageContent() {
     const router = useRouter();
     const searchParams =
         useSearchParams();
@@ -218,5 +219,24 @@ export default function VerifyPage() {
                 </div>
             </div>
         </main>
+    );
+}
+
+export default function VerifyPage() {
+    return (
+        <Suspense
+            fallback={
+                <main className="min-h-screen bg-[#06131f] text-white">
+                    <div className="mx-auto flex min-h-screen w-full max-w-6xl items-center justify-center p-6">
+                        <Loader2
+                            size={28}
+                            className="animate-spin text-[#e6b24a]"
+                        />
+                    </div>
+                </main>
+            }
+        >
+            <VerifyPageContent />
+        </Suspense>
     );
 }

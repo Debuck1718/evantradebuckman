@@ -3,6 +3,10 @@ import {
   HttpStatus,
 } from "../../http";
 
+import {
+  SessionCookieMapper,
+} from "./SessionCookieMapper";
+
 /**
  * Maps Logout responses.
  */
@@ -21,7 +25,9 @@ export class LogoutResponseMapper {
 
       headers: {},
 
-      cookies: [],
+      cookies: [
+        SessionCookieMapper.clear(),
+      ],
 
       body: {
 

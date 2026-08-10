@@ -4,8 +4,18 @@ import {
   Response,
 } from "express";
 
-import { DomainError } from "../../domain/errors/DomainError";
-import { OAuthError } from "../../domain/errors/OAuthError";
+import {
+  HttpError,
+  HttpStatus,
+} from "../";
+
+import {
+  SessionError,
+} from "../../session/errors";
+
+import {
+  AuthenticationError,
+} from "../../authentication/errors";
 
 /**
  * Global HTTP error handler.
@@ -25,20 +35,24 @@ export function ErrorMiddleware(
 
 ): void {
 
-  //
-  // OAuth Errors
-  //
-  if (error instanceof OAuthError) {
+  if (error instanceof HttpError) {
 
     response
-      .status(error.status)
+      .status(
+        error.status,
+      )
       .json({
 
-        error:
-          error.error,
+        error: {
+          code:
+            HttpStatus[
+              error.status
+            ],
 
-        error_description:
+          message:
           error.message,
+
+        },
 
       });
 
@@ -46,20 +60,59 @@ export function ErrorMiddleware(
 
   }
 
-  //
-  // Other Domain Errors
-  //
-  if (error instanceof DomainError) {
+  if (error instanceof SessionError) {
+
+    const unauthorizedCodes = [
+      "session_expired",
+      "session_idle_timeout",
+      "session_locked",
+      "session_revoked",
+      "session_terminated",
+      "step_up_required",
+    ];
+
+    const status =
+      error.error === "session_not_found"
+        ? HttpStatus.NOT_FOUND
+        : unauthorizedCodes.includes(
+            error.error,
+          )
+          ? HttpStatus.UNAUTHORIZED
+          : HttpStatus.BAD_REQUEST;
 
     response
-      .status(400)
+      .status(status)
       .json({
 
-        error:
-          "domain_error",
+        error: {
+          code:
+            error.error,
 
-        error_description:
-          error.message,
+          message:
+            error.description,
+
+        },
+
+      });
+
+    return;
+
+  }
+
+  if (error instanceof AuthenticationError) {
+
+    response
+      .status(error.status)
+      .json({
+
+        error: {
+          code:
+            error.code,
+
+          message:
+            error.message,
+
+        },
 
       });
 
@@ -76,11 +129,14 @@ export function ErrorMiddleware(
     .status(500)
     .json({
 
-      error:
-        "server_error",
+      error: {
+        code:
+          "INTERNAL_SERVER_ERROR",
 
-      error_description:
-        "An unexpected error occurred.",
+        message:
+          "An unexpected error occurred.",
+
+      },
 
     });
 

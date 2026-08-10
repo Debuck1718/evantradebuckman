@@ -293,7 +293,7 @@ export default function ChangePasswordPage() {
           <p className="text-sm text-white/40">
             Forgot your current password?{" "}
             <Link
-              href="/identity/auth/forgot-password"
+              href="/forgot-password"
               className="font-medium text-[#e6b24a] hover:text-[#f0c261]"
             >
               Recover your account

@@ -200,6 +200,116 @@ export async function registerAccount(
 }
 
 // ======================================================
+// OAuth Clients
+// ======================================================
+
+export interface RegisterOAuthClientInput {
+  ownerAccountId: string;
+  name: string;
+  slug: string;
+  homepageUrl?: string;
+  description?: string;
+  firstParty?: boolean;
+}
+
+export interface RegisterOAuthClientResponse {
+  client: {
+    id: string;
+    ownerAccountId: string;
+    clientId: string;
+    name: string;
+    slug: string;
+    homepageUrl?: string;
+    description?: string;
+    firstParty: boolean;
+    status: string;
+    createdAt: string;
+  };
+  clientSecret: string;
+}
+
+export interface RegisterOAuthRedirectUriInput {
+  clientId: string;
+  redirectUri: string;
+  primary?: boolean;
+}
+
+export interface RegisterOAuthRedirectUriResponse {
+  redirectUri: {
+    id: string;
+    clientId: string;
+    redirectUri: string;
+    primary: boolean;
+    createdAt: string;
+  };
+}
+
+export async function registerOAuthClient(
+  input: RegisterOAuthClientInput,
+): Promise<RegisterOAuthClientResponse> {
+  const response = await fetch(
+    `${API_URL}/clients/register`,
+    {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify({
+        ownerAccountId: input.ownerAccountId,
+        name: input.name.trim(),
+        slug: input.slug.trim().toLowerCase(),
+        ...(input.homepageUrl?.trim()
+          ? { homepageUrl: input.homepageUrl.trim() }
+          : {}),
+        ...(input.description?.trim()
+          ? { description: input.description.trim() }
+          : {}),
+        ...(input.firstParty !== undefined
+          ? { firstParty: input.firstParty }
+          : {}),
+      }),
+
+      cache: "no-store",
+    },
+  );
+
+  return readResponse<RegisterOAuthClientResponse>(
+    response,
+  );
+}
+
+export async function registerOAuthRedirectUri(
+  input: RegisterOAuthRedirectUriInput,
+): Promise<RegisterOAuthRedirectUriResponse> {
+  const response = await fetch(
+    `${API_URL}/clients/redirect-uris`,
+    {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify({
+        clientId: input.clientId,
+        redirectUri: input.redirectUri.trim(),
+        ...(input.primary !== undefined
+          ? { primary: input.primary }
+          : {}),
+      }),
+
+      cache: "no-store",
+    },
+  );
+
+  return readResponse<RegisterOAuthRedirectUriResponse>(
+    response,
+  );
+}
+
+// ======================================================
 // Verification
 // ======================================================
 
@@ -329,7 +439,7 @@ export async function validateSession(
 // ======================================================
 
 export interface LogoutInput {
-  sessionId: string;
+  sessionId?: string;
 }
 
 export interface LogoutResponse {
@@ -337,7 +447,7 @@ export interface LogoutResponse {
 }
 
 export async function logout(
-  sessionId: string,
+  sessionId?: string,
 ): Promise<LogoutResponse> {
   const response = await fetch(
     `${API_URL}/identity/logout`,
@@ -348,8 +458,12 @@ export async function logout(
         "Content-Type": "application/json",
       },
 
+      credentials: "include",
+
       body: JSON.stringify({
-        sessionId,
+        ...(sessionId
+          ? { sessionId }
+          : {}),
       }),
 
       cache: "no-store",
@@ -595,6 +709,8 @@ export interface BrowserSessionResponse {
 
   evantraId: string;
 
+  authenticated?: string;
+
   authenticatedAt?: string;
 
   expiresAt: string;
@@ -610,8 +726,53 @@ export interface BrowserSessionResponse {
   createdAt?: string;
 
   lifecycle?: {
+    status?: string;
     revoked?: boolean;
     terminated?: boolean;
+  };
+
+  device?: {
+    deviceId?: string;
+    name?: string;
+    type?:
+      | "desktop"
+      | "laptop"
+      | "mobile"
+      | "tablet"
+      | "server"
+      | "tv"
+      | "iot"
+      | "unknown";
+    operatingSystem?: string;
+    operatingSystemVersion?: string;
+    browser?: string;
+    browserVersion?: string;
+    platform?: string;
+    trusted?: boolean;
+    verified?: boolean;
+    lastSeenAt?: string;
+  };
+
+  network?: {
+    ipAddress?: string;
+    forwardedIpAddress?: string | null;
+    country?: string | null;
+    region?: string | null;
+    city?: string | null;
+    internetServiceProvider?: string | null;
+    autonomousSystemNumber?: string | null;
+    networkType?:
+      | "wired"
+      | "wifi"
+      | "cellular"
+      | "satellite"
+      | "vpn"
+      | "tor"
+      | "proxy"
+      | "unknown";
+    vpnDetected?: boolean;
+    proxyDetected?: boolean;
+    torDetected?: boolean;
   };
 }
 

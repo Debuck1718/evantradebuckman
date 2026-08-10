@@ -7,3 +7,5 @@ export * from "./MembershipStatus";
 
 export * from "./Role";
 export * from "./Permission";
+export * from "./OrganizationRegistry";
+export * from "./OrganizationManager";

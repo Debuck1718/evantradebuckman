@@ -12,6 +12,10 @@ import {
   HttpStatus,
 } from "../../http";
 
+import {
+  SessionCookieMapper,
+} from "./SessionCookieMapper";
+
 /**
  * Maps authentication
  * results into HTTP
@@ -39,7 +43,11 @@ export class AuthenticationResponseMapper {
 
       headers: {},
 
-      cookies: [],
+      cookies: [
+        SessionCookieMapper.active(
+          params.browserSession,
+        ),
+      ],
 
       body: {
 
@@ -58,6 +66,15 @@ export class AuthenticationResponseMapper {
               .contactEmail
               .value(),
 
+          firstName:
+            params.account.firstName,
+
+          lastName:
+            params.account.lastName,
+
+          status:
+            params.account.getStatus(),
+
         },
 
         session: {
@@ -65,8 +82,29 @@ export class AuthenticationResponseMapper {
           id:
             params.session.id,
 
+          sessionId:
+            params.browserSession
+              .identity
+              .sessionId,
+
+          accountId:
+            params.browserSession
+              .identity
+              .accountId,
+
+          evantraId:
+            params.browserSession
+              .identity
+              .evantraId
+              .value(),
+
           expiresAt:
             params.session.expiresAt,
+
+          idleTimeoutAt:
+            params.browserSession
+              .lifecycle
+              .getIdleTimeoutAt(),
 
         },
 

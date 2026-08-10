@@ -56,6 +56,17 @@ function formatDate(
 function getDeviceIcon(
   session: BrowserSessionResponse,
 ) {
+  const deviceType =
+    session.device?.type;
+
+  if (deviceType === "mobile") {
+    return Smartphone;
+  }
+
+  if (deviceType === "tablet") {
+    return Monitor;
+  }
+
   const value = JSON.stringify(session)
     .toLowerCase();
 
@@ -76,6 +87,56 @@ function getDeviceIcon(
   }
 
   return Laptop;
+}
+
+function networkTypeLabel(
+  session: BrowserSessionResponse,
+): string {
+  const type =
+    session.network?.networkType;
+
+  if (!type) {
+    return "Unknown network";
+  }
+
+  switch (type) {
+    case "wifi":
+      return "Wi-Fi";
+    case "wired":
+      return "Wired";
+    case "cellular":
+      return "Cellular";
+    case "satellite":
+      return "Satellite";
+    case "vpn":
+      return "VPN";
+    case "tor":
+      return "Tor";
+    case "proxy":
+      return "Proxy";
+    default:
+      return "Unknown network";
+  }
+}
+
+function networkRiskFlags(
+  session: BrowserSessionResponse,
+): string[] {
+  const flags: string[] = [];
+
+  if (session.network?.vpnDetected) {
+    flags.push("VPN detected");
+  }
+
+  if (session.network?.proxyDetected) {
+    flags.push("Proxy detected");
+  }
+
+  if (session.network?.torDetected) {
+    flags.push("Tor detected");
+  }
+
+  return flags;
 }
 
 function isRevoked(
@@ -491,7 +552,7 @@ export default function SecurityPage() {
           </div>
 
           <Link
-            href="/identity/auth/account"
+            href="/workspace/account"
             className="text-sm text-white/50 transition hover:text-white"
           >
             Back to account
@@ -757,9 +818,10 @@ export default function SecurityPage() {
                         <div className="min-w-0">
                           <div className="flex flex-wrap items-center gap-2">
                             <h3 className="text-base font-semibold">
-                              {isCurrent
-                                ? "This device"
-                                : "Browser session"}
+                              {item.device?.name ??
+                                (isCurrent
+                                  ? "This device"
+                                  : "Browser session")}
                             </h3>
 
                             {isCurrent && (
@@ -781,6 +843,43 @@ export default function SecurityPage() {
                           </div>
 
                           <div className="mt-4 grid gap-3 text-sm text-white/45 sm:grid-cols-2">
+                            <div className="flex items-start gap-2">
+                              <Globe2
+                                size={15}
+                                className="mt-0.5 shrink-0"
+                              />
+
+                              <span>
+                                <span className="block text-xs text-white/25">
+                                  Network
+                                </span>
+
+                                {networkTypeLabel(
+                                  item,
+                                )}
+                              </span>
+                            </div>
+
+                            <div className="flex items-start gap-2">
+                              <Laptop
+                                size={15}
+                                className="mt-0.5 shrink-0"
+                              />
+
+                              <span>
+                                <span className="block text-xs text-white/25">
+                                  Device
+                                </span>
+
+                                {item.device?.browser ||
+                                  "Browser"}
+                                {item.device
+                                  ?.browserVersion
+                                  ? ` ${item.device.browserVersion}`
+                                  : ""}
+                              </span>
+                            </div>
+
                             <div className="flex items-start gap-2">
                               <Clock3
                                 size={15}
@@ -847,12 +946,49 @@ export default function SecurityPage() {
                                   </span>
 
                                   {formatDate(
-                                    item.authenticatedAt,
+                                    item.authenticatedAt ??
+                                      item.authenticated,
                                   )}
                                 </span>
                               </div>
                             )}
                           </div>
+
+                          {(item.network?.city ||
+                            item.network?.region ||
+                            item.network?.country ||
+                            item.network?.ipAddress) && (
+                            <p className="mt-3 text-xs text-white/35">
+                              {[
+                                item.network?.city,
+                                item.network?.region,
+                                item.network?.country,
+                              ]
+                                .filter(Boolean)
+                                .join(", ") ||
+                                "Location unavailable"}
+                              {item.network
+                                ?.ipAddress
+                                ? ` • ${item.network.ipAddress}`
+                                : ""}
+                            </p>
+                          )}
+
+                          {networkRiskFlags(item)
+                            .length > 0 && (
+                            <div className="mt-3 flex flex-wrap gap-2">
+                              {networkRiskFlags(
+                                item,
+                              ).map((flag) => (
+                                <span
+                                  key={flag}
+                                  className="rounded-full border border-amber-300/30 bg-amber-300/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-amber-200"
+                                >
+                                  {flag}
+                                </span>
+                              ))}
+                            </div>
+                          )}
 
                           <p className="mt-4 break-all text-[11px] text-white/20">
                             Session ID:{" "}
@@ -957,21 +1093,28 @@ export default function SecurityPage() {
         {/* Footer navigation */}
         <div className="mt-10 flex flex-wrap gap-5 border-t border-white/10 pt-7">
           <Link
-            href="/identity/auth/account"
+            href="/workspace/account"
             className="text-sm text-white/40 transition hover:text-white"
           >
             Account
           </Link>
 
           <Link
-            href="/identity/auth/contact-email"
+            href="/workspace/profile"
+            className="text-sm text-white/40 transition hover:text-white"
+          >
+            Profile
+          </Link>
+
+          <Link
+            href="/contact-email"
             className="text-sm text-white/40 transition hover:text-white"
           >
             Contact email
           </Link>
 
           <Link
-            href="/identity/auth/security"
+            href="/security"
             className="text-sm text-[#e6b24a]"
           >
             Security

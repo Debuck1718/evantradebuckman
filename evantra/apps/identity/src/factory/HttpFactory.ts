@@ -5,6 +5,31 @@ import { AuthorizationController } from "../http/controllers/AuthorizationContro
 import { TokenController } from "../http/controllers/TokenController";
 import { RevokeTokenController } from "../http/controllers/RevokeTokenController";
 import { IntrospectTokenController } from "../http/controllers/IntrospectTokenController";
+import { UserInfoController } from "../http/controllers/UserInfoController";
+import { RegisterClientController } from "../http/controllers/RegisterClientController";
+import { RegisterClientRedirectUriController } from "../http/controllers/RegisterClientRedirectUriController";
+import { OidcDiscoveryController } from "../http/controllers/OidcDiscoveryController";
+import { OidcJwksController } from "../http/controllers/OidcJwksController";
+import { AuthenticateController } from "../authentication/controllers/AuthenticateController";
+import { RegisterController } from "../authentication/controllers/RegisterController";
+import { VerifyAccountController } from "../authentication/controllers/VerifyAccountController";
+import { LogoutController } from "../authentication/controllers/LogoutController";
+import { ValidateSessionController } from "../authentication/controllers/ValidateSessionController";
+import { RefreshSessionController } from "../authentication/controllers/RefreshSessionController";
+import { TouchSessionController } from "../authentication/controllers/TouchSessionController";
+import { ListBrowserSessionsController } from "../authentication/controllers/ListBrowserSessionsController";
+import { RevokeBrowserSessionController } from "../authentication/controllers/RevokeBrowserSessionController";
+import { RevokeAllBrowserSessionsController } from "../authentication/controllers/RevokeAllBrowserSessionsController";
+import { RotateBrowserSessionController } from "../authentication/controllers/RotateBrowserSessionController";
+import { ForgotPasswordController } from "../authentication/controllers/ForgotPasswordController";
+import { ResetPasswordController } from "../authentication/controllers/ResetPasswordController";
+import { ChangePasswordController } from "../authentication/controllers/ChangePasswordController";
+import { ResendVerificationController } from "../authentication/controllers/ResendVerificationController";
+import { RequestContactEmailChangeController } from "../authentication/controllers/RequestContactEmailChangeController";
+import { VerifyContactEmailChangeController } from "../authentication/controllers/VerifyContactEmailChangeController";
+import { TerminateBrowserSessionController } from "../authentication/controllers/TerminateBrowserSessionController";
+import { RotateClientSecretController } from "../client/RotateClientSecretController";
+import { ApproveClientController } from "../client/ApproveClientController";
 
 import { AuthorizationCodeGrantHandler } from "../http/oauth/grants/AuthorizationCodeGrantHandler";
 import { RefreshTokenGrantHandler } from "../http/oauth/grants/RefreshTokenGrantHandler";
@@ -92,6 +117,8 @@ export class HttpFactory {
 
         workflows.oauth.authorize,
 
+        workflows.session.validateBrowserSession,
+
       );
 
     const tokenController =
@@ -102,14 +129,199 @@ export class HttpFactory {
       );
 
     const revokeTokenController =
-  new RevokeTokenController(
-    workflows.oauth.revokeToken,
-  );
+      new RevokeTokenController(
 
-const introspectTokenController =
-  new IntrospectTokenController(
-    workflows.oauth.introspectToken,
-  );  
+        workflows.oauth.revokeToken,
+
+      );
+
+    const introspectTokenController =
+      new IntrospectTokenController(
+
+        workflows.oauth.introspectToken,
+
+      );
+
+    const userInfoController =
+      new UserInfoController(
+
+        workflows.oauth.userInfo,
+
+      );
+
+    // ==========================================================
+    // Identity Controllers
+    // ==========================================================
+
+    const authenticateController =
+      new AuthenticateController(
+
+        workflows.identity.authenticate,
+
+      );
+
+    const registerController =
+      new RegisterController(
+
+        workflows.identity.registerAccount,
+
+      );
+
+    const verifyAccountController =
+      new VerifyAccountController(
+
+        workflows.identity.verifyAccount,
+
+      );
+
+    const logoutController =
+      new LogoutController(
+
+        workflows.session.terminateBrowserSession,
+
+      );
+
+    const validateSessionController =
+      new ValidateSessionController(
+
+        workflows.session.validateIdentitySession,
+
+      );
+
+    const refreshSessionController =
+      new RefreshSessionController(
+
+        workflows.session.refreshBrowserSession,
+
+      );
+
+    const touchSessionController =
+      new TouchSessionController(
+
+        workflows.session.touchBrowserSession,
+
+      );
+
+    const listSessionsController =
+      new ListBrowserSessionsController(
+
+        workflows.session.validateBrowserSession,
+
+        workflows.session.listBrowserSessions,
+
+      );
+
+    const revokeSessionController =
+      new RevokeBrowserSessionController(
+
+        workflows.session.revokeBrowserSession,
+
+      );
+
+    const revokeAllSessionsController =
+      new RevokeAllBrowserSessionsController(
+
+        workflows.session.revokeAllBrowserSessions,
+
+      );
+
+    const rotateSessionController =
+      new RotateBrowserSessionController(
+
+        workflows.session.rotateBrowserSession,
+
+      );
+
+    const terminateSessionController =
+      new TerminateBrowserSessionController(
+
+        workflows.session.terminateBrowserSession,
+
+      );
+
+    const forgotPasswordController =
+      new ForgotPasswordController(
+
+        workflows.identity.forgotPassword,
+
+      );
+
+    const resetPasswordController =
+      new ResetPasswordController(
+
+        workflows.identity.resetPassword,
+
+      );
+
+    const changePasswordController =
+      new ChangePasswordController(
+
+        workflows.identity.changePassword,
+
+      );
+
+    const resendVerificationController =
+      new ResendVerificationController(
+
+        workflows.identity.resendVerification,
+
+      );
+
+    const requestContactEmailChangeController =
+      new RequestContactEmailChangeController(
+
+        workflows.identity.requestContactEmailChange,
+
+      );
+
+    const verifyContactEmailChangeController =
+      new VerifyContactEmailChangeController(
+
+        workflows.identity.verifyContactEmailChange,
+
+      );
+
+    // ==========================================================
+    // Client Controllers
+    // ==========================================================
+
+    const registerClientController =
+      new RegisterClientController(
+
+        workflows.clients.registerClient,
+
+      );
+
+    const registerClientRedirectUriController =
+      new RegisterClientRedirectUriController(
+
+        workflows.clients.registerClientRedirectUri,
+
+      );
+
+    const rotateClientSecretController =
+      new RotateClientSecretController(
+
+        workflows.clients.rotateClientSecret,
+
+      );
+
+    const approveClientController =
+      new ApproveClientController(
+
+        workflows.clients.approveClient,
+
+      );
+
+    // ==========================================================
+    // OIDC Controllers
+    // ==========================================================
+
+    const oidcDiscoveryController =
+      new OidcDiscoveryController();
+
+    const oidcJwksController =
+      new OidcJwksController();
 
     // ==========================================================
     // HTTP Registry
@@ -131,10 +343,14 @@ const introspectTokenController =
             tokenController,
 
           revokeToken:
-              revokeTokenController,  
-              
+            revokeTokenController,
+
           introspectToken:
-              introspectTokenController,
+            introspectTokenController,
+
+          userInfo:
+            userInfoController,
+
         },
 
         grants: {
@@ -154,25 +370,101 @@ const introspectTokenController =
 
       identity: {
 
-        // register
-        // authenticate
-        // verify
-        // logout
+        controllers: {
+
+          authentication: {
+
+            authenticate:
+              authenticateController,
+
+            register:
+              registerController,
+
+            verify:
+              verifyAccountController,
+
+            logout:
+              logoutController,
+
+            validateSession:
+              validateSessionController,
+
+            refreshSession:
+              refreshSessionController,
+
+            touchSession:
+              touchSessionController,
+
+            listSessions:
+              listSessionsController,
+
+            revokeSession:
+              revokeSessionController,
+
+            revokeAllSessions:
+              revokeAllSessionsController,
+
+            rotateSession:
+              rotateSessionController,
+
+            terminateSession:
+              terminateSessionController,
+
+            forgotPassword:
+              forgotPasswordController,
+
+            resetPassword:
+              resetPasswordController,
+
+            changePassword:
+              changePasswordController,
+
+            resendVerification:
+              resendVerificationController,
+
+            requestContactEmailChange:
+              requestContactEmailChangeController,
+
+            verifyContactEmailChange:
+              verifyContactEmailChangeController,
+
+          },
+
+        },
 
       },
 
       clients: {
 
-        // register
-        // redirectUris
+        controllers: {
+
+          registerClient:
+            registerClientController,
+
+          registerRedirectUri:
+            registerClientRedirectUriController,
+
+          approveClient:
+            approveClientController,
+
+          rotateClientSecret:
+            rotateClientSecretController,
+
+        },
 
       },
 
       oidc: {
 
-        // discovery
-        // jwks
-        // userInfo
+        controllers: {
+
+          discovery:
+            oidcDiscoveryController,
+
+          jwks:
+            oidcJwksController,
+
+        },
 
       },
 

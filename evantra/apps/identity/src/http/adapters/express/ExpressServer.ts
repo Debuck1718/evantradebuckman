@@ -2,19 +2,13 @@ import express, {
   Express,
 } from "express";
 
-import cookieParser from "cookie-parser";
-
 import {
   Application,
 } from "../../../bootstrap/Application";
 
 import {
-  ExpressRouter,
-} from "./ExpressRouter";
-
-import {
-  ExpressErrorHandler,
-} from "./ExpressErrorHandler";
+  configureExpress,
+} from "../../server/configureExpress";
 
 /**
  * Creates the Express server.
@@ -25,38 +19,9 @@ export class ExpressServer {
     application: ReturnType<typeof Application.create>,
   ): Express {
 
-    const app =
-      express();
-
-    app.use(
-
-      express.json(),
-
+    return configureExpress(
+      application.identity.http,
     );
-
-    app.use(
-
-      cookieParser(),
-
-    );
-
-    app.use(
-
-      ExpressRouter.create(
-
-        application,
-
-      ),
-
-    );
-
-    app.use(
-
-      ExpressErrorHandler.handle,
-
-    );
-
-    return app;
 
   }
 
