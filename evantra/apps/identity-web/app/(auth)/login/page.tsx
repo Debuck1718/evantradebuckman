@@ -21,10 +21,6 @@ import {
 import {
   authenticate,
 } from "../../lib/api";
-import {
-  buildWorkspaceUrl,
-  isAllowedAbsoluteSurfaceUrl,
-} from "../../lib/surfaceUrls";
 
 import {
   IdentityShell,
@@ -100,35 +96,13 @@ function LoginPageContent() {
       const returnTo =
         searchParams.get("returnTo") ?? "";
 
-      if (
+      const safeReturnTo =
         returnTo.startsWith("/") &&
         !returnTo.startsWith("//")
-      ) {
-        router.push(returnTo);
-        router.refresh();
-        return;
-      }
+          ? returnTo
+          : "/workspace/account";
 
-      if (
-        returnTo &&
-        isAllowedAbsoluteSurfaceUrl(returnTo)
-      ) {
-        window.location.assign(returnTo);
-        return;
-      }
-
-      const fallback =
-        buildWorkspaceUrl("/workspace/account");
-
-      if (
-        fallback.startsWith("http://") ||
-        fallback.startsWith("https://")
-      ) {
-        window.location.assign(fallback);
-        return;
-      }
-
-      router.push(fallback);
+      router.push(safeReturnTo);
       router.refresh();
     } catch (err) {
       setError(

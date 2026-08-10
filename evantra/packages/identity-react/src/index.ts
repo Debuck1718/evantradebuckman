@@ -20,7 +20,7 @@ export interface EvantraAuthorizeParams {
 }
 
 const defaultConfig: EvantraIdentityConfig = {
-  identityWebBaseUrl: "http://localhost:3001",
+  identityWebBaseUrl: "https://identity.evantradebuckman.com",
 };
 
 const EvantraIdentityContext = createContext<EvantraIdentityConfig>(defaultConfig);

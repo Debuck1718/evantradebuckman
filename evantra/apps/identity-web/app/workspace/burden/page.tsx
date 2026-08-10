@@ -9,7 +9,6 @@ import {
   type BurdenSnapshot,
 } from "../lib/intelligence";
 import { useIdentitySession } from "../../../components/identity/IdentitySessionProvider";
-import { buildIdentityLoginUrl, buildWorkspaceUrl } from "../../lib/surfaceUrls";
 
 const fields: Array<{ key: keyof BurdenSnapshot; label: string; min: number; max: number; step?: number }> = [
   { key: "openTasks", label: "Open tasks", min: 0, max: 50 },
@@ -23,7 +22,6 @@ const fields: Array<{ key: keyof BurdenSnapshot; label: string; min: number; max
 
 export default function WorkspaceBurdenPage() {
   const { account, session, loading } = useIdentitySession();
-  const signInUrl = buildIdentityLoginUrl(buildWorkspaceUrl("/workspace/burden"));
 
   const [snapshot, setSnapshot] = useState<BurdenSnapshot>(defaultBurdenSnapshot);
   const [saved, setSaved] = useState(false);
@@ -126,7 +124,7 @@ export default function WorkspaceBurdenPage() {
         <div className="mx-auto flex min-h-screen max-w-6xl items-center justify-center px-6">
           <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-center">
             <p className="text-sm text-white/70">Sign in to use workspace burden intelligence.</p>
-            <Link href={signInUrl} className="mt-4 inline-block rounded-xl bg-[#e6b24a] px-4 py-2 text-sm font-semibold text-[#06131f]">
+            <Link href="/login" className="mt-4 inline-block rounded-xl bg-[#e6b24a] px-4 py-2 text-sm font-semibold text-[#06131f]">
               Sign in
             </Link>
           </div>

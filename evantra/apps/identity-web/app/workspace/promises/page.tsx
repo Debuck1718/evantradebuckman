@@ -9,7 +9,6 @@ import {
   type WorkspacePromise,
 } from "../lib/intelligence";
 import { useIdentitySession } from "../../../components/identity/IdentitySessionProvider";
-import { buildIdentityLoginUrl, buildWorkspaceUrl } from "../../lib/surfaceUrls";
 
 const statuses: readonly PromiseStatus[] = [
   "proposed",
@@ -22,7 +21,6 @@ const statuses: readonly PromiseStatus[] = [
 
 export default function WorkspacePromisesPage() {
   const { account, session, loading } = useIdentitySession();
-  const signInUrl = buildIdentityLoginUrl(buildWorkspaceUrl("/workspace/promises"));
 
   const [title, setTitle] = useState("");
   const [dueAt, setDueAt] = useState("");
@@ -152,7 +150,7 @@ export default function WorkspacePromisesPage() {
         <div className="mx-auto flex min-h-screen max-w-6xl items-center justify-center px-6">
           <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-center">
             <p className="text-sm text-white/70">Sign in to use workspace promise tracking.</p>
-            <Link href={signInUrl} className="mt-4 inline-block rounded-xl bg-[#e6b24a] px-4 py-2 text-sm font-semibold text-[#06131f]">
+            <Link href="/login" className="mt-4 inline-block rounded-xl bg-[#e6b24a] px-4 py-2 text-sm font-semibold text-[#06131f]">
               Sign in
             </Link>
           </div>

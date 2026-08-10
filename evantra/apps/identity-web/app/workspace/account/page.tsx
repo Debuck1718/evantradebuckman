@@ -7,6 +7,7 @@ import {
 } from "react";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import {
   CheckCircle2,
@@ -21,17 +22,17 @@ import {
 import {
   useIdentitySession,
 } from "../../../components/identity/IdentitySessionProvider";
-import { buildIdentityLoginUrl, buildWorkspaceUrl } from "../../lib/surfaceUrls";
 
 import { logout } from "../../lib/api";
 
 export default function AccountPage() {
+  const router = useRouter();
+
   const {
     account,
     session,
     loading,
   } = useIdentitySession();
-  const signInUrl = buildIdentityLoginUrl(buildWorkspaceUrl("/workspace/account"));
 
   const [loggingOut, setLoggingOut] =
     useState(false);
@@ -132,7 +133,8 @@ export default function AccountPage() {
        * Do not leave the account page accessible
        * through the current client state.
        */
-      window.location.assign(signInUrl);
+      router.replace("/login");
+      router.refresh();
     }
   };
 
@@ -189,7 +191,7 @@ export default function AccountPage() {
             </p>
 
             <Link
-              href={signInUrl}
+              href="/login"
               className="mt-7 inline-flex w-full items-center justify-center rounded-xl bg-[#e6b24a] px-6 py-3 text-sm font-semibold text-[#06131f] transition hover:bg-[#f0c66b]"
             >
               Sign in

@@ -64,8 +64,8 @@ export default function Technology() {
             >
               {category.technologies.map((technology) => (
                 <TechChip
-                  key={technology}
-                  label={technology}
+                  key={technology.name}
+                  label={technology.name}
                 />
               ))}
             </div>
