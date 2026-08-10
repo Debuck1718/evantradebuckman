@@ -93,7 +93,7 @@ export interface CompanyProduct {
    Technology Stack
 ============================================================ */
 export interface TechnologyItem {
-  name: Key | null | undefined;
+  name?: string;
   title: string;
 
   description?: string;

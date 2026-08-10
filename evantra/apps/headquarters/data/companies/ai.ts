@@ -302,11 +302,11 @@ export const aiCompany: CompanyData = {
             title: "AI Frameworks",
             name: "",
             technologies: [
-                { title: "LangChain" },
-                { title: "LlamaIndex" },
-                { title: "CrewAI" },
-                { title: "AutoGen" },
-                { title: "Haystack" },
+                { name: "langchain", title: "LangChain" },
+                { name: "llamaindex", title: "LlamaIndex" },
+                { name: "crewai", title: "CrewAI" },
+                { name: "autogen", title: "AutoGen" },
+                { name: "haystack", title: "Haystack" },
             ]
         },
 
@@ -314,10 +314,10 @@ export const aiCompany: CompanyData = {
             title: "Machine Learning",
             name: "",
             technologies: [
-                { title: "PyTorch" },
-                { title: "TensorFlow" },
-                { title: "Scikit-Learn" },
-                { title: "XGBoost" },
+                { name: "pytorch", title: "PyTorch" },
+                { name: "tensorflow", title: "TensorFlow" },
+                { name: "scikit-learn", title: "Scikit-Learn" },
+                { name: "xgboost", title: "XGBoost" },
             ]
         },
 
@@ -325,10 +325,10 @@ export const aiCompany: CompanyData = {
             title: "Data Engineering",
             name: "",
             technologies: [
-                { title: "PostgreSQL" },
-                { title: "MongoDB" },
-                { title: "Redis" },
-                { title: "Supabase" },
+                { name: "postgresql", title: "PostgreSQL" },
+                { name: "mongodb", title: "MongoDB" },
+                { name: "redis", title: "Redis" },
+                { name: "supabase", title: "Supabase" },
             ]
         },
 
@@ -336,10 +336,10 @@ export const aiCompany: CompanyData = {
             title: "Vector Databases",
             name: "",
             technologies: [
-                { title: "Pinecone" },
-                { title: "Weaviate" },
-                { title: "Qdrant" },
-                { title: "FAISS" },
+                { name: "pinecone", title: "Pinecone" },
+                { name: "weaviate", title: "Weaviate" },
+                { name: "qdrant", title: "Qdrant" },
+                { name: "faiss", title: "FAISS" },
             ]
         },
 
@@ -347,11 +347,11 @@ export const aiCompany: CompanyData = {
             title: "Cloud & Deployment",
             name: "",
             technologies: [
-                { title: "Docker" },
-                { title: "Kubernetes" },
-                { title: "Azure AI" },
-                { title: "AWS Bedrock" },
-                { title: "Google Vertex AI" },
+                { name: "docker", title: "Docker" },
+                { name: "kubernetes", title: "Kubernetes" },
+                { name: "azure-ai", title: "Azure AI" },
+                { name: "aws-bedrock", title: "AWS Bedrock" },
+                { name: "google-vertex-ai", title: "Google Vertex AI" },
             ]
         },
     ],
