@@ -22,7 +22,17 @@ function normalizeHost(value: string | null): string {
     return "";
   }
 
-  return value.toLowerCase().split(":")[0];
+  const trimmed = value.trim().toLowerCase();
+
+  if (trimmed.includes("://")) {
+    try {
+      return new URL(trimmed).hostname;
+    } catch {
+      return trimmed;
+    }
+  }
+
+  return trimmed.split(":")[0];
 }
 
 function hasPrefix(pathname: string, prefixes: string[]): boolean {
@@ -40,6 +50,14 @@ function isPublicAsset(pathname: string): boolean {
 function redirectToHost(request: NextRequest, destinationHost: string): NextResponse {
   const url = request.nextUrl.clone();
   url.host = destinationHost;
+
+  return NextResponse.redirect(url, 307);
+}
+
+function redirectToPath(request: NextRequest, destinationPath: string): NextResponse {
+  const url = request.nextUrl.clone();
+  url.pathname = destinationPath;
+  url.search = "";
 
   return NextResponse.redirect(url, 307);
 }
@@ -70,36 +88,41 @@ export function proxy(request: NextRequest): NextResponse {
   const host = normalizeHost(request.headers.get("host"));
   const workspaceHost = normalizeHost(process.env.NEXT_PUBLIC_WORKSPACE_HOST ?? null);
   const identityHost = normalizeHost(process.env.NEXT_PUBLIC_IDENTITY_HOST ?? null);
-
-  if (!allowRequest(pathname)) {
-    if (APP_SURFACE === "workspace" && identityHost) {
-      return redirectToHost(request, identityHost);
-    }
-
-    if (APP_SURFACE === "identity" && workspaceHost) {
-      return redirectToHost(request, workspaceHost);
-    }
-
-    return NextResponse.redirect(new URL("/", request.url), 307);
-  }
-
   const workspaceRequest = isWorkspacePath(pathname);
 
-  // Runtime host-based split, useful when APP_SURFACE is "all".
-  if (workspaceHost && host === workspaceHost && !workspaceRequest) {
-    if (identityHost) {
-      return redirectToHost(request, identityHost);
+  if (!allowRequest(pathname)) {
+    if (APP_SURFACE === "workspace") {
+      return redirectToPath(request, "/workspace/hub");
     }
 
-    return NextResponse.redirect(new URL("/workspace/hub", request.url), 307);
-  }
-
-  if (identityHost && host === identityHost && workspaceRequest) {
-    if (workspaceHost) {
-      return redirectToHost(request, workspaceHost);
+    if (APP_SURFACE === "identity") {
+      return redirectToPath(request, "/");
     }
 
     return NextResponse.redirect(new URL("/", request.url), 307);
+  }
+
+  // Runtime host-based split, useful when APP_SURFACE is "all".
+  if (APP_SURFACE === "all") {
+    if (workspaceHost && host === workspaceHost && pathname === "/") {
+      return redirectToPath(request, "/workspace/hub");
+    }
+
+    if (workspaceHost && host === workspaceHost && !workspaceRequest) {
+      if (identityHost) {
+        return redirectToHost(request, identityHost);
+      }
+
+      return redirectToPath(request, "/workspace/hub");
+    }
+
+    if (identityHost && host === identityHost && workspaceRequest) {
+      if (workspaceHost) {
+        return redirectToHost(request, workspaceHost);
+      }
+
+      return redirectToPath(request, "/");
+    }
   }
 
   return NextResponse.next();
