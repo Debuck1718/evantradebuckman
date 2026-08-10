@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "dev:workspace": "cross-env EVANTRA_APP_SURFACE=workspace next dev",
-    "dev:identity": "cross-env EVANTRA_APP_SURFACE=identity next dev",
+    "dev": "next dev --webpack",
+    "dev:workspace": "cross-env EVANTRA_APP_SURFACE=workspace next dev --webpack",
+    "dev:identity": "cross-env EVANTRA_APP_SURFACE=identity next dev --webpack",
     "build": "next build --webpack",
     "build:workspace": "cross-env EVANTRA_APP_SURFACE=workspace next build --webpack",
     "build:identity": "cross-env EVANTRA_APP_SURFACE=identity next build --webpack",
