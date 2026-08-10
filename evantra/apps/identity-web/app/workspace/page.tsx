@@ -1,5 +1,1 @@
-import { redirect } from "next/navigation";
-
-export default function WorkspacePage() {
-	redirect("/workspace/hub");
-}
+export { default } from "./hub/page";
