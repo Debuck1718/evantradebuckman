@@ -49,7 +49,10 @@ function isPublicAsset(pathname: string): boolean {
 
 function redirectToHost(request: NextRequest, destinationHost: string): NextResponse {
   const url = request.nextUrl.clone();
-  url.host = destinationHost;
+
+  const [hostname, port] = destinationHost.split(":");
+  url.hostname = hostname;
+  url.port = port ?? "";
 
   return NextResponse.redirect(url, 307);
 }
@@ -92,10 +95,22 @@ export function proxy(request: NextRequest): NextResponse {
 
   if (!allowRequest(pathname)) {
     if (APP_SURFACE === "workspace") {
+      if (pathname === "/") {
+        return redirectToPath(request, "/workspace/hub");
+      }
+
+      if (identityHost) {
+        return redirectToHost(request, identityHost);
+      }
+
       return redirectToPath(request, "/workspace/hub");
     }
 
     if (APP_SURFACE === "identity") {
+      if (workspaceHost) {
+        return redirectToHost(request, workspaceHost);
+      }
+
       return redirectToPath(request, "/");
     }
 

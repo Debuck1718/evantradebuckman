@@ -20,7 +20,7 @@ import {
 export function AuthButtons() {
   return (
     <EvantraIdentityProvider
-      config={{ identityWebBaseUrl: "https://identity.evantra.com" }}
+      config={{ identityWebBaseUrl: "https://identity.evantradebuckman.com" }}
     >
       <EvantraSignInButton returnTo="/app" className="btn">
         Sign in with Evantra
@@ -39,7 +39,7 @@ export function AuthButtons() {
 ```ts
 import { createEvantraAuthorizeUrl } from "@evantra/identity-react";
 
-const url = createEvantraAuthorizeUrl("https://identity.evantra.com", {
+const url = createEvantraAuthorizeUrl("https://identity.evantradebuckman.com", {
   clientId: "your-client-id",
   redirectUri: "https://app.example.com/oauth/callback",
   scope: "openid profile email",

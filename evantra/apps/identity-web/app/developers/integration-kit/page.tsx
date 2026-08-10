@@ -2,9 +2,9 @@ import { IdentityShell } from "../../../components/identity/IdentityShell";
 
 const installCommand = "pnpm add @evantra/identity-react";
 
-const reactUsage = `import {\n  EvantraIdentityProvider,\n  EvantraSignInButton,\n  EvantraRegisterButton,\n} from \"@evantra/identity-react\";\n\nexport function LoginSection() {\n  return (\n    <EvantraIdentityProvider\n      config={{ identityWebBaseUrl: \"https://identity.evantra.com\" }}\n    >\n      <EvantraSignInButton className=\"btn\" returnTo=\"/app\">\n        Sign in with Evantra\n      </EvantraSignInButton>\n\n      <EvantraRegisterButton className=\"btn\" returnTo=\"/app\">\n        Create account\n      </EvantraRegisterButton>\n    </EvantraIdentityProvider>\n  );\n}`;
+const reactUsage = `import {\n  EvantraIdentityProvider,\n  EvantraSignInButton,\n  EvantraRegisterButton,\n} from \"@evantra/identity-react\";\n\nexport function LoginSection() {\n  return (\n    <EvantraIdentityProvider\n      config={{ identityWebBaseUrl: \"https://identity.evantradebuckman.com\" }}\n    >\n      <EvantraSignInButton className=\"btn\" returnTo=\"/app\">\n        Sign in with Evantra\n      </EvantraSignInButton>\n\n      <EvantraRegisterButton className=\"btn\" returnTo=\"/app\">\n        Create account\n      </EvantraRegisterButton>\n    </EvantraIdentityProvider>\n  );\n}`;
 
-const oauthUsage = `import {\n  createEvantraAuthorizeUrl,\n} from \"@evantra/identity-react\";\n\nconst url = createEvantraAuthorizeUrl(\n  \"https://identity.evantra.com\",\n  {\n    clientId: \"your-client-id\",\n    redirectUri: \"https://app.example.com/oauth/callback\",\n    scope: \"openid profile email\",\n    state: crypto.randomUUID(),\n    nonce: crypto.randomUUID(),\n  },\n);`;
+const oauthUsage = `import {\n  createEvantraAuthorizeUrl,\n} from \"@evantra/identity-react\";\n\nconst url = createEvantraAuthorizeUrl(\n  \"https://identity.evantradebuckman.com\",\n  {\n    clientId: \"your-client-id\",\n    redirectUri: \"https://app.example.com/oauth/callback\",\n    scope: \"openid profile email\",\n    state: crypto.randomUUID(),\n    nonce: crypto.randomUUID(),\n  },\n);`;
 
 export default function IntegrationKitPage() {
   return (
@@ -32,18 +32,51 @@ export default function IntegrationKitPage() {
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/40">
             React / Next usage
           </p>
-          <pre className="mt-5 overflow-x-auto rounded-xl border border-white/10 bg-black/30 p-4 text-xs leading-6 text-white/80">
-            <code>{reactUsage}</code>
-          </pre>
+            <pre className="mt-5 overflow-x-auto rounded-xl border border-white/10 bg-black/30 p-4 text-xs leading-6 text-white/80">
+              <code>{`import {
+    EvantraIdentityProvider,
+    EvantraSignInButton,
+    EvantraRegisterButton,
+  } from "@evantra/identity-react";
+
+  export function LoginSection() {
+    return (
+      <EvantraIdentityProvider
+        config={{ identityWebBaseUrl: "https://identity.evantradebuckman.com" }}
+      >
+        <EvantraSignInButton className="btn" returnTo="/app">
+          Sign in with Evantra
+        </EvantraSignInButton>
+
+        <EvantraRegisterButton className="btn" returnTo="/app">
+          Create account
+        </EvantraRegisterButton>
+      </EvantraIdentityProvider>
+    );
+  }`}</code>
+            </pre>
         </section>
 
         <section className="rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-6">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/40">
             OAuth authorize helper
           </p>
-          <pre className="mt-5 overflow-x-auto rounded-xl border border-white/10 bg-black/30 p-4 text-xs leading-6 text-white/80">
-            <code>{oauthUsage}</code>
-          </pre>
+            <pre className="mt-5 overflow-x-auto rounded-xl border border-white/10 bg-black/30 p-4 text-xs leading-6 text-white/80">
+              <code>{`import {
+    createEvantraAuthorizeUrl,
+  } from "@evantra/identity-react";
+
+  const url = createEvantraAuthorizeUrl(
+    "https://identity.evantradebuckman.com",
+    {
+      clientId: "your-client-id",
+      redirectUri: "https://app.example.com/oauth/callback",
+      scope: "openid profile email",
+      state: crypto.randomUUID(),
+      nonce: crypto.randomUUID(),
+    },
+  );`}</code>
+            </pre>
         </section>
 
         <section className="rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-6">
@@ -59,3 +92,4 @@ export default function IntegrationKitPage() {
     </IdentityShell>
   );
 }
+

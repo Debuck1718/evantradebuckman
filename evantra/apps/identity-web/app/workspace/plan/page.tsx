@@ -7,9 +7,11 @@ import {
   type LifeWorkPlan,
 } from "../lib/intelligence";
 import { useIdentitySession } from "../../../components/identity/IdentitySessionProvider";
+import { buildIdentityLoginUrl, buildWorkspaceUrl } from "../../lib/surfaceUrls";
 
 export default function WorkspacePlanPage() {
   const { account, session, loading } = useIdentitySession();
+  const signInUrl = buildIdentityLoginUrl(buildWorkspaceUrl("/workspace/plan"));
   const [plan, setPlan] = useState<LifeWorkPlan | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -54,7 +56,7 @@ export default function WorkspacePlanPage() {
         <div className="mx-auto flex min-h-screen max-w-6xl items-center justify-center px-6">
           <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-center">
             <p className="text-sm text-white/70">Sign in to generate your workspace plan.</p>
-            <Link href="/login" className="mt-4 inline-block rounded-xl bg-[#e6b24a] px-4 py-2 text-sm font-semibold text-[#06131f]">
+            <Link href={signInUrl} className="mt-4 inline-block rounded-xl bg-[#e6b24a] px-4 py-2 text-sm font-semibold text-[#06131f]">
               Sign in
             </Link>
           </div>

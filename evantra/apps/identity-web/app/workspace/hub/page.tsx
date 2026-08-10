@@ -6,6 +6,7 @@ import { Loader2, Sparkles, ShieldCheck, Target, BrainCircuit } from "lucide-rea
 
 import { useIdentitySession } from "../../../components/identity/IdentitySessionProvider";
 import { type LifeWorkPlan } from "../lib/intelligence";
+import { buildIdentityLoginUrl, buildWorkspaceUrl } from "../../lib/surfaceUrls";
 
 const systemCards = [
   {
@@ -38,6 +39,7 @@ const starterActions = [
 export default function WorkspaceHubPage() {
   const { account, session, loading } = useIdentitySession();
   const [plan, setPlan] = useState<LifeWorkPlan | null>(null);
+  const signInUrl = buildIdentityLoginUrl(buildWorkspaceUrl("/workspace/hub"));
 
   useEffect(() => {
     async function loadPlan(accountId: string): Promise<void> {
@@ -81,7 +83,7 @@ export default function WorkspaceHubPage() {
             <h1 className="mt-6 text-2xl font-semibold">Sign in required</h1>
             <p className="mt-3 text-sm text-white/50">Sign in to access the Evantra workspace hub.</p>
             <Link
-              href="/login"
+              href={signInUrl}
               className="mt-7 inline-flex rounded-xl bg-[#e6b24a] px-6 py-3 text-sm font-semibold text-[#06131f] transition hover:bg-[#f0c261]"
             >
               Sign in

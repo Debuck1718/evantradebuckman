@@ -23,8 +23,10 @@ import {
 import {
 	useIdentitySession,
 } from "../../../../components/identity/IdentitySessionProvider";
+import { buildIdentityLoginUrl, buildWorkspaceUrl } from "../../../lib/surfaceUrls";
 
 export default function RegisterApplicationPage() {
+	const signInUrl = buildIdentityLoginUrl(buildWorkspaceUrl("/workspace/applications/new"));
 	const {
 		account,
 		session,
@@ -160,7 +162,7 @@ export default function RegisterApplicationPage() {
 						</p>
 
 						<Link
-							href="/login"
+							href={signInUrl}
 							className="mt-7 inline-flex rounded-xl bg-[#e6b24a] px-6 py-3 text-sm font-semibold text-[#06131f] transition hover:bg-[#f0c261]"
 						>
 							Sign in

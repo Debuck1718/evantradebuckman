@@ -4,7 +4,11 @@ import { GlobalFooter, GlobalHeader } from "@/components/layout";
 
 const identityWebUrl =
   process.env.NEXT_PUBLIC_IDENTITY_WEB_URL ??
-  "http://localhost:3001";
+  "https://identity.evantradebuckman.com";
+
+const workspaceWebUrl =
+  process.env.NEXT_PUBLIC_WORKSPACE_WEB_URL ??
+  "https://workspace.evantradebuckman.com";
 
 const pillars = [
   {
@@ -62,7 +66,7 @@ export default function IdentityPage() {
                   Sign in
                 </Link>
                 <Link
-                  href={`${identityWebUrl}/workspace/account`}
+                  href={`${workspaceWebUrl}/workspace/account`}
                   className="btn-outline"
                 >
                   Open workspace
@@ -147,7 +151,7 @@ export default function IdentityPage() {
               </p>
               <div className="mt-6">
                 <Link
-                  href={`${identityWebUrl}/workspace/account`}
+                  href={`${workspaceWebUrl}/workspace/account`}
                   className="rounded-xl border border-white/10 px-4 py-2.5 text-sm font-semibold text-white transition hover:border-white/20 hover:bg-white/[0.04]"
                 >
                   Workspace account
