@@ -1,0 +1,13 @@
+[build]
+  command = "pnpm --filter @evantra/identity-web build:workspace"
+  publish = "apps/identity-web/.next"
+
+[build.environment]
+  NODE_VERSION = "22"
+  PNPM_VERSION = "11.20.0"
+
+[functions]
+  directory = "apps/identity-web/.netlify/functions"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

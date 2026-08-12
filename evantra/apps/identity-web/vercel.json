@@ -2,9 +2,5 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
   "installCommand": "pnpm install --frozen-lockfile",
-<<<<<<< HEAD
-  "buildCommand": "pnpm build:workspace"
-=======
   "buildCommand": "pnpm --filter @evantra/identity-web build:workspace"
->>>>>>> c1a043feb3143f44725189966c781627055aad45
 }
