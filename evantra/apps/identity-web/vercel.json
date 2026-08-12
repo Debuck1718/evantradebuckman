@@ -2,5 +2,5 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "installCommand": "pnpm install --frozen-lockfile",
   "buildCommand": "pnpm --filter @evantra/identity-web build:workspace",
-  "outputDirectory": "Next.js"
+  "outputDirectory": 
 }
