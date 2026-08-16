@@ -6,7 +6,9 @@ const repoRoot = path.resolve(appRoot, "../..");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  outputFileTracingRoot: repoRoot,
+  // Only apply custom tracing root if not on Vercel, or scope it properly 
+  // so Vercel's bundler doesn't look for package.json inside .next/
+  outputFileTracingRoot: process.env.VERCEL ? appRoot : repoRoot,
   turbopack: {
     root: repoRoot,
   },
