@@ -19,6 +19,10 @@ async function main() {
       .registerAccount
       .execute({
 
+        firstName: "Evans",
+
+        lastName: "Buckman",
+
         evantraId: "evans",
 
         contactEmail:
