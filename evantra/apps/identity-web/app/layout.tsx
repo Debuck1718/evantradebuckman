@@ -20,6 +20,11 @@ export const metadata: Metadata = {
   applicationName:
     "Evantra Identity",
 
+  icons: {
+    icon: "/icon",
+    apple: "/icon",
+  },
+
   keywords: [
     "Evantra",
     "Evantra Identity",

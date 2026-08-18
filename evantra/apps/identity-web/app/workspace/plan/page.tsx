@@ -2,11 +2,23 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-
 import {
-  type LifeWorkPlan,
-} from "../lib/intelligence";
+  ArrowLeft,
+  BrainCircuit,
+  Calendar,
+  CheckCircle2,
+  Clock,
+  Layers,
+  Loader2,
+  ShieldCheck,
+  Sparkles,
+  Target,
+  Zap,
+} from "lucide-react";
+
+import { type LifeWorkPlan } from "../lib/intelligence";
 import { useIdentitySession } from "../../../components/identity/IdentitySessionProvider";
+import { GlassCard } from "../../../components/ui/GlassCard";
 
 export default function WorkspacePlanPage() {
   const { account, session, loading } = useIdentitySession();
@@ -18,9 +30,10 @@ export default function WorkspacePlanPage() {
       try {
         setError(null);
 
-        const response = await fetch(`/api/workspace/plan?accountId=${encodeURIComponent(accountId)}`, {
-          cache: "no-store",
-        });
+        const response = await fetch(
+          `/api/workspace/plan?accountId=${encodeURIComponent(accountId)}`,
+          { cache: "no-store" },
+        );
 
         if (!response.ok) {
           throw new Error("Unable to load life-work plan.");
@@ -42,7 +55,7 @@ export default function WorkspacePlanPage() {
     return (
       <main className="min-h-screen bg-[#06131f] text-white">
         <div className="mx-auto flex min-h-screen max-w-6xl items-center justify-center px-6">
-          <p className="text-sm text-white/60">Loading identity context...</p>
+          <Loader2 size={32} className="animate-spin text-[#e6b24a]" />
         </div>
       </main>
     );
@@ -51,13 +64,19 @@ export default function WorkspacePlanPage() {
   if (!account || !session) {
     return (
       <main className="min-h-screen bg-[#06131f] text-white">
-        <div className="mx-auto flex min-h-screen max-w-6xl items-center justify-center px-6">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-center">
-            <p className="text-sm text-white/70">Sign in to generate your workspace plan.</p>
-            <Link href="/login" className="mt-4 inline-block rounded-xl bg-[#e6b24a] px-4 py-2 text-sm font-semibold text-[#06131f]">
+        <div className="mx-auto flex min-h-screen max-w-xl items-center justify-center px-6">
+          <GlassCard variant="elevated" className="w-full p-8 text-center sm:p-10">
+            <h1 className="text-2xl font-semibold">Sign in required</h1>
+            <p className="mt-3 text-sm text-white/50">
+              Sign in to generate your workspace life-work operating plan.
+            </p>
+            <Link
+              href="/login"
+              className="mt-6 inline-flex rounded-xl bg-[#e6b24a] px-6 py-3 text-sm font-semibold text-[#06131f]"
+            >
               Sign in
             </Link>
-          </div>
+          </GlassCard>
         </div>
       </main>
     );
@@ -67,7 +86,9 @@ export default function WorkspacePlanPage() {
     return (
       <main className="min-h-screen bg-[#06131f] text-white">
         <div className="mx-auto flex min-h-screen max-w-6xl items-center justify-center px-6">
-          <p className="text-sm text-white/60">{error ?? "Generating life-work plan..."}</p>
+          <p className="text-sm text-white/60">
+            {error ?? "Generating life-work operating plan via Kernel..."}
+          </p>
         </div>
       </main>
     );
@@ -76,58 +97,181 @@ export default function WorkspacePlanPage() {
   return (
     <main className="min-h-screen bg-[#06131f] text-white">
       <div className="mx-auto w-full max-w-6xl px-6 py-10 md:px-8 md:py-14">
-        <header className="mb-8">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#e6b24a]">Life-Work Orchestration</p>
-          <h1 className="mt-3 text-3xl font-semibold tracking-tight md:text-4xl">Generated operating plan</h1>
-          <p className="mt-3 max-w-3xl text-sm leading-7 text-white/60">
-            This plan merges burden signals, commitments, and execution focus so users can act with clarity.
-          </p>
-          <div className="mt-4 flex flex-wrap gap-3">
-            <Link href="/workspace/hub" className="rounded-xl border border-white/10 px-4 py-2 text-xs font-semibold text-white/75 transition hover:border-white/20 hover:text-white">
-              Back to hub
+        {/* Header */}
+        <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+          <div>
+            <div className="flex items-center gap-2">
+              <Link
+                href="/workspace/hub"
+                className="inline-flex items-center gap-1.5 text-xs text-white/50 transition hover:text-[#e6b24a]"
+              >
+                <ArrowLeft size={14} />
+                Workspace Hub
+              </Link>
+              <span className="text-white/20">/</span>
+              <span className="text-xs font-semibold uppercase tracking-wider text-[#fae59a]">
+                Life-Work Orchestrator
+              </span>
+            </div>
+
+            <h1 className="mt-3 text-3xl font-semibold tracking-tight md:text-5xl">
+              Daily Operating Plan
+            </h1>
+
+            <p className="mt-3 max-w-3xl text-sm leading-relaxed text-white/60 sm:text-base">
+              Synchronized daily operating rhythm generated by the Evantra Kernel. Merges
+              cognitive burden signals, promises due in 72h, and focus shielding into one clear path.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <Link
+              href="/workspace/burden"
+              className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-xs font-semibold text-white transition hover:border-[#e6b24a]/40 hover:text-[#fae59a]"
+            >
+              <BrainCircuit size={14} />
+              Adjust Burden
             </Link>
-            <Link href="/workspace/burden" className="rounded-xl border border-white/10 px-4 py-2 text-xs font-semibold text-white/75 transition hover:border-white/20 hover:text-white">
-              Update burden
-            </Link>
-            <Link href="/workspace/promises" className="rounded-xl border border-white/10 px-4 py-2 text-xs font-semibold text-white/75 transition hover:border-white/20 hover:text-white">
-              Update commitments
+
+            <Link
+              href="/workspace/promises"
+              className="inline-flex items-center gap-2 rounded-xl bg-[#e6b24a] px-4 py-2.5 text-xs font-semibold text-[#06131f] transition hover:bg-[#f0c261]"
+            >
+              <Target size={14} />
+              Manage Promises
             </Link>
           </div>
-        </header>
+        </div>
 
-        <div className="grid gap-6 lg:grid-cols-[1fr_1fr]">
-          <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
-            <p className="text-xs uppercase tracking-[0.2em] text-white/35">Burden status</p>
-            <p className="mt-2 text-4xl font-semibold">{plan.burden.score}</p>
-            <p className="mt-2 text-sm uppercase tracking-[0.14em] text-[#e6b24a]">{plan.burden.band}</p>
+        {/* Plan Grid */}
+        <div className="mt-10 grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+          {/* Top Focus & Guardrails */}
+          <div className="space-y-6">
+            {/* Top Focus */}
+            <GlassCard variant="gold" className="p-7 sm:p-8">
+              <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                <div className="flex items-center gap-2.5">
+                  <Sparkles size={18} className="text-[#e6b24a]" />
+                  <h2 className="text-base font-semibold text-white">
+                    Primary Execution Focus
+                  </h2>
+                </div>
+                <span className="text-xs text-[#fae59a] font-mono">
+                  {plan.topFocus.length} Strategic Items
+                </span>
+              </div>
 
-            <h2 className="mt-6 text-lg font-semibold">Guardrails</h2>
-            <ul className="mt-3 space-y-2 text-sm text-white/60">
-              {plan.guardrails.map(item => (
-                <li key={item}>- {item}</li>
-              ))}
-            </ul>
-          </section>
+              <div className="mt-5 space-y-3">
+                {plan.topFocus.map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-sm text-white/85 transition hover:border-[#e6b24a]/40"
+                  >
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#e6b24a]/20 font-mono text-xs font-semibold text-[#fae59a]">
+                      {idx + 1}
+                    </span>
+                    <p className="leading-relaxed">{item}</p>
+                  </div>
+                ))}
+              </div>
+            </GlassCard>
 
-          <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
-            <h2 className="text-lg font-semibold">Top focus</h2>
-            <ul className="mt-3 space-y-2 text-sm text-white/60">
-              {plan.topFocus.map(item => (
-                <li key={item}>- {item}</li>
-              ))}
-            </ul>
+            {/* Cognitive Guardrails */}
+            <GlassCard variant="default" className="p-7 sm:p-8">
+              <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                <div className="flex items-center gap-2.5">
+                  <ShieldCheck size={18} className="text-[#e6b24a]" />
+                  <h2 className="text-base font-semibold text-white">
+                    Active Cognitive Guardrails
+                  </h2>
+                </div>
+                <span className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-300">
+                  Enforced
+                </span>
+              </div>
 
-            <h2 className="mt-6 text-lg font-semibold">Promises due soon</h2>
-            <ul className="mt-3 space-y-2 text-sm text-white/60">
-              {plan.promisesDueSoon.length > 0 ? (
-                plan.promisesDueSoon.map(item => (
-                  <li key={item.id}>- {item.title}</li>
-                ))
-              ) : (
-                <li>- No urgent commitments due in 72 hours.</li>
-              )}
-            </ul>
-          </section>
+              <div className="mt-5 space-y-3">
+                {plan.guardrails.map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="flex items-start gap-3 rounded-2xl border border-white/5 bg-white/[0.02] p-4 text-sm text-white/75"
+                  >
+                    <CheckCircle2
+                      size={16}
+                      className="text-[#fae59a] shrink-0 mt-0.5"
+                    />
+                    <p className="leading-relaxed">{item}</p>
+                  </div>
+                ))}
+              </div>
+            </GlassCard>
+          </div>
+
+          {/* Telemetry & 72-Hour Commitments */}
+          <div className="space-y-6">
+            {/* Burden Summary */}
+            <GlassCard variant="default" className="p-7 sm:p-8">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <BrainCircuit size={18} className="text-[#e6b24a]" />
+                  <span className="text-xs font-semibold uppercase tracking-[0.2em] text-white/50">
+                    Calculated Burden Index
+                  </span>
+                </div>
+
+                <span className="rounded-full border border-[#e6b24a]/30 bg-[#e6b24a]/10 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider text-[#fae59a]">
+                  {plan.burden.band}
+                </span>
+              </div>
+
+              <div className="mt-5 flex items-baseline gap-3">
+                <span className="text-5xl font-bold tracking-tight text-white">
+                  {plan.burden.score}
+                </span>
+                <span className="text-sm text-white/40">/ 100 max load</span>
+              </div>
+
+              <p className="mt-4 text-xs leading-relaxed text-white/60">
+                Operating load is synthesized continuously from your open tasks, meeting
+                density, and active promise count.
+              </p>
+            </GlassCard>
+
+            {/* Commitments Due Soon */}
+            <GlassCard variant="default" className="p-7 sm:p-8">
+              <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                <div className="flex items-center gap-2">
+                  <Clock size={16} className="text-[#e6b24a]" />
+                  <h3 className="text-sm font-semibold uppercase tracking-wider text-white/70">
+                    Commitments Due in 72h
+                  </h3>
+                </div>
+                <span className="rounded-full border border-blue-400/20 bg-blue-400/10 px-2.5 py-0.5 text-[11px] font-semibold text-blue-300">
+                  {plan.promisesDueSoon.length} Active
+                </span>
+              </div>
+
+              <div className="mt-5 space-y-3">
+                {plan.promisesDueSoon.length > 0 ? (
+                  plan.promisesDueSoon.map((item) => (
+                    <div
+                      key={item.id}
+                      className="rounded-xl border border-white/5 bg-white/[0.02] p-3.5"
+                    >
+                      <p className="text-sm font-medium text-white">{item.title}</p>
+                      <p className="mt-1 text-xs text-[#fae59a]">
+                        Due {new Date(item.dueAt).toLocaleDateString()}
+                      </p>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-xs text-white/40 italic py-3">
+                    No urgent promises requiring fulfillment in the next 72 hours.
+                  </p>
+                )}
+              </div>
+            </GlassCard>
+          </div>
         </div>
       </div>
     </main>

@@ -2,6 +2,20 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import {
+  AlertTriangle,
+  ArrowLeft,
+  Calendar,
+  CheckCircle2,
+  Clock,
+  HelpCircle,
+  Loader2,
+  Plus,
+  ShieldCheck,
+  Sparkles,
+  Target,
+  Zap,
+} from "lucide-react";
 
 import {
   dueSoonPromises,
@@ -9,14 +23,39 @@ import {
   type WorkspacePromise,
 } from "../lib/intelligence";
 import { useIdentitySession } from "../../../components/identity/IdentitySessionProvider";
+import { GlassCard } from "../../../components/ui/GlassCard";
 
-const statuses: readonly PromiseStatus[] = [
-  "proposed",
-  "active",
-  "fulfilled",
-  "renegotiated",
-  "breached",
-  "cancelled",
+const statuses: readonly { value: PromiseStatus; label: string; badgeColor: string }[] = [
+  {
+    value: "proposed",
+    label: "Proposed",
+    badgeColor: "border-blue-400/20 bg-blue-400/10 text-blue-300",
+  },
+  {
+    value: "active",
+    label: "Active Commitment",
+    badgeColor: "border-[#e6b24a]/30 bg-[#e6b24a]/10 text-[#fae59a]",
+  },
+  {
+    value: "fulfilled",
+    label: "Fulfilled",
+    badgeColor: "border-emerald-400/20 bg-emerald-400/10 text-emerald-300",
+  },
+  {
+    value: "renegotiated",
+    label: "Renegotiated",
+    badgeColor: "border-purple-400/20 bg-purple-400/10 text-purple-300",
+  },
+  {
+    value: "breached",
+    label: "Breached",
+    badgeColor: "border-red-400/20 bg-red-400/10 text-red-300",
+  },
+  {
+    value: "cancelled",
+    label: "Cancelled",
+    badgeColor: "border-white/10 bg-white/5 text-white/40",
+  },
 ];
 
 export default function WorkspacePromisesPage() {
@@ -37,9 +76,10 @@ export default function WorkspacePromisesPage() {
         setBusy(true);
         setError(null);
 
-        const response = await fetch(`/api/workspace/promises?accountId=${encodeURIComponent(accountId)}`, {
-          cache: "no-store",
-        });
+        const response = await fetch(
+          `/api/workspace/promises?accountId=${encodeURIComponent(accountId)}`,
+          { cache: "no-store" },
+        );
 
         if (!response.ok) {
           throw new Error("Unable to load commitments.");
@@ -138,7 +178,7 @@ export default function WorkspacePromisesPage() {
     return (
       <main className="min-h-screen bg-[#06131f] text-white">
         <div className="mx-auto flex min-h-screen max-w-6xl items-center justify-center px-6">
-          <p className="text-sm text-white/60">Loading identity context...</p>
+          <Loader2 size={32} className="animate-spin text-[#e6b24a]" />
         </div>
       </main>
     );
@@ -147,13 +187,19 @@ export default function WorkspacePromisesPage() {
   if (!account || !session) {
     return (
       <main className="min-h-screen bg-[#06131f] text-white">
-        <div className="mx-auto flex min-h-screen max-w-6xl items-center justify-center px-6">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-center">
-            <p className="text-sm text-white/70">Sign in to use workspace promise tracking.</p>
-            <Link href="/login" className="mt-4 inline-block rounded-xl bg-[#e6b24a] px-4 py-2 text-sm font-semibold text-[#06131f]">
+        <div className="mx-auto flex min-h-screen max-w-xl items-center justify-center px-6">
+          <GlassCard variant="elevated" className="w-full p-8 text-center sm:p-10">
+            <h1 className="text-2xl font-semibold">Sign in required</h1>
+            <p className="mt-3 text-sm text-white/50">
+              Sign in to use the workspace promise graph.
+            </p>
+            <Link
+              href="/login"
+              className="mt-6 inline-flex rounded-xl bg-[#e6b24a] px-6 py-3 text-sm font-semibold text-[#06131f]"
+            >
               Sign in
             </Link>
-          </div>
+          </GlassCard>
         </div>
       </main>
     );
@@ -162,107 +208,257 @@ export default function WorkspacePromisesPage() {
   return (
     <main className="min-h-screen bg-[#06131f] text-white">
       <div className="mx-auto w-full max-w-6xl px-6 py-10 md:px-8 md:py-14">
-        <header className="mb-8">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#e6b24a]">Promise Graph</p>
-          <h1 className="mt-3 text-3xl font-semibold tracking-tight md:text-4xl">Commitments and accountability</h1>
-          <p className="mt-3 max-w-3xl text-sm leading-7 text-white/60">
-            Track what was promised, by when, and how status changed so trust and execution stay visible.
-          </p>
-          <div className="mt-4 flex flex-wrap gap-3">
-            <Link href="/workspace/hub" className="rounded-xl border border-white/10 px-4 py-2 text-xs font-semibold text-white/75 transition hover:border-white/20 hover:text-white">
-              Back to hub
-            </Link>
-            <Link href="/workspace/plan" className="rounded-xl border border-white/10 px-4 py-2 text-xs font-semibold text-white/75 transition hover:border-white/20 hover:text-white">
-              Open life-work plan
+        {/* Header */}
+        <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+          <div>
+            <div className="flex items-center gap-2">
+              <Link
+                href="/workspace/hub"
+                className="inline-flex items-center gap-1.5 text-xs text-white/50 transition hover:text-[#e6b24a]"
+              >
+                <ArrowLeft size={14} />
+                Workspace Hub
+              </Link>
+              <span className="text-white/20">/</span>
+              <span className="text-xs font-semibold uppercase tracking-wider text-[#fae59a]">
+                Promise Graph
+              </span>
+            </div>
+
+            <h1 className="mt-3 text-3xl font-semibold tracking-tight md:text-5xl">
+              Promises &amp; Commitments
+            </h1>
+
+            <p className="mt-3 max-w-3xl text-sm leading-relaxed text-white/60 sm:text-base">
+              Track commitments with explicit bilateral accountability, deadlines,
+              and renegotiation history. Turn loose todo items into reliable trust contracts.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <Link
+              href="/workspace/plan"
+              className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-xs font-semibold text-white transition hover:border-[#e6b24a]/40 hover:text-[#fae59a]"
+            >
+              <Sparkles size={14} />
+              Open Operating Plan
             </Link>
           </div>
-        </header>
+        </div>
 
-        <div className="grid gap-6 lg:grid-cols-[1fr_1fr]">
-          <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
-            <h2 className="text-lg font-semibold">Add commitment</h2>
-            <div className="mt-4 space-y-4">
-              <label className="block space-y-2 text-sm text-white/70">
-                <span>Title</span>
+        {/* Creation & Urgency Grid */}
+        <div className="mt-10 grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+          {/* Add Commitment Card */}
+          <GlassCard variant="default" className="p-7 sm:p-8">
+            <div className="flex items-center justify-between border-b border-white/10 pb-5">
+              <div>
+                <h2 className="text-lg font-semibold text-white">
+                  Capture Bilateral Promise
+                </h2>
+                <p className="text-xs text-white/50">
+                  Record a deliverable with an explicit delivery window
+                </p>
+              </div>
+
+              <span className="rounded-full border border-[#e6b24a]/30 bg-[#e6b24a]/10 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider text-[#fae59a]">
+                New Promise
+              </span>
+            </div>
+
+            <div className="mt-6 space-y-4">
+              <div>
+                <label className="mb-2 block text-xs font-medium uppercase tracking-wider text-white/70">
+                  Commitment Description / Title
+                </label>
                 <input
+                  type="text"
                   value={title}
-                  onChange={event => setTitle(event.target.value)}
-                  className="w-full rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-white outline-none"
-                  placeholder="Deliver integration checklist"
+                  onChange={(event) => setTitle(event.target.value)}
+                  placeholder="e.g. Deliver OAuth SDK security documentation"
+                  className="w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/25 focus:border-[#e6b24a]"
                 />
-              </label>
+              </div>
 
-              <label className="block space-y-2 text-sm text-white/70">
-                <span>Due date</span>
+              <div>
+                <label className="mb-2 block text-xs font-medium uppercase tracking-wider text-white/70">
+                  Target Due Date &amp; Time
+                </label>
                 <input
                   type="datetime-local"
                   value={dueAt}
-                  onChange={event => setDueAt(event.target.value)}
-                  className="w-full rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-white outline-none"
+                  onChange={(event) => setDueAt(event.target.value)}
+                  className="w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-sm text-white outline-none transition focus:border-[#e6b24a]"
                 />
-              </label>
+              </div>
 
               <button
                 type="button"
                 onClick={() => void submit()}
-                disabled={busy}
-                className="rounded-xl bg-[#e6b24a] px-5 py-2.5 text-sm font-semibold text-[#06131f] transition hover:bg-[#f0c261]"
+                disabled={busy || !title.trim() || !dueAt.trim()}
+                className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[#e6b24a] px-5 py-3 text-sm font-semibold text-[#06131f] shadow-md transition hover:bg-[#f0c261] disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {busy ? "Saving..." : "Add promise"}
+                {busy ? (
+                  <>
+                    <Loader2 size={16} className="animate-spin" />
+                    Recording...
+                  </>
+                ) : (
+                  <>
+                    <Plus size={16} />
+                    Commit to Promise Graph
+                  </>
+                )}
               </button>
 
-              {saved && <p className="text-sm text-emerald-300/80">Saved to workspace API.</p>}
-              {error && <p className="text-sm text-red-300/80">{error}</p>}
-            </div>
-          </section>
-
-          <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
-            <p className="text-xs uppercase tracking-[0.2em] text-white/35">Urgency</p>
-            <p className="mt-2 text-3xl font-semibold">{dueSoon.length}</p>
-            <p className="mt-2 text-sm text-white/60">commitment(s) due within 72 hours.</p>
-
-            <ul className="mt-5 space-y-2 text-sm text-white/60">
-              {dueSoon.length > 0 ? (
-                dueSoon.map(item => (
-                  <li key={item.id}>- {item.title}</li>
-                ))
-              ) : (
-                <li>- No urgent commitments in the next 72 hours.</li>
+              {saved && (
+                <div className="flex items-center gap-2 rounded-xl border border-emerald-400/20 bg-emerald-400/10 px-4 py-2.5 text-xs text-emerald-300">
+                  <CheckCircle2 size={15} />
+                  Promise successfully recorded and synced.
+                </div>
               )}
-            </ul>
-          </section>
+
+              {error && (
+                <div className="flex items-center gap-2 rounded-xl border border-red-400/20 bg-red-400/10 px-4 py-2.5 text-xs text-red-300">
+                  <AlertTriangle size={15} />
+                  {error}
+                </div>
+              )}
+            </div>
+          </GlassCard>
+
+          {/* Urgency Window */}
+          <div className="space-y-6">
+            <GlassCard variant="gold" className="p-7 sm:p-8">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Clock size={18} className="text-[#e6b24a]" />
+                  <span className="text-xs font-semibold uppercase tracking-[0.2em] text-white/50">
+                    72-Hour Urgency Horizon
+                  </span>
+                </div>
+
+                <span className="rounded-full border border-blue-400/20 bg-blue-400/10 px-2.5 py-0.5 text-xs font-semibold text-blue-300">
+                  {dueSoon.length} Pending
+                </span>
+              </div>
+
+              <div className="mt-6 flex items-baseline gap-3">
+                <span className="text-6xl font-bold tracking-tight text-white">
+                  {dueSoon.length}
+                </span>
+                <span className="text-sm text-white/50">due within 72 hours</span>
+              </div>
+
+              <div className="mt-6 space-y-2.5">
+                {dueSoon.length > 0 ? (
+                  dueSoon.map((item) => (
+                    <div
+                      key={item.id}
+                      className="flex items-start justify-between gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-3.5 text-xs"
+                    >
+                      <div className="space-y-1">
+                        <p className="font-medium text-white">{item.title}</p>
+                        <p className="text-[11px] text-[#fae59a]">
+                          Due {new Date(item.dueAt).toLocaleDateString()} at{" "}
+                          {new Date(item.dueAt).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </p>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-xs text-white/45 italic py-3">
+                    No urgent promises requiring immediate fulfillment in the 72-hour window.
+                  </p>
+                )}
+              </div>
+            </GlassCard>
+
+            <GlassCard variant="default" className="p-6">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-white/50">
+                Promise Integrity Rule
+              </h3>
+              <p className="mt-2 text-xs leading-relaxed text-white/60">
+                If a deadline cannot be met, renegotiate proactively rather than letting the
+                commitment expire into a breached state.
+              </p>
+            </GlassCard>
+          </div>
         </div>
 
-        <section className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-6">
-          <h2 className="text-lg font-semibold">All commitments</h2>
+        {/* All Promises Ledger */}
+        <section className="mt-12">
+          <div className="mb-5 flex items-center justify-between">
+            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.24em] text-white/45">
+              <Target size={16} className="text-[#e6b24a]" />
+              Accountability Ledger
+            </div>
+            <span className="text-xs text-white/40">{items.length} Total Commitments</span>
+          </div>
 
-          <div className="mt-4 space-y-3">
+          <div className="space-y-3">
             {items.length > 0 ? (
-              items.map(item => (
-                <article key={item.id} className="rounded-xl border border-white/10 bg-black/10 p-4">
-                  <div className="flex flex-wrap items-start justify-between gap-3">
-                    <div>
-                      <h3 className="font-semibold">{item.title}</h3>
-                      <p className="mt-1 text-xs text-white/45">Due {new Date(item.dueAt).toLocaleString()}</p>
-                    </div>
+              items.map((item) => {
+                const currentStatus =
+                  statuses.find((s) => s.value === item.status) ?? statuses[0];
 
-                    <select
-                      value={item.status}
-                      onChange={event => void setStatus(item.id, event.target.value as PromiseStatus)}
-                      disabled={busy}
-                      className="rounded-lg border border-white/10 bg-black/30 px-2 py-1 text-xs text-white"
-                    >
-                      {statuses.map(status => (
-                        <option key={status} value={status}>
-                          {status}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </article>
-              ))
+                return (
+                  <GlassCard
+                    key={item.id}
+                    variant="default"
+                    className="p-5 sm:p-6"
+                  >
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                      <div className="space-y-1.5">
+                        <div className="flex items-center gap-2.5">
+                          <h3 className="font-semibold text-white text-base">
+                            {item.title}
+                          </h3>
+                        </div>
+
+                        <div className="flex items-center gap-3 text-xs text-white/45">
+                          <span className="flex items-center gap-1">
+                            <Calendar size={13} className="text-[#e6b24a]" />
+                            Due {new Date(item.dueAt).toLocaleString()}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-3 shrink-0">
+                        <span
+                          className={`rounded-full border px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider ${currentStatus.badgeColor}`}
+                        >
+                          {currentStatus.label}
+                        </span>
+
+                        <select
+                          value={item.status}
+                          onChange={(event) =>
+                            void setStatus(
+                              item.id,
+                              event.target.value as PromiseStatus,
+                            )
+                          }
+                          disabled={busy}
+                          className="rounded-xl border border-white/10 bg-black/40 px-3 py-1.5 text-xs text-white outline-none transition focus:border-[#e6b24a]"
+                        >
+                          {statuses.map((status) => (
+                            <option key={status.value} value={status.value}>
+                              {status.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                  </GlassCard>
+                );
+              })
             ) : (
-              <p className="text-sm text-white/45">No commitments yet.</p>
+              <GlassCard variant="default" className="p-8 text-center text-sm text-white/40">
+                No promises recorded yet. Use the form above to log your first commitment.
+              </GlassCard>
             )}
           </div>
         </section>

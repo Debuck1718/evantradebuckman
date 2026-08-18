@@ -10,13 +10,18 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import {
+  ArrowLeft,
   CheckCircle2,
   Clock3,
+  KeyRound,
+  Layers,
   Loader2,
   LogOut,
   Mail,
   ShieldCheck,
+  Sparkles,
   User,
+  Zap,
 } from "lucide-react";
 
 import {
@@ -24,6 +29,8 @@ import {
 } from "../../../components/identity/IdentitySessionProvider";
 
 import { logout } from "../../lib/api";
+import { GlassCard } from "../../../components/ui/GlassCard";
+import { EvantraBrandIcon } from "../../../components/brand/EvantraBrandIcon";
 
 export default function AccountPage() {
   const router = useRouter();
@@ -109,12 +116,6 @@ export default function AccountPage() {
         error,
       );
 
-      /*
-       * We still clear local authentication
-       * state below. A failed logout request
-       * should not leave the UI pretending
-       * that the user is authenticated.
-       */
       setLogoutError(
         error instanceof Error
           ? error.message
@@ -129,10 +130,6 @@ export default function AccountPage() {
         "evantra_account",
       );
 
-      /*
-       * Do not leave the account page accessible
-       * through the current client state.
-       */
       router.replace("/login");
       router.refresh();
     }
@@ -148,16 +145,10 @@ export default function AccountPage() {
     return (
       <main className="min-h-screen bg-[#06131f] text-white">
         <div className="flex min-h-screen items-center justify-center px-6">
-          <div className="flex flex-col items-center">
-            <Loader2
-              size={28}
-              className="animate-spin text-[#e6b24a]"
-            />
-
-            <p className="mt-4 text-sm text-white/50">
-              Loading your Evantra Identity...
-            </p>
-          </div>
+          <Loader2
+            size={32}
+            className="animate-spin text-[#e6b24a]"
+          />
         </div>
       </main>
     );
@@ -172,31 +163,25 @@ export default function AccountPage() {
   if (!account || !session) {
     return (
       <main className="min-h-screen bg-[#06131f] text-white">
-        <div className="mx-auto flex min-h-screen w-full max-w-3xl items-center justify-center px-6">
-          <div className="w-full max-w-md rounded-3xl border border-white/10 bg-white/[0.03] p-8 text-center shadow-2xl">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-[#e6b24a]/30 bg-[#e6b24a]/10">
-              <ShieldCheck
-                size={26}
-                className="text-[#e6b24a]"
-              />
-            </div>
+        <div className="mx-auto flex min-h-screen w-full max-w-xl items-center justify-center px-6">
+          <GlassCard variant="elevated" className="w-full p-8 text-center sm:p-10">
+            <EvantraBrandIcon size={48} className="mx-auto" />
 
-            <h1 className="mt-7 text-2xl font-semibold">
+            <h1 className="mt-6 text-2xl font-semibold">
               Sign in required
             </h1>
 
-            <p className="mt-3 text-sm leading-6 text-white/50">
-              Sign in to access your Evantra
-              Identity.
+            <p className="mt-3 text-sm text-white/50">
+              Sign in to access your Evantra Identity account.
             </p>
 
             <Link
               href="/login"
-              className="mt-7 inline-flex w-full items-center justify-center rounded-xl bg-[#e6b24a] px-6 py-3 text-sm font-semibold text-[#06131f] transition hover:bg-[#f0c66b]"
+              className="mt-7 inline-flex w-full items-center justify-center rounded-xl bg-[#e6b24a] px-6 py-3 text-sm font-semibold text-[#06131f] transition hover:bg-[#f0c261]"
             >
               Sign in
             </Link>
-          </div>
+          </GlassCard>
         </div>
       </main>
     );
@@ -216,53 +201,49 @@ export default function AccountPage() {
 
   return (
     <main className="min-h-screen bg-[#06131f] text-white">
-      <div className="mx-auto w-full max-w-6xl px-6 py-8 sm:px-8 lg:px-10">
+      <div className="mx-auto w-full max-w-6xl px-6 py-10 md:px-8 md:py-14">
         {/* ==================================================
             Header
             ================================================== */}
 
-        <header className="mb-12 flex flex-col gap-6 border-b border-white/10 pb-7 sm:flex-row sm:items-center sm:justify-between">
-          <Link
-            href="/workspace/account"
-            className="flex w-fit items-center gap-3"
-          >
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#e6b24a]/30 bg-[#e6b24a]/10">
-              <ShieldCheck
-                size={22}
-                className="text-[#e6b24a]"
-              />
+        <header className="mb-10 flex flex-col gap-6 border-b border-white/10 pb-7 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <div className="flex items-center gap-2">
+              <Link
+                href="/workspace/hub"
+                className="inline-flex items-center gap-1.5 text-xs text-white/50 transition hover:text-[#e6b24a]"
+              >
+                <ArrowLeft size={14} />
+                Workspace Hub
+              </Link>
+              <span className="text-white/20">/</span>
+              <span className="text-xs font-semibold uppercase tracking-wider text-[#fae59a]">
+                Identity Account
+              </span>
             </div>
 
-            <div>
-              <p className="text-sm font-semibold tracking-[0.22em]">
-                EVANTRA
-              </p>
-
-              <p className="text-[10px] uppercase tracking-[0.2em] text-white/40">
-                Identity
-              </p>
-            </div>
-          </Link>
+            <h1 className="mt-3 text-3xl font-semibold tracking-tight md:text-4xl">
+              Account Infrastructure
+            </h1>
+          </div>
 
           <button
             type="button"
             onClick={handleLogout}
             disabled={loggingOut}
-            className="inline-flex w-fit items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2.5 text-sm text-white/70 transition hover:border-white/20 hover:bg-white/[0.06] hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex w-fit items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-xs font-semibold text-white/80 transition hover:border-red-400/40 hover:bg-red-400/10 hover:text-red-300 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {loggingOut ? (
               <>
                 <Loader2
-                  size={16}
+                  size={14}
                   className="animate-spin"
                 />
-
                 Signing out...
               </>
             ) : (
               <>
-                <LogOut size={16} />
-
+                <LogOut size={14} />
                 Sign out
               </>
             )}
@@ -283,240 +264,151 @@ export default function AccountPage() {
             </p>
 
             <p className="mt-1 text-red-200/60">
-              You will still be redirected to
-              the sign-in page.
+              You will still be redirected to the sign-in page.
             </p>
           </div>
         )}
 
         {/* ==================================================
-            Welcome
+            Welcome Hero Banner
             ================================================== */}
 
-        <section className="mb-10">
-          <p className="mb-3 text-xs font-medium uppercase tracking-[0.22em] text-[#e6b24a]">
-            Evantra Identity
-          </p>
+        <GlassCard
+          variant="gold"
+          className="mb-10 p-8 sm:p-9 border-[#e6b24a]/25 bg-gradient-to-br from-[#0b4f71]/30 via-[#06131f] to-[#071826]"
+        >
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <div className="flex items-center gap-3">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-[#e6b24a]/30 bg-[#e6b24a]/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-[#fae59a]">
+                  <Zap size={13} className="text-[#e6b24a]" />
+                  Master Account Record
+                </span>
 
-          <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-            Welcome, {account.firstName}.
-          </h1>
+                <span className="inline-flex items-center gap-1 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1 text-xs font-semibold text-emerald-300">
+                  <CheckCircle2 size={13} />
+                  {accountStatus}
+                </span>
+              </div>
 
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-white/50">
-            Your Evantra Identity is connected
-            and ready to access the Evantra
-            digital ecosystem.
-          </p>
+              <h2 className="mt-4 text-2xl font-semibold tracking-tight sm:text-3xl">
+                Identity Profile for{" "}
+                <span className="bg-gradient-to-r from-[#fae59a] via-[#e6b24a] to-[#c99322] bg-clip-text text-transparent">
+                  {fullName}
+                </span>
+              </h2>
 
-          <div className="mt-6 flex flex-wrap gap-3">
-            <Link
-              href="/workspace/hub"
-              className="rounded-xl border border-white/10 px-4 py-2.5 text-xs font-semibold text-white/75 transition hover:border-white/20 hover:bg-white/[0.03] hover:text-white"
-            >
-              Open workspace hub
-            </Link>
+              <p className="mt-2 max-w-2xl text-xs leading-relaxed text-white/65 sm:text-sm">
+                Your sovereign Evantra ID powers your profile, authenticated sessions,
+                cryptographic master keys, and connected developer applications.
+              </p>
+            </div>
 
-            <Link
-              href="/workspace/profile"
-              className="rounded-xl border border-white/10 px-4 py-2.5 text-xs font-semibold text-white/75 transition hover:border-white/20 hover:bg-white/[0.03] hover:text-white"
-            >
-              Manage profile
-            </Link>
+            <div className="flex flex-wrap gap-2.5 shrink-0">
+              <Link
+                href="/workspace/profile"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#e6b24a] px-4 py-2.5 text-xs font-semibold text-[#06131f] transition hover:bg-[#f0c261]"
+              >
+                <User size={14} />
+                Manage Profile
+              </Link>
 
-            <Link
-              href="/security"
-              className="rounded-xl border border-white/10 px-4 py-2.5 text-xs font-semibold text-white/75 transition hover:border-white/20 hover:bg-white/[0.03] hover:text-white"
-            >
-              Security sessions
-            </Link>
+              <Link
+                href="/security"
+                className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-xs font-semibold text-white transition hover:border-[#e6b24a]/40 hover:text-[#fae59a]"
+              >
+                <ShieldCheck size={14} className="text-[#e6b24a]" />
+                Security Sessions
+              </Link>
+            </div>
           </div>
-        </section>
+        </GlassCard>
 
         {/* ==================================================
-            Identity overview
+            Identity overview grid
             ================================================== */}
 
-        <div className="grid gap-5 md:grid-cols-2">
+        <div className="grid gap-6 md:grid-cols-2">
           {/* Evantra ID */}
-
-          <section className="rounded-2xl border border-[#e6b24a]/20 bg-[#e6b24a]/[0.04] p-6">
+          <GlassCard variant="default" className="p-7">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-xs uppercase tracking-[0.18em] text-white/30">
+                <p className="text-xs uppercase tracking-wider text-white/35">
                   Evantra ID
                 </p>
 
-                <p className="mt-3 break-all text-xl font-medium text-[#e6b24a]">
+                <p className="mt-3 break-all font-mono text-xl font-semibold text-[#fae59a]">
                   {account.evantraId}
                 </p>
               </div>
 
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#e6b24a]/20 bg-[#e6b24a]/10">
-                <ShieldCheck
-                  size={19}
-                  className="text-[#e6b24a]"
-                />
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-[#e6b24a]/25 bg-[#e6b24a]/10">
+                <EvantraBrandIcon size={26} showGlow={false} />
               </div>
             </div>
 
-            <p className="mt-4 text-sm leading-6 text-white/40">
-              Your unique identity within the
-              Evantra ecosystem.
+            <p className="mt-4 text-xs leading-relaxed text-white/50">
+              Unique, global namespace identifier across all Evantra ecosystem apps and OAuth integrations.
             </p>
-          </section>
-
-          {/* Account status */}
-
-          <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-xs uppercase tracking-[0.18em] text-white/30">
-                  Account status
-                </p>
-
-                <p className="mt-3 text-lg font-medium">
-                  {accountStatus}
-                </p>
-              </div>
-
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-emerald-400/20 bg-emerald-400/[0.06]">
-                <CheckCircle2
-                  size={19}
-                  className="text-emerald-300"
-                />
-              </div>
-            </div>
-
-            <p className="mt-4 text-sm leading-6 text-white/40">
-              Your Evantra Identity account
-              status.
-            </p>
-          </section>
-
-          {/* Personal information */}
-
-          <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04]">
-                <User
-                  size={18}
-                  className="text-white/60"
-                />
-              </div>
-
-              <div>
-                <p className="text-xs uppercase tracking-[0.18em] text-white/30">
-                  Personal information
-                </p>
-
-                <p className="mt-1 text-sm text-white/40">
-                  Your Evantra account name
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-6 space-y-4">
-              <div>
-                <p className="text-xs text-white/30">
-                  Full name
-                </p>
-
-                <p className="mt-1 text-sm text-white/80">
-                  {fullName}
-                </p>
-              </div>
-
-              <div>
-                <p className="text-xs text-white/30">
-                  First name
-                </p>
-
-                <p className="mt-1 text-sm text-white/80">
-                  {account.firstName}
-                </p>
-              </div>
-
-              <div>
-                <p className="text-xs text-white/30">
-                  Last name
-                </p>
-
-                <p className="mt-1 text-sm text-white/80">
-                  {account.lastName}
-                </p>
-              </div>
-            </div>
-          </section>
+          </GlassCard>
 
           {/* Contact email */}
+          <GlassCard variant="default" className="p-7">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-xs uppercase tracking-wider text-white/35">
+                  Primary Contact Email
+                </p>
 
-          <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04]">
-                <Mail
-                  size={18}
-                  className="text-white/60"
-                />
+                <p className="mt-3 break-all font-mono text-base font-medium text-white">
+                  {account.contactEmail}
+                </p>
               </div>
 
-              <div>
-                <p className="text-xs uppercase tracking-[0.18em] text-white/30">
-                  Contact email
-                </p>
-
-                <p className="mt-1 text-sm text-white/40">
-                  Account communication
-                </p>
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04]">
+                <Mail size={18} className="text-white/70" />
               </div>
             </div>
 
-            <p className="mt-6 break-all text-base text-white/80">
-              {account.contactEmail}
+            <p className="mt-4 text-xs leading-relaxed text-white/50">
+              Secured for multi-factor verification, security alerts, and cryptographic recovery notices.
             </p>
+          </GlassCard>
 
-            <p className="mt-3 text-sm leading-6 text-white/40">
-              Used for verification, account
-              recovery, and important Evantra
-              Identity communications.
-            </p>
-          </section>
-
-          {/* Session */}
-
-          <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 md:col-span-2">
-            <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+          {/* Cryptographic Session */}
+          <GlassCard variant="default" className="p-7 md:col-span-2">
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between border-b border-white/10 pb-5">
               <div className="flex items-start gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04]">
+                <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04]">
                   <Clock3
                     size={18}
-                    className="text-white/60"
+                    className="text-white/70"
                   />
                 </div>
 
                 <div>
-                  <p className="text-xs uppercase tracking-[0.18em] text-white/30">
-                    Current session
-                  </p>
+                  <h3 className="text-base font-semibold text-white">
+                    Cryptographic Active Session
+                  </h3>
 
-                  <p className="mt-1 text-sm text-white/40">
-                    Your current Evantra Identity
-                    session.
+                  <p className="text-xs text-white/45">
+                    Hardware-bound browser session protected by Evantra Identity
                   </p>
                 </div>
               </div>
 
               <div
-                className={`inline-flex w-fit items-center gap-2 rounded-full border px-3 py-1.5 text-xs ${
+                className={`inline-flex w-fit items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-wider ${
                   sessionExpired
-                    ? "border-red-400/20 bg-red-400/[0.05] text-red-200"
-                    : "border-emerald-400/20 bg-emerald-400/[0.05] text-emerald-200"
+                    ? "border-red-400/20 bg-red-400/10 text-red-300"
+                    : "border-emerald-400/20 bg-emerald-400/10 text-emerald-300"
                 }`}
               >
                 <span
                   className={`h-1.5 w-1.5 rounded-full ${
                     sessionExpired
-                      ? "bg-red-300"
-                      : "bg-emerald-300"
+                      ? "bg-red-400 animate-pulse"
+                      : "bg-emerald-400"
                   }`}
                 />
 
@@ -526,47 +418,31 @@ export default function AccountPage() {
               </div>
             </div>
 
-            <div className="mt-7 grid gap-5 sm:grid-cols-2">
-              <div>
-                <p className="text-xs text-white/30">
-                  Session ID
+            <div className="mt-6 grid gap-5 sm:grid-cols-2">
+              <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-4">
+                <p className="text-xs uppercase tracking-wider text-white/35">
+                  Session Token ID
                 </p>
 
-                <p className="mt-2 break-all font-mono text-xs text-white/50">
+                <p className="mt-2 break-all font-mono text-xs text-white/60">
                   {session.sessionId}
                 </p>
               </div>
 
-              <div>
-                <p className="text-xs text-white/30">
-                  Expires
+              <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-4">
+                <p className="text-xs uppercase tracking-wider text-white/35">
+                  Session Expiration Time
                 </p>
 
-                <p className="mt-2 text-sm text-white/70">
+                <p className="mt-2 text-xs font-medium text-white/80">
                   {sessionExpiry
                     ? sessionExpiry.toLocaleString()
                     : "Unavailable"}
                 </p>
               </div>
             </div>
-          </section>
+          </GlassCard>
         </div>
-
-        {/* ==================================================
-            Footer
-            ================================================== */}
-
-        <footer className="mt-12 border-t border-white/10 pt-7">
-          <div className="flex flex-col gap-3 text-xs text-white/30 sm:flex-row sm:items-center sm:justify-between">
-            <p>
-              EVANTRA IDENTITY
-            </p>
-
-            <p>
-              Secure access infrastructure.
-            </p>
-          </div>
-        </footer>
       </div>
     </main>
   );

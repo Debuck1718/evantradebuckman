@@ -1,7 +1,9 @@
 "use client";
 
-import { ShieldCheck } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import type { ReactNode } from "react";
+import { EvantraBrandIcon } from "../brand/EvantraBrandIcon";
 
 interface IdentityShellProps {
   children: ReactNode;
@@ -20,27 +22,33 @@ export function IdentityShell({
         <div className="grid w-full overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/[0.025] shadow-2xl lg:grid-cols-[0.9fr_1.1fr]">
 
           {/* Brand panel */}
-
           <section className="hidden min-h-[650px] flex-col justify-between border-r border-white/10 bg-gradient-to-br from-[#0b4f71]/40 via-[#06131f] to-[#06131f] p-12 lg:flex">
-
             <div>
-              <div className="mb-12 flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#e6b24a]/30 bg-[#e6b24a]/10">
-                  <ShieldCheck
-                    size={21}
-                    className="text-[#e6b24a]"
-                  />
-                </div>
+              <div className="mb-12 flex items-center justify-between">
+                <Link
+                  href="/"
+                  className="group flex items-center gap-3.5 transition"
+                >
+                  <EvantraBrandIcon size={44} />
 
-                <div>
-                  <p className="text-sm font-semibold tracking-[0.22em] text-white">
-                    EVANTRA
-                  </p>
+                  <div>
+                    <p className="text-sm font-semibold tracking-[0.24em] text-white group-hover:text-[#fae59a] transition">
+                      EVANTRA
+                    </p>
 
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-white/40">
-                    Identity
-                  </p>
-                </div>
+                    <p className="text-[10px] uppercase tracking-[0.22em] text-[#e6b24a]/80">
+                      Identity
+                    </p>
+                  </div>
+                </Link>
+
+                <Link
+                  href="/workspace/hub"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1.5 text-xs text-white/70 transition hover:border-[#e6b24a]/40 hover:bg-[#e6b24a]/10 hover:text-[#e6b24a]"
+                >
+                  <span>Workspace</span>
+                  <ArrowRight size={13} />
+                </Link>
               </div>
 
               <p className="mb-5 text-xs font-medium uppercase tracking-[0.28em] text-[#e6b24a]">
@@ -61,25 +69,50 @@ export function IdentityShell({
               </p>
             </div>
 
-            <div className="text-xs leading-6 text-white/35">
-              <p>EVANTRA IDENTITY</p>
-              <p>Secure access infrastructure.</p>
+            <div className="flex items-center justify-between border-t border-white/10 pt-6 text-xs text-white/40">
+              <div>
+                <p className="font-semibold tracking-[0.16em] text-white/60">EVANTRA IDENTITY</p>
+                <p className="mt-0.5">Unified Auth &amp; Enterprise SSO</p>
+              </div>
+
+              <Link
+                href="/workspace/hub"
+                className="text-[#e6b24a] transition hover:text-[#fae59a] hover:underline"
+              >
+                Go to Workspace &rarr;
+              </Link>
             </div>
           </section>
 
           {/* Authentication panel */}
-
           <section className="flex min-h-[650px] items-center justify-center p-6 sm:p-10">
             <div className="w-full max-w-md">
 
-              <div className="mb-8 lg:hidden">
-                <p className="text-sm font-semibold tracking-[0.22em] text-white">
-                  EVANTRA
-                </p>
+              {/* Mobile Header with Brand Icon and Workspace shortcut */}
+              <div className="mb-8 flex items-center justify-between lg:hidden">
+                <Link
+                  href="/"
+                  className="flex items-center gap-3"
+                >
+                  <EvantraBrandIcon size={38} />
 
-                <p className="mt-1 text-[10px] uppercase tracking-[0.2em] text-white/40">
-                  Identity
-                </p>
+                  <div>
+                    <p className="text-sm font-semibold tracking-[0.22em] text-white">
+                      EVANTRA
+                    </p>
+
+                    <p className="text-[10px] uppercase tracking-[0.2em] text-[#e6b24a]/80">
+                      Identity
+                    </p>
+                  </div>
+                </Link>
+
+                <Link
+                  href="/workspace/hub"
+                  className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs text-white/70 transition hover:border-[#e6b24a]/40 hover:text-[#e6b24a]"
+                >
+                  Workspace
+                </Link>
               </div>
 
               <div className="mb-8">
@@ -100,9 +133,15 @@ export function IdentityShell({
 
               {children}
 
-              <p className="mt-8 text-center text-xs text-white/30">
-                Protected by Evantra Identity
-              </p>
+              <div className="mt-8 flex flex-col items-center gap-2 text-center text-xs text-white/35">
+                <p>Protected by Evantra Identity</p>
+                <Link
+                  href="/workspace/hub"
+                  className="text-white/45 transition hover:text-[#e6b24a]"
+                >
+                  Switch to Workspace
+                </Link>
+              </div>
             </div>
           </section>
         </div>
