@@ -21,8 +21,8 @@ export const metadata: Metadata = {
     "Evantra Identity",
 
   icons: {
-    icon: "/icon",
-    apple: "/icon",
+    icon: "/icon.svg",
+    apple: "/icon.svg",
   },
 
   keywords: [
