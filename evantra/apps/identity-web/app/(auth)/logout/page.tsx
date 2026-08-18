@@ -16,6 +16,8 @@ import {
 
 import { logout } from "../../lib/api";
 import { useIdentitySession } from "../../../components/identity/IdentitySessionProvider";
+import { EvantraBrandIcon } from "../../../components/brand/EvantraBrandIcon";
+import { GlassCard } from "../../../components/ui/GlassCard";
 
 export default function LogoutPage() {
 	const router = useRouter();
@@ -63,13 +65,8 @@ export default function LogoutPage() {
 	return (
 		<main className="min-h-screen bg-[#06131f] text-white">
 			<div className="mx-auto flex min-h-screen max-w-xl items-center justify-center px-6">
-				<section className="w-full rounded-3xl border border-white/10 bg-white/[0.03] p-8 text-center">
-					<div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl border border-[#e6b24a]/30 bg-[#e6b24a]/10">
-						<ShieldCheck
-							size={22}
-							className="text-[#e6b24a]"
-						/>
-					</div>
+				<GlassCard variant="elevated" className="w-full p-8 text-center sm:p-10">
+					<EvantraBrandIcon size={48} className="mx-auto" />
 
 					<h1 className="mt-6 text-2xl font-semibold">
 						Signing you out
@@ -103,7 +100,7 @@ export default function LogoutPage() {
 							Return to sign in
 						</Link>
 					</div>
-				</section>
+				</GlassCard>
 			</div>
 		</main>
 	);

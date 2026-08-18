@@ -23,6 +23,8 @@ import {
 import {
 	useIdentitySession,
 } from "../../../../components/identity/IdentitySessionProvider";
+import { EvantraBrandIcon } from "../../../../components/brand/EvantraBrandIcon";
+import { GlassCard } from "../../../../components/ui/GlassCard";
 
 export default function RegisterApplicationPage() {
 	const {
@@ -145,11 +147,8 @@ export default function RegisterApplicationPage() {
 		return (
 			<main className="min-h-screen bg-[#06131f] text-white">
 				<div className="mx-auto flex min-h-screen max-w-xl items-center justify-center px-6">
-					<section className="w-full rounded-3xl border border-white/10 bg-white/[0.03] p-8 text-center">
-						<ShieldCheck
-							size={34}
-							className="mx-auto text-[#e6b24a]"
-						/>
+					<GlassCard variant="elevated" className="w-full p-8 text-center sm:p-10">
+						<EvantraBrandIcon size={48} className="mx-auto" />
 
 						<h1 className="mt-6 text-2xl font-semibold">
 							Sign in required
@@ -165,7 +164,7 @@ export default function RegisterApplicationPage() {
 						>
 							Sign in
 						</Link>
-					</section>
+					</GlassCard>
 				</div>
 			</main>
 		);
