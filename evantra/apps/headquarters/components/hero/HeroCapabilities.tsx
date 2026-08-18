@@ -12,27 +12,27 @@ import Reveal from "@/components/shared/Reveal";
 const capabilities = [
   {
     icon: BrainCircuit,
-    title: "AI & SOFTWARE",
-    line1: "Intelligent Systems",
-    line2: "Built for Impact",
+    title: "SOFTWARE & AI",
+    line1: "Enterprise Systems.",
+    line2: "Global Scale Execution.",
   },
   {
     icon: ShieldCheck,
     title: "CYBERSECURITY",
-    line1: "Securing Systems.",
-    line2: "Protecting Futures.",
+    line1: "Sovereign Defense.",
+    line2: "Zero-Knowledge Cloud.",
   },
   {
     icon: Cpu,
     title: "ENGINEERING",
-    line1: "Designing Solutions.",
-    line2: "Building the Future.",
+    line1: "Mission-Critical Systems.",
+    line2: "Institutional Precision.",
   },
   {
     icon: FlaskConical,
-    title: "RESEARCH",
-    line1: "Advancing Knowledge.",
-    line2: "Creating Possibilities.",
+    title: "ENTERPRISE & VENTURES",
+    line1: "Global Collaborations.",
+    line2: "Strategic Scalability.",
   },
 ];
 
