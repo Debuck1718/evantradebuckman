@@ -234,7 +234,7 @@ importers:
   apps/identity-web:
     dependencies:
       '@evantra/assistant':
-        specifier: workspace:*
+        specifier: file:../../packages/assistant
         version: link:../../packages/assistant
       '@radix-ui/react-slot':
         specifier: ^1.3.0
