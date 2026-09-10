@@ -6,6 +6,7 @@ import {
 
 import {
   RegisterClientRedirectUriWorkflow,
+  ValidateBrowserSessionWorkflow,
 } from "../../workflows";
 
 /**
@@ -15,6 +16,8 @@ export class RegisterClientRedirectUriController {
   constructor(
     private readonly workflow:
       RegisterClientRedirectUriWorkflow,
+    private readonly validateSession:
+      ValidateBrowserSessionWorkflow,
   ) {}
 
   async handle(
@@ -33,6 +36,27 @@ export class RegisterClientRedirectUriController {
         request.body.primary === true ||
         request.body.primary === "true";
 
+      const sessionId =
+        String(
+          request.cookies?.evantra_session_id ??
+            request.cookies?.session_id ??
+            request.header("x-session-id") ??
+            "",
+        ).trim();
+
+      if (!sessionId) {
+        response.status(401).json({
+          error: {
+            code: "UNAUTHENTICATED",
+            message: "An authenticated session is required.",
+          },
+        });
+        return;
+      }
+
+      const session =
+        await this.validateSession.execute({ sessionId });
+
       if (!clientId || !redirectUri) {
         response.status(400).json({
           error: {
@@ -50,6 +74,7 @@ export class RegisterClientRedirectUriController {
           clientId,
           redirectUri,
           primary,
+          ownerAccountId: session.identity.accountId,
         });
 
       response.status(201).json({

@@ -1,6 +1,5 @@
 const API_URL =
-  process.env.NEXT_PUBLIC_IDENTITY_API_URL ??
-  "http://localhost:4000";
+  "/api/backend";
 
 // ======================================================
 // Shared
@@ -182,6 +181,8 @@ export async function registerAccount(
         "Content-Type": "application/json",
       },
 
+      credentials: "include",
+
       body: JSON.stringify({
         firstName: input.firstName.trim(),
         lastName: input.lastName.trim(),
@@ -204,7 +205,6 @@ export async function registerAccount(
 // ======================================================
 
 export interface RegisterOAuthClientInput {
-  ownerAccountId: string;
   name: string;
   slug: string;
   homepageUrl?: string;
@@ -256,8 +256,9 @@ export async function registerOAuthClient(
         "Content-Type": "application/json",
       },
 
+      credentials: "include",
+
       body: JSON.stringify({
-        ownerAccountId: input.ownerAccountId,
         name: input.name.trim(),
         slug: input.slug.trim().toLowerCase(),
         ...(input.homepageUrl?.trim()
@@ -291,6 +292,8 @@ export async function registerOAuthRedirectUri(
       headers: {
         "Content-Type": "application/json",
       },
+
+      credentials: "include",
 
       body: JSON.stringify({
         clientId: input.clientId,

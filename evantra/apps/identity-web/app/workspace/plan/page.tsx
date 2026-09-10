@@ -26,13 +26,15 @@ export default function WorkspacePlanPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    async function loadPlan(accountId: string): Promise<void> {
+    async function loadPlan(): Promise<void> {
       try {
         setError(null);
 
         const response = await fetch(
-          `/api/workspace/plan?accountId=${encodeURIComponent(accountId)}`,
-          { cache: "no-store" },
+          "/api/workspace/plan",
+          {
+            cache: "no-store",
+          },
         );
 
         if (!response.ok) {
@@ -46,10 +48,10 @@ export default function WorkspacePlanPage() {
       }
     }
 
-    if (account?.id) {
-      void loadPlan(account.id);
+    if (session) {
+      void loadPlan();
     }
-  }, [account?.id]);
+  }, [session]);
 
   if (loading) {
     return (

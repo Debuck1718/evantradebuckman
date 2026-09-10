@@ -33,7 +33,7 @@ export default async function OAuthConsentPage({
 
   const identityApiUrl =
     process.env.NEXT_PUBLIC_IDENTITY_API_URL ??
-    "http://localhost:4000";
+    "https://evantra-headquarters.onrender.com";
 
   const scopes = describeScopes(
     resolvedSearchParams.scope ?? "",

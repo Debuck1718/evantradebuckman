@@ -6,6 +6,7 @@ import {
 
 import {
   RegisterClientWorkflow,
+  ValidateBrowserSessionWorkflow,
 } from "../../workflows";
 
 /**
@@ -15,6 +16,8 @@ export class RegisterClientController {
   constructor(
     private readonly workflow:
       RegisterClientWorkflow,
+    private readonly validateSession:
+      ValidateBrowserSessionWorkflow,
   ) {}
 
   async handle(
@@ -23,10 +26,29 @@ export class RegisterClientController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      const ownerAccountId =
+      const sessionId =
         String(
-          request.body.ownerAccountId ?? "",
+          request.cookies?.evantra_session_id ??
+            request.cookies?.session_id ??
+            request.header("x-session-id") ??
+            "",
         ).trim();
+
+      if (!sessionId) {
+        response.status(401).json({
+          error: {
+            code: "UNAUTHENTICATED",
+            message: "An authenticated session is required.",
+          },
+        });
+        return;
+      }
+
+      const session =
+        await this.validateSession.execute({ sessionId });
+
+      const ownerAccountId =
+        session.identity.accountId;
 
       const name =
         String(request.body.name ?? "").trim();
@@ -49,7 +71,6 @@ export class RegisterClientController {
         request.body.firstParty === "true";
 
       if (
-        !ownerAccountId ||
         !name ||
         !slug
       ) {
@@ -57,7 +78,7 @@ export class RegisterClientController {
           error: {
             code: "INVALID_REQUEST",
             message:
-              "ownerAccountId, name and slug are required.",
+              "name and slug are required.",
           },
         });
 

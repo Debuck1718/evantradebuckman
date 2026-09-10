@@ -290,12 +290,16 @@ export class HttpFactory {
 
         workflows.clients.registerClient,
 
+        workflows.session.validateBrowserSession,
+
       );
 
     const registerClientRedirectUriController =
       new RegisterClientRedirectUriController(
 
         workflows.clients.registerClientRedirectUri,
+
+        workflows.session.validateBrowserSession,
 
       );
 

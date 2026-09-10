@@ -13,6 +13,10 @@ function secureCookie(): boolean {
   return process.env.NODE_ENV === "production";
 }
 
+function sameSitePolicy(): "lax" | "none" {
+  return secureCookie() ? "none" : "lax";
+}
+
 export class SessionCookieMapper {
 
   static active(
@@ -24,7 +28,7 @@ export class SessionCookieMapper {
         browserSession.identity.sessionId,
       httpOnly: true,
       secure: secureCookie(),
-      sameSite: "lax",
+      sameSite: sameSitePolicy(),
       path: "/",
       expiresAt:
         browserSession.lifecycle.getExpiresAt(),
@@ -37,7 +41,7 @@ export class SessionCookieMapper {
       value: "",
       httpOnly: true,
       secure: secureCookie(),
-      sameSite: "lax",
+      sameSite: sameSitePolicy(),
       path: "/",
       expiresAt: new Date(0),
     };

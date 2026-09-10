@@ -34,6 +34,12 @@ export default function WorkspaceLayout({
 						>
 							Hub
 						</Link>
+							<Link
+								href="/workspace/assistant"
+								className="transition hover:text-[#e6b24a]"
+							>
+								Assistant
+							</Link>
 						<Link
 							href="/workspace/account"
 							className="transition hover:text-[#e6b24a]"
@@ -65,6 +71,24 @@ export default function WorkspaceLayout({
 							Promises
 						</Link>
 						<Link
+							href="/workspace/knowledge"
+							className="transition hover:text-[#e6b24a]"
+						>
+							Knowledge
+						</Link>
+						<Link
+							href="/workspace/calendar"
+							className="transition hover:text-[#e6b24a]"
+						>
+							Calendar
+						</Link>
+						<Link
+							href="/workspace/finance"
+							className="transition hover:text-[#e6b24a]"
+						>
+							Finance
+						</Link>
+						<Link
 							href="/workspace/burden"
 							className="transition hover:text-[#e6b24a]"
 						>
@@ -92,11 +116,15 @@ export default function WorkspaceLayout({
 				{/* Mobile horizontal navigation */}
 				<div className="flex md:hidden overflow-x-auto border-t border-white/5 px-6 py-2.5 gap-4 text-xs uppercase tracking-wider text-white/60 scrollbar-none">
 					<Link href="/workspace/hub" className="shrink-0 hover:text-white">Hub</Link>
+					<Link href="/workspace/assistant" className="shrink-0 hover:text-white">Assistant</Link>
 					<Link href="/workspace/account" className="shrink-0 hover:text-white">Account</Link>
 					<Link href="/workspace/applications" className="shrink-0 hover:text-white">Applications</Link>
 					<Link href="/workspace/plan" className="shrink-0 hover:text-white">Plan</Link>
 					<Link href="/workspace/profile" className="shrink-0 hover:text-white">Profile</Link>
 					<Link href="/workspace/promises" className="shrink-0 hover:text-white">Promises</Link>
+					<Link href="/workspace/knowledge" className="shrink-0 hover:text-white">Knowledge</Link>
+					<Link href="/workspace/calendar" className="shrink-0 hover:text-white">Calendar</Link>
+					<Link href="/workspace/finance" className="shrink-0 hover:text-white">Finance</Link>
 					<Link href="/workspace/burden" className="shrink-0 hover:text-white">Burden</Link>
 					<Link href="/security" className="shrink-0 hover:text-white">Security</Link>
 				</div>

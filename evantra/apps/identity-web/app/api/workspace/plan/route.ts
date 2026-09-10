@@ -5,9 +5,9 @@ import {
 } from "../../../workspace/lib/intelligence";
 
 import {
-  requireAccountId,
-  workspaceState,
+  requireAuthenticatedAccount,
 } from "../_store";
+import { getBurden, listPromises } from "../repository";
 
 const sampleTopTasks = [
   "Clear one blocker that impacts delivery",
@@ -19,12 +19,13 @@ const sampleTopTasks = [
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
-    const accountId = requireAccountId(request.nextUrl.searchParams.get("accountId"));
-    const state = workspaceState(accountId);
+    const accountId = await requireAuthenticatedAccount(request);
+    const burden = await getBurden(accountId);
+    const promises = await listPromises(accountId);
 
     const plan = buildLifeWorkPlan({
-      burden: state.burden,
-      promises: state.promises,
+      burden,
+      promises,
       topTasks: sampleTopTasks,
       upcomingEventsCount: 4,
     });
@@ -33,7 +34,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Unable to load plan." },
-      { status: 400 },
+      { status: error instanceof Error && "status" in error ? 401 : 400 },
     );
   }
 }
