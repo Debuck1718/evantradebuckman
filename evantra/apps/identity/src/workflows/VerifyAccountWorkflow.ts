@@ -3,6 +3,10 @@ import {
 } from "../account";
 
 import {
+  AccountStatus,
+} from "../account/AccountStatus";
+
+import {
   VerificationService,
 } from "../verification";
 
@@ -52,11 +56,6 @@ export class VerifyAccountWorkflow {
       );
     }
 
-    // Complete verification.
-    await this.verifications.verify(
-      verification
-    );
-
     // Find account.
     const account =
       await this.accounts.findById(
@@ -68,6 +67,21 @@ export class VerifyAccountWorkflow {
         "Account not found."
       );
     }
+
+    // Email verification may only complete onboarding.
+    if (
+      account.getStatus() !==
+      AccountStatus.PENDING_VERIFICATION
+    ) {
+      throw new Error(
+        "Account cannot be verified in its current state."
+      );
+    }
+
+    // Consume the token only after the account state is valid.
+    await this.verifications.verify(
+      verification
+    );
 
     // Activate account.
     await this.accounts.activate(

@@ -348,16 +348,9 @@ export async function verifyAccount(
     },
   );
 
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(
-      data?.error?.message ??
-        "Unable to verify your Evantra ID.",
-    );
-  }
-
-  return data;
+  return readResponse<VerifyAccountResponse>(
+    response,
+  );
 }
 
 export async function resendVerification(
@@ -381,16 +374,9 @@ export async function resendVerification(
     },
   );
 
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(
-      data?.error?.message ??
-        "Unable to resend the verification email.",
-    );
-  }
-
-  return data;
+  return readResponse<ResendVerificationResponse>(
+    response,
+  );
 }
 
 // ======================================================

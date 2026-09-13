@@ -190,6 +190,22 @@ async register(params: {
   }
 
   /**
+   * Reactivates an account after
+   * administrative review.
+   */
+  async reactivate(
+    account: Account,
+  ): Promise<void> {
+
+    account.reactivate();
+
+    await this.repository.update(
+      account,
+    );
+
+  }
+
+  /**
    * Suspends the account.
    */
   async suspend(

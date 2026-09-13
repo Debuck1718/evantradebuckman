@@ -11,6 +11,7 @@ export function createAccountRoutes(
 
   const router = Router();
   const authentication = identity.controllers.authentication;
+  const administration = identity.controllers.administration;
 
   router.post(
     "/authenticate",
@@ -30,6 +31,13 @@ export function createAccountRoutes(
     "/verify",
     authentication.verify.handle.bind(
       authentication.verify,
+    ),
+  );
+
+  router.post(
+    "/reactivate",
+    administration.reactivateAccount.reactivateAccount.bind(
+      administration.reactivateAccount,
     ),
   );
 

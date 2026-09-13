@@ -1,6 +1,7 @@
 export * from "./AuthenticateWorkflow"
 export * from "./RegisterAccountWorkflow"
 export * from "./VerifyAccountWorkflow"
+export * from "./ReactivateAccountWorkflow"
 export * from "./RegisterClientWorkflow"
 export * from "./RegisterClientRedirectUriWorkflow";
 export * from "./ApproveClientWorkflow";
