@@ -75,7 +75,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/favicon.ico",
+        url: "/opengraph-image", // generated 1200x630 branded card
         width: 1200,
         height: 630,
         alt: "Evantra Global Headquarters & Technology Ecosystem",
@@ -88,7 +88,7 @@ export const metadata: Metadata = {
     title: siteTitle,
     description: siteDescription,
     creator: "@evantra",
-    images: ["/favicon.ico"],
+    images: ["/opengraph-image"],
   },
 
   icons: {

@@ -16,6 +16,18 @@ const areas = [
     href: "/admin/submissions",
   },
   {
+    title: "Support requests",
+    description:
+      "Review and resolve issues submitted by users from the workspace support page.",
+    href: "/admin/requests",
+  },
+  {
+    title: "Inbound inbox",
+    description:
+      "Emails received at the headquarters contact address through Resend receiving.",
+    href: "/admin/inbound",
+  },
+  {
     title: "Workspace controls",
     description:
       "Worker/admin access belongs in the final kernel-backed workspace layer.",

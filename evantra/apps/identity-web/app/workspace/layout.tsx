@@ -89,6 +89,24 @@ export default function WorkspaceLayout({
 							Finance
 						</Link>
 						<Link
+							href="/workspace/organizations"
+							className="transition hover:text-[#e6b24a]"
+						>
+							Organizations
+						</Link>
+						<Link
+							href="/workspace/notifications"
+							className="transition hover:text-[#e6b24a]"
+						>
+							Notifications
+						</Link>
+						<Link
+							href="/workspace/support"
+							className="transition hover:text-[#e6b24a]"
+						>
+							Support
+						</Link>
+						<Link
 							href="/workspace/burden"
 							className="transition hover:text-[#e6b24a]"
 						>
@@ -125,6 +143,9 @@ export default function WorkspaceLayout({
 					<Link href="/workspace/knowledge" className="shrink-0 hover:text-white">Knowledge</Link>
 					<Link href="/workspace/calendar" className="shrink-0 hover:text-white">Calendar</Link>
 					<Link href="/workspace/finance" className="shrink-0 hover:text-white">Finance</Link>
+					<Link href="/workspace/organizations" className="shrink-0 hover:text-white">Organizations</Link>
+					<Link href="/workspace/notifications" className="shrink-0 hover:text-white">Notifications</Link>
+					<Link href="/workspace/support" className="shrink-0 hover:text-white">Support</Link>
 					<Link href="/workspace/burden" className="shrink-0 hover:text-white">Burden</Link>
 					<Link href="/security" className="shrink-0 hover:text-white">Security</Link>
 				</div>
