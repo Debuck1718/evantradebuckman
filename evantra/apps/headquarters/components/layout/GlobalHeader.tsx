@@ -7,12 +7,30 @@ import { ArrowRight, Menu, X } from "lucide-react";
 import Logo from "./Logo";
 import Navigation from "./Navigation";
 import SearchButton from "./SearchButton";
+import SearchDialog from "./SearchDialog";
 
 import { EvantraButton } from "../shared/EvantraButton";
 import MobileNavigation from "./MobileNavigation";
 export default function GlobalHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        setMobileOpen(false);
+        setSearchOpen((open) => !open);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -136,7 +154,10 @@ export default function GlobalHeader() {
               "
             >
               <div className="hidden md:block">
-                <SearchButton dark={scrolled} />
+                <SearchButton
+                  dark={scrolled}
+                  onClick={() => setSearchOpen(true)}
+                />
               </div>
 
               <div className="hidden lg:block">
@@ -207,6 +228,8 @@ export default function GlobalHeader() {
     open={mobileOpen}
     onClose={() => setMobileOpen(false)}
 />
+
+      <SearchDialog open={searchOpen} onClose={() => setSearchOpen(false)} />
 
       <AnimatePresence>
         {mobileOpen && (

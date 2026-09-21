@@ -99,7 +99,6 @@ export default function RegisterApplicationPage() {
 
 		try {
 			const created = await registerOAuthClient({
-				ownerAccountId: account.id,
 				name,
 				slug,
 				homepageUrl,

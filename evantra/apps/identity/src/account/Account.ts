@@ -197,6 +197,32 @@ export class Account {
   }
 
   /**
+   * Restores an account after
+   * administrative review.
+   */
+  reactivate(): void {
+
+    if (
+      this.status !==
+        AccountStatus.SUSPENDED &&
+      this.status !==
+        AccountStatus.DISABLED
+    ) {
+
+      throw new Error(
+        "Only suspended or disabled accounts can be reactivated.",
+      );
+
+    }
+
+    this.status =
+      AccountStatus.ACTIVE;
+
+    this.touch();
+
+  }
+
+  /**
    * Changes the account's
    * contact email.
    */

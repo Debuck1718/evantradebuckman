@@ -13,10 +13,17 @@ export interface EvantraIdentityConfig {
 export interface EvantraAuthorizeParams {
   clientId: string;
   redirectUri: string;
+  codeChallenge: string;
+  codeChallengeMethod?: "S256";
   scope?: string;
   state?: string;
   nonce?: string;
   responseType?: "code";
+}
+
+export interface EvantraPkcePair {
+  verifier: string;
+  challenge: string;
 }
 
 const defaultConfig: EvantraIdentityConfig = {
@@ -64,12 +71,37 @@ export function createEvantraRegisterUrl(baseUrl: string, returnTo?: string): st
   return `${normalizedBase}/register?returnTo=${encodeURIComponent(returnTo)}`;
 }
 
+export async function createEvantraPkcePair(): Promise<EvantraPkcePair> {
+  const bytes = new Uint8Array(64);
+  crypto.getRandomValues(bytes);
+
+  const verifier = Array.from(bytes, byte =>
+    byte.toString(16).padStart(2, "0"),
+  ).join("");
+
+  const digest = await crypto.subtle.digest(
+    "SHA-256",
+    new TextEncoder().encode(verifier),
+  );
+
+  const challenge = btoa(
+    String.fromCharCode(...new Uint8Array(digest)),
+  )
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/, "");
+
+  return { verifier, challenge };
+}
+
 export function createEvantraAuthorizeUrl(baseUrl: string, params: EvantraAuthorizeParams): string {
   const normalizedBase = normalizeBaseUrl(baseUrl);
   const query = new URLSearchParams();
 
   query.set("client_id", params.clientId);
   query.set("redirect_uri", params.redirectUri);
+  query.set("code_challenge", params.codeChallenge);
+  query.set("code_challenge_method", params.codeChallengeMethod ?? "S256");
   query.set("response_type", params.responseType ?? "code");
 
   if (params.scope) {

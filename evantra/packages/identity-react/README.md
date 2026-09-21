@@ -37,15 +37,25 @@ export function AuthButtons() {
 ## OAuth URL Helper
 
 ```ts
-import { createEvantraAuthorizeUrl } from "@evantra/identity-react";
+import {
+  createEvantraAuthorizeUrl,
+  createEvantraPkcePair,
+} from "@evantra/identity-react";
+
+const { verifier, challenge } = await createEvantraPkcePair();
 
 const url = createEvantraAuthorizeUrl("https://identity.evantradebuckman.com", {
   clientId: "your-client-id",
   redirectUri: "https://app.example.com/oauth/callback",
+  codeChallenge: challenge,
+  codeChallengeMethod: "S256",
   scope: "openid profile email",
   state: crypto.randomUUID(),
   nonce: crypto.randomUUID(),
 });
+
+sessionStorage.setItem("evantra_pkce_verifier", verifier);
+window.location.assign(url);
 ```
 
 ## Security Notes

@@ -7,103 +7,81 @@ import {
 } from "../../../workspace/lib/intelligence";
 
 import {
-  requireAccountId,
-  workspaceState,
+  requireAuthenticatedAccount,
 } from "../_store";
+import {
+  createWorkspacePromise,
+  listPromises,
+  updatePromiseStatus,
+} from "../repository";
+import { promisePatchSchema } from "../validation";
+import { promiseCreateSchema } from "../validation";
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
-    const accountId = requireAccountId(request.nextUrl.searchParams.get("accountId"));
-    const state = workspaceState(accountId);
+    const accountId = await requireAuthenticatedAccount(request);
+    const items = await listPromises(accountId);
 
     return NextResponse.json({
-      items: state.promises,
-      dueSoon: dueSoonPromises(state.promises),
+      items,
+      dueSoon: dueSoonPromises(items),
     });
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Unable to load promises." },
-      { status: 400 },
+      { status: error instanceof Error && "status" in error ? 401 : 400 },
     );
   }
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
-    const payload = (await request.json()) as {
-      accountId?: string;
-      title?: string;
-      dueAt?: string;
-    };
+    const parsed = promiseCreateSchema.safeParse(await request.json());
+    if (!parsed.success) return NextResponse.json({ error: "Invalid promise request." }, { status: 400 });
+    const payload = parsed.data;
 
-    const accountId = requireAccountId(payload.accountId ?? null);
-
-    if (!payload.title?.trim()) {
-      return NextResponse.json({ error: "title is required." }, { status: 400 });
-    }
-
-    if (!payload.dueAt?.trim()) {
-      return NextResponse.json({ error: "dueAt is required." }, { status: 400 });
-    }
+    const accountId = await requireAuthenticatedAccount(request);
 
     const item = createPromise(payload.title, payload.dueAt);
 
-    const state = workspaceState(accountId);
-    state.promises = [item, ...state.promises];
+    const created = await createWorkspacePromise(accountId, item);
+    const items = await listPromises(accountId);
 
     return NextResponse.json(
       {
-        item,
-        items: state.promises,
-        dueSoon: dueSoonPromises(state.promises),
+        item: created,
+        items,
+        dueSoon: dueSoonPromises(items),
       },
       { status: 201 },
     );
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Unable to create promise." },
-      { status: 400 },
+      { status: error instanceof Error && "status" in error ? 401 : 400 },
     );
   }
 }
 
 export async function PATCH(request: NextRequest): Promise<NextResponse> {
   try {
-    const payload = (await request.json()) as {
-      accountId?: string;
-      id?: string;
-      status?: WorkspacePromise["status"];
-    };
+    const parsed = promisePatchSchema.safeParse(await request.json());
+    if (!parsed.success) return NextResponse.json({ error: "Invalid promise request." }, { status: 400 });
+    const payload = parsed.data;
 
-    const accountId = requireAccountId(payload.accountId ?? null);
+    const accountId = await requireAuthenticatedAccount(request);
 
-    if (!payload.id?.trim()) {
-      return NextResponse.json({ error: "id is required." }, { status: 400 });
-    }
-
-    if (!payload.status) {
-      return NextResponse.json({ error: "status is required." }, { status: 400 });
-    }
-
-    const state = workspaceState(accountId);
-
-    state.promises = state.promises.map(item =>
-      item.id === payload.id
-        ? {
-            ...item,
-            status: payload.status!,
-          }
-        : item,
-    );
+    await updatePromiseStatus(accountId, payload.id, payload.status);
+    const items = await listPromises(accountId);
 
     return NextResponse.json({
-      items: state.promises,
-      dueSoon: dueSoonPromises(state.promises),
+      items,
+      dueSoon: dueSoonPromises(items),
     });
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Unable to update promise." },
-      { status: 400 },
+      { status: error instanceof Error && "status" in error ? 401 : 400 },
     );
   }
 }

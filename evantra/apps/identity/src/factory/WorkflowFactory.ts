@@ -1,6 +1,7 @@
 import {
   RegisterAccountWorkflow,
   VerifyAccountWorkflow,
+  ReactivateAccountWorkflow,
   AuthenticateWorkflow,
 
   RegisterClientWorkflow,
@@ -97,6 +98,12 @@ export class WorkflowFactory {
 
         services.verifications,
 
+      );
+
+    const reactivateAccount =
+      new ReactivateAccountWorkflow(
+        services.accounts,
+        services.audit,
       );
 
     const authenticate =
@@ -397,6 +404,8 @@ const verifyContactEmailChange =
     registerAccount,
 
     verifyAccount,
+
+    reactivateAccount,
 
     authenticate,
 

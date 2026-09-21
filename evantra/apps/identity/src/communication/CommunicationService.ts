@@ -53,6 +53,13 @@ export class CommunicationService {
 
         params,
 
+        `${(
+          process.env.EVANTRA_IDENTITY_WEB_URL ??
+          "http://localhost:3001"
+        ).replace(/\/$/, "")}/verify?token=${encodeURIComponent(
+          params.token,
+        )}`,
+
       );
 
     await this.provider.sendEmail({

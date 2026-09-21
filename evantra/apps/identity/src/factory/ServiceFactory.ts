@@ -33,6 +33,7 @@ import {
 import {
   CommunicationService,
   ConsoleCommunicationProvider,
+  ResendCommunicationProvider,
 } from "../communication";
 
 import {
@@ -204,12 +205,32 @@ export class ServiceFactory {
 
       );
 
+      const resendApiKey =
+        process.env.RESEND_API_KEY?.trim();
+      const emailFrom =
+        process.env.EVANTRA_EMAIL_FROM?.trim();
+
+      if (
+        process.env.NODE_ENV === "production" &&
+        (!resendApiKey || !emailFrom)
+      ) {
+        throw new Error(
+          "RESEND_API_KEY and EVANTRA_EMAIL_FROM are required in production.",
+        );
+      }
+
+      const communicationProvider =
+        resendApiKey && emailFrom
+          ? new ResendCommunicationProvider(
+              resendApiKey,
+              emailFrom,
+            )
+          : new ConsoleCommunicationProvider();
+
       const communication =
-  new CommunicationService(
-
-    new ConsoleCommunicationProvider(),
-
-  );
+        new CommunicationService(
+          communicationProvider,
+        );
 
   const emailChanges =
   new EmailChangeService(

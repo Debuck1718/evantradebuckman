@@ -56,7 +56,7 @@ export function configureExpress(
   app.use(
     cors({
 
-      origin: true,
+      origin: trustedOrigins(),
 
       credentials: true,
 
@@ -221,4 +221,21 @@ export function configureExpress(
 
   return app;
 
+}
+
+function trustedOrigins(): string[] {
+  const configured = process.env.EVANTRA_ALLOWED_ORIGINS
+    ?.split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
+  if (configured?.length) {
+    return configured;
+  }
+
+  return [
+    "https://identity.evantradebuckman.com",
+    "https://workspace.evantradebuckman.com",
+    "http://localhost:3000",
+  ];
 }

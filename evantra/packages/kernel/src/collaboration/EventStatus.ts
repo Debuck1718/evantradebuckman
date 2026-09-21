@@ -1,0 +1,8 @@
+/**
+ * Lifecycle state of an event.
+ */
+export enum EventStatus {
+  SCHEDULED = "SCHEDULED",
+  CANCELLED = "CANCELLED",
+  COMPLETED = "COMPLETED",
+}

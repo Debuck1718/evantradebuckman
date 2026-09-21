@@ -30,6 +30,7 @@ import { VerifyContactEmailChangeController } from "../authentication/controller
 import { TerminateBrowserSessionController } from "../authentication/controllers/TerminateBrowserSessionController";
 import { RotateClientSecretController } from "../client/RotateClientSecretController";
 import { ApproveClientController } from "../client/ApproveClientController";
+import { AccountAdminController } from "../account/AccountAdminController";
 
 import { AuthorizationCodeGrantHandler } from "../http/oauth/grants/AuthorizationCodeGrantHandler";
 import { RefreshTokenGrantHandler } from "../http/oauth/grants/RefreshTokenGrantHandler";
@@ -174,6 +175,11 @@ export class HttpFactory {
 
       );
 
+    const accountAdminController =
+      new AccountAdminController(
+        workflows.identity.reactivateAccount,
+      );
+
     const logoutController =
       new LogoutController(
 
@@ -290,12 +296,16 @@ export class HttpFactory {
 
         workflows.clients.registerClient,
 
+        workflows.session.validateBrowserSession,
+
       );
 
     const registerClientRedirectUriController =
       new RegisterClientRedirectUriController(
 
         workflows.clients.registerClientRedirectUri,
+
+        workflows.session.validateBrowserSession,
 
       );
 
@@ -427,6 +437,13 @@ export class HttpFactory {
 
             verifyContactEmailChange:
               verifyContactEmailChangeController,
+
+          },
+
+          administration: {
+
+            reactivateAccount:
+              accountAdminController,
 
           },
 

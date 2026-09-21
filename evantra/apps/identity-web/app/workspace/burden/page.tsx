@@ -103,14 +103,16 @@ export default function WorkspaceBurdenPage() {
   const assessment = useMemo(() => assessBurden(snapshot), [snapshot]);
 
   useEffect(() => {
-    async function loadFromApi(accountId: string): Promise<void> {
+    async function loadFromApi(): Promise<void> {
       try {
         setBusy(true);
         setError(null);
 
         const response = await fetch(
-          `/api/workspace/burden?accountId=${encodeURIComponent(accountId)}`,
-          { cache: "no-store" },
+          "/api/workspace/burden",
+          {
+            cache: "no-store",
+          },
         );
 
         if (!response.ok) {
@@ -126,10 +128,10 @@ export default function WorkspaceBurdenPage() {
       }
     }
 
-    if (account?.id) {
-      void loadFromApi(account.id);
+    if (session) {
+      void loadFromApi();
     }
-  }, [account?.id]);
+  }, [session]);
 
   const getBandStyles = (band: string) => {
     switch (band) {
@@ -180,7 +182,7 @@ export default function WorkspaceBurdenPage() {
   }
 
   async function persist(): Promise<void> {
-    if (!account?.id) {
+    if (!session) {
       return;
     }
 
@@ -194,7 +196,6 @@ export default function WorkspaceBurdenPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          accountId: account.id,
           snapshot,
         }),
       });

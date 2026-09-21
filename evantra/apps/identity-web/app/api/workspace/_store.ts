@@ -1,45 +1,41 @@
-import {
-  defaultBurdenSnapshot,
-  type BurdenSnapshot,
-  type WorkspacePromise,
-} from "../../workspace/lib/intelligence";
+import { NextRequest } from "next/server";
 
-interface WorkspaceState {
-  burden: BurdenSnapshot;
-  promises: WorkspacePromise[];
+const IDENTITY_API_URL =
+  process.env.NEXT_PUBLIC_IDENTITY_API_URL ??
+  "https://evantra-headquarters.onrender.com";
+
+export class WorkspaceAuthError extends Error {
+  readonly status = 401;
 }
 
-const globalStore = globalThis as typeof globalThis & {
-  __evantraWorkspaceStore?: Map<string, WorkspaceState>;
-};
+export async function requireAuthenticatedAccount(
+  request: NextRequest,
+): Promise<string> {
+  const sessionId = request.cookies.get("evantra_session_id")?.value?.trim();
 
-function store(): Map<string, WorkspaceState> {
-  if (!globalStore.__evantraWorkspaceStore) {
-    globalStore.__evantraWorkspaceStore = new Map<string, WorkspaceState>();
+  if (!sessionId) {
+    throw new WorkspaceAuthError("An authenticated session is required.");
   }
 
-  return globalStore.__evantraWorkspaceStore;
-}
+  const response = await fetch(`${IDENTITY_API_URL}/identity/session`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ sessionId }),
+    cache: "no-store",
+  });
 
-export function requireAccountId(accountId: string | null): string {
-  const value = String(accountId ?? "").trim();
-
-  if (!value) {
-    throw new Error("accountId is required.");
+  if (!response.ok) {
+    throw new WorkspaceAuthError("Your session is invalid or expired.");
   }
 
-  return value;
-}
+  const payload = (await response.json()) as {
+    account?: { id?: string };
+  };
+  const accountId = payload.account?.id?.trim();
 
-export function workspaceState(accountId: string): WorkspaceState {
-  const s = store();
-
-  if (!s.has(accountId)) {
-    s.set(accountId, {
-      burden: { ...defaultBurdenSnapshot },
-      promises: [],
-    });
+  if (!accountId) {
+    throw new WorkspaceAuthError("The authenticated account was not found.");
   }
 
-  return s.get(accountId)!;
+  return accountId;
 }

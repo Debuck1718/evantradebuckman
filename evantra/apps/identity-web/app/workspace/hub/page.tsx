@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   BrainCircuit,
+  Bot,
   Calendar,
   CheckCircle2,
   FileText,
@@ -15,6 +16,7 @@ import {
   ShieldCheck,
   Sparkles,
   Target,
+  WalletCards,
   Zap,
 } from "lucide-react";
 
@@ -60,7 +62,7 @@ const kernelModules = [
     description:
       "A bidirectional idea and research graph. Link insights, project notes, and architectural decisions without SaaS silos.",
     icon: FileText,
-    href: "/workspace/plan",
+    href: "/workspace/knowledge",
     badge: "Knowledge Graph",
     accent: "from-purple-500/20 to-indigo-500/5",
   },
@@ -70,7 +72,7 @@ const kernelModules = [
     description:
       "Orchestrates daily focus blocks, buffers recovery windows, and shields high-priority creative time from meeting overload.",
     icon: Calendar,
-    href: "/workspace/plan",
+    href: "/workspace/calendar",
     badge: "Orchestrator",
     accent: "from-rose-500/20 to-orange-500/5",
   },
@@ -84,9 +86,31 @@ const kernelModules = [
     badge: "Ecosystem Portal",
     accent: "from-[#e6b24a]/20 to-amber-500/5",
   },
+  {
+    title: "Financial Ledger",
+    tagline: "Decision-Ready Money Signals",
+    description: "Record income and expenses, see your running balance, and keep financial context close to your operating plan.",
+    icon: WalletCards,
+    href: "/workspace/finance",
+    badge: "Finance",
+    accent: "from-cyan-500/20 to-blue-500/5",
+  },
+  {
+    title: "Workspace Assistant",
+    tagline: "Context Into Action",
+    description: "Ask grounded questions across your priorities, promises, knowledge, calendar, and financial signals.",
+    icon: Bot,
+    href: "/workspace/assistant",
+    badge: "Kernel Guide",
+    accent: "from-fuchsia-500/20 to-rose-500/5",
+  },
 ];
 
 const starterActions = [
+  {
+    text: "Ask the Workspace Assistant to turn your current context into clear next actions.",
+    href: "/workspace/assistant",
+  },
   {
     text: "Review current Burden Score to detect cognitive overload before performance drops.",
     href: "/workspace/burden",
@@ -110,11 +134,13 @@ export default function WorkspaceHubPage() {
   const [plan, setPlan] = useState<LifeWorkPlan | null>(null);
 
   useEffect(() => {
-    async function loadPlan(accountId: string): Promise<void> {
+    async function loadPlan(): Promise<void> {
       try {
         const response = await fetch(
-          `/api/workspace/plan?accountId=${encodeURIComponent(accountId)}`,
-          { cache: "no-store" },
+          "/api/workspace/plan",
+          {
+            cache: "no-store",
+          },
         );
 
         if (!response.ok) {
@@ -128,10 +154,10 @@ export default function WorkspaceHubPage() {
       }
     }
 
-    if (account?.id) {
-      void loadPlan(account.id);
+    if (session) {
+      void loadPlan();
     }
-  }, [account?.id]);
+  }, [session]);
 
   if (loading) {
     return (

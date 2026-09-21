@@ -6,42 +6,37 @@ import {
 } from "../../../workspace/lib/intelligence";
 
 import {
-  requireAccountId,
-  workspaceState,
+  requireAuthenticatedAccount,
 } from "../_store";
+import { getBurden, saveBurden } from "../repository";
+import { burdenSchema } from "../validation";
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
-    const accountId = requireAccountId(request.nextUrl.searchParams.get("accountId"));
-    const state = workspaceState(accountId);
+    const accountId = await requireAuthenticatedAccount(request);
+    const snapshot = await getBurden(accountId);
 
     return NextResponse.json({
-      snapshot: state.burden,
-      assessment: assessBurden(state.burden),
+      snapshot,
+      assessment: assessBurden(snapshot),
     });
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Unable to load burden data." },
-      { status: 400 },
+      { status: error instanceof Error && "status" in error ? 401 : 400 },
     );
   }
 }
 
 export async function PUT(request: NextRequest): Promise<NextResponse> {
   try {
-    const payload = (await request.json()) as {
-      accountId?: string;
-      snapshot?: BurdenSnapshot;
-    };
+    const parsed = burdenSchema.safeParse(await request.json());
+    if (!parsed.success) return NextResponse.json({ error: "Invalid burden request." }, { status: 400 });
+    const payload = parsed.data;
 
-    const accountId = requireAccountId(payload.accountId ?? null);
+    const accountId = await requireAuthenticatedAccount(request);
 
-    if (!payload.snapshot) {
-      return NextResponse.json({ error: "snapshot is required." }, { status: 400 });
-    }
-
-    const state = workspaceState(accountId);
-    state.burden = {
+    const snapshot = await saveBurden(accountId, {
       openTasks: Number(payload.snapshot.openTasks ?? 0),
       blockedTasks: Number(payload.snapshot.blockedTasks ?? 0),
       overdueTasks: Number(payload.snapshot.overdueTasks ?? 0),
@@ -49,16 +44,16 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
       focusMinutesToday: Number(payload.snapshot.focusMinutesToday ?? 0),
       recoveryMinutesToday: Number(payload.snapshot.recoveryMinutesToday ?? 0),
       commitmentsDueSoon: Number(payload.snapshot.commitmentsDueSoon ?? 0),
-    };
+    });
 
     return NextResponse.json({
-      snapshot: state.burden,
-      assessment: assessBurden(state.burden),
+      snapshot,
+      assessment: assessBurden(snapshot),
     });
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Unable to save burden data." },
-      { status: 400 },
+      { status: error instanceof Error && "status" in error ? 401 : 400 },
     );
   }
 }

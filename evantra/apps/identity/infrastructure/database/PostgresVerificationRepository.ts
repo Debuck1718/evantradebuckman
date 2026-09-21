@@ -104,6 +104,7 @@ export class PostgresVerificationRepository
         SELECT *
         FROM identity.verifications
         WHERE token = $1
+          AND verified_at IS NULL
         LIMIT 1
         `,
         [token]

@@ -24,6 +24,7 @@ export class RegisterClientRedirectUriWorkflow {
     clientId: string;
     redirectUri: string;
     primary?: boolean;
+    ownerAccountId: string;
   }): Promise<ClientRedirectUri> {
 
     const client =
@@ -33,6 +34,10 @@ export class RegisterClientRedirectUriWorkflow {
 
     if (!client) {
       throw new Error("Client not found.");
+    }
+
+    if (client.ownerAccountId !== params.ownerAccountId) {
+      throw new Error("You do not own this client.");
     }
 
     const redirect =

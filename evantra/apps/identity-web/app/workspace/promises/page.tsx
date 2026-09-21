@@ -71,14 +71,16 @@ export default function WorkspacePromisesPage() {
   const dueSoon = useMemo(() => dueSoonPromises(items), [items]);
 
   useEffect(() => {
-    async function loadFromApi(accountId: string): Promise<void> {
+    async function loadFromApi(): Promise<void> {
       try {
         setBusy(true);
         setError(null);
 
         const response = await fetch(
-          `/api/workspace/promises?accountId=${encodeURIComponent(accountId)}`,
-          { cache: "no-store" },
+          "/api/workspace/promises",
+          {
+            cache: "no-store",
+          },
         );
 
         if (!response.ok) {
@@ -94,13 +96,13 @@ export default function WorkspacePromisesPage() {
       }
     }
 
-    if (account?.id) {
-      void loadFromApi(account.id);
+    if (session) {
+      void loadFromApi();
     }
-  }, [account?.id]);
+  }, [session]);
 
   async function submit(): Promise<void> {
-    if (!title.trim() || !dueAt.trim() || !account?.id) {
+    if (!title.trim() || !dueAt.trim() || !session) {
       return;
     }
 
@@ -115,7 +117,6 @@ export default function WorkspacePromisesPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          accountId: account.id,
           title,
           dueAt,
         }),
@@ -139,7 +140,7 @@ export default function WorkspacePromisesPage() {
   }
 
   async function setStatus(id: string, status: PromiseStatus): Promise<void> {
-    if (!account?.id) {
+    if (!session) {
       return;
     }
 
@@ -154,7 +155,6 @@ export default function WorkspacePromisesPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          accountId: account.id,
           id,
           status,
         }),
