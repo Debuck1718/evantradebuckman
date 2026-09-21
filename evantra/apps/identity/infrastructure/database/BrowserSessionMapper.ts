@@ -10,6 +10,59 @@ import { SessionLifecycle } from "../../src/session/valueObjects/SessionLifecycl
 import { BrowserSessionRow } from "./BrowserSessionRow";
 import { EnumMapper } from "./EnumMapper";
 
+/**
+ * Reduces a raw forwarded IP value
+ * into a single address that the
+ * PostgreSQL inet type accepts.
+ *
+ * Proxy hops (Vercel, Cloudflare,
+ * Render) produce a comma-separated
+ * chain in "x-forwarded-for"; inet
+ * only accepts one address, so the
+ * originating client entry is kept.
+ *
+ * Returns null when no valid IPv4
+ * or IPv6 address can be derived.
+ */
+function toInet(
+  value: string | null | undefined,
+): string | null {
+
+  if (!value) {
+
+    return null;
+
+  }
+
+  const first = (
+    value.split(",")[0] ?? ""
+  ).trim();
+
+  if (!first) {
+
+    return null;
+
+  }
+
+  const ipv4 =
+    /^(\d{1,3}\.){3}\d{1,3}$/;
+
+  const ipv6 =
+    /^[0-9a-fA-F:]+$/;
+
+  if (
+    !ipv4.test(first) &&
+    !ipv6.test(first)
+  ) {
+
+    return null;
+
+  }
+
+  return first;
+
+}
+
 import { EvantraId } from "../../src/account";
 
 import {
@@ -146,10 +199,13 @@ export class BrowserSessionMapper {
       // ======================================================
 
       ip_address:
-        session.network.ipAddress,
+        toInet(session.network.ipAddress) ??
+        "0.0.0.0",
 
       forwarded_ip_address:
-        session.network.forwardedIpAddress,
+        toInet(
+          session.network.forwardedIpAddress,
+        ),
 
       country:
         session.network.country,

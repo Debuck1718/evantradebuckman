@@ -6,10 +6,11 @@ import {
 } from "react";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 import {
+  CheckCircle2,
   Loader2,
+  Mail,
   UserRoundPlus,
 } from "lucide-react";
 
@@ -22,8 +23,6 @@ import {
 } from "../../../components/identity/IdentityShell";
 
 export default function RegisterPage() {
-  const router = useRouter();
-
   const [firstName, setFirstName] =
     useState("");
 
@@ -44,6 +43,14 @@ export default function RegisterPage() {
 
   const [error, setError] =
     useState("");
+
+  /*
+   * Set once registration succeeds.
+   * Holds the contact email the
+   * verification message was sent to.
+   */
+  const [pendingEmail, setPendingEmail] =
+    useState<string | null>(null);
 
   async function handleSubmit(
     event: FormEvent<HTMLFormElement>,
@@ -122,15 +129,18 @@ export default function RegisterPage() {
        * Registration is complete.
        *
        * The account begins in
-       * PENDING_VERIFICATION.
+       * PENDING_VERIFICATION and a
+       * verification email has been
+       * sent.
        *
-       * Send the user directly to
-       * Evantra Identity verification.
+       * Verification happens through
+       * the link in that email, so we
+       * show a pending state here
+       * instead of navigating to the
+       * token-consuming /verify page.
        */
-      router.push(
-        `/verify?email=${encodeURIComponent(
-          normalizedEmail,
-        )}`,
+      setPendingEmail(
+        normalizedEmail,
       );
     } catch (error) {
       setError(
@@ -141,6 +151,76 @@ export default function RegisterPage() {
     } finally {
       setLoading(false);
     }
+  }
+
+  /*
+   * Pending verification state.
+   *
+   * Shown after a successful
+   * registration, in place of the
+   * form, once the verification
+   * email has been dispatched.
+   */
+  if (pendingEmail) {
+    return (
+      <IdentityShell
+        title="Check your email"
+        description="Your Evantra ID has been created and is awaiting verification."
+      >
+        <div className="text-center">
+          <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full border-[#e6b24a]/20 bg-[#e6b24a]/10">
+            <Mail
+              size={28}
+              className="text-[#e6b24a]"
+            />
+          </div>
+
+          <p className="mb-3 text-xs font-medium uppercase tracking-[0.22em] text-[#e6b24a]">
+            Pending verification
+          </p>
+
+          <h2 className="text-2xl font-semibold text-white">
+            Verify your Evantra ID
+          </h2>
+
+          <p className="mt-3 text-sm leading-6 text-white/50">
+            We sent a verification link to{" "}
+            <span className="font-medium text-white/80">
+              {pendingEmail}
+            </span>
+            . Open that email and confirm your
+            verification to activate your
+            Evantra ID.
+          </p>
+
+          <div className="mt-6 flex items-center justify-center gap-2 rounded-xl border-white/10 bg-white/[0.03] px-4 py-3 text-xs leading-5 text-white/40">
+            <CheckCircle2
+              size={16}
+              className="shrink-0 text-emerald-400"
+            />
+
+            Your account stays pending until
+            the email is confirmed.
+          </div>
+
+          <div className="mt-8 flex flex-col gap-3">
+            <Link
+              href="/login"
+              className="w-full rounded-xl bg-gradient-to-r from-[#f7d97f] via-[#e6b24a] to-[#c99322] px-5 py-3 text-center text-sm font-semibold text-[#06131f] shadow-lg shadow-[#e6b24a]/10 transition hover:-translate-y-0.5 hover:shadow-[#e6b24a]/20"
+            >
+              Continue to sign in
+            </Link>
+
+            <Link
+              href="/verify/resend"
+              className="w-full rounded-xl border-white/10 px-5 py-3 text-center text-sm font-medium text-white/70 transition hover:bg-white/5 hover:text-white"
+            >
+              Resend verification email
+            </Link>
+          </div>
+        </div>
+      </IdentityShell>
+    );
   }
 
   return (

@@ -139,9 +139,11 @@ export class AuthenticationContextMapper {
           request.ipAddress,
 
         forwardedIpAddress:
-          request.headers[
-            "x-forwarded-for"
-          ] ?? null,
+          normalizeForwardedIpAddress(
+            request.headers[
+              "x-forwarded-for"
+            ],
+          ),
 
         /**
          * Future:
@@ -230,5 +232,68 @@ export class AuthenticationContextMapper {
     });
 
   }
+
+}
+
+/**
+ * Normalizes the "x-forwarded-for"
+ * header into a single valid IP
+ * address.
+ *
+ * Proxies and load balancers (e.g.
+ * Vercel, Cloudflare, Render) append
+ * their own address to the header,
+ * producing a comma-separated chain:
+ *
+ *   "154.161.53.190,98.83.222.238, ..."
+ *
+ * PostgreSQL's inet type only
+ * accepts one address, so the chain
+ * must be reduced to its first
+ * (originating client) entry.
+ */
+export function normalizeForwardedIpAddress(
+
+  value: string | undefined | null,
+
+): string | null {
+
+  if (!value) {
+
+    return null;
+
+  }
+
+  const first = (
+    value.split(",")[0] ?? ""
+  ).trim();
+
+  if (!first) {
+
+    return null;
+
+  }
+
+  /**
+   * Accept IPv4 and IPv6 values only.
+   * Anything else (unknown, malformed)
+   * would be rejected by the inet type.
+   */
+  const ipv4 =
+    /^(\d{1,3}\.){3}\d{1,3}$/;
+
+  const ipv6 =
+    /^[0-9a-fA-F:]+$/;
+
+  if (
+    !ipv4.test(first) &&
+    !ipv6.test(first)
+  ) {
+
+    return null;
+
+  }
+
+  return first;
 
 }
