@@ -18,6 +18,7 @@ import {
     CheckCircle2,
     AlertCircle,
     Loader2,
+    Mail,
 } from "lucide-react";
 
 import {
@@ -32,10 +33,34 @@ function VerifyPageContent() {
     const token =
         searchParams.get("token");
 
+    /*
+     * Where to go after verification.
+     *
+     * For OAuth clients this is the
+     * /oauth/authorize request that
+     * originally sent the visitor to
+     * sign in, so the authorization
+     * code is issued and the user lands
+     * back on the client's site.
+     *
+     * Only same-origin relative paths are
+     * honoured so a crafted link cannot
+     * bounce a visitor off-origin.
+     */
+    const requestedReturnTo =
+        searchParams.get("returnTo") ?? "";
+
+    const returnTo =
+        requestedReturnTo.startsWith("/") &&
+        !requestedReturnTo.startsWith("//")
+            ? requestedReturnTo
+            : "/login";
+
     const [status, setStatus] =
         useState<
             "verifying" |
             "success" |
+            "pending" |
             "error"
         >("verifying");
 
@@ -44,9 +69,18 @@ function VerifyPageContent() {
 
     useEffect(() => {
         if (!token) {
-            setStatus("error");
+            /*
+             * No token means the visitor
+             * reached /verify directly
+             * rather than through the email
+             * link. Verification can only
+             * happen from that link, so show
+             * the pending state instead of a
+             * failure.
+             */
+            setStatus("pending");
             setMessage(
-                "This verification link is missing its verification token.",
+                "Open the verification link we emailed you to confirm your Evantra ID.",
             );
             return;
         }
@@ -164,12 +198,57 @@ function VerifyPageContent() {
                                 <button
                                     type="button"
                                     onClick={() =>
-                                        router.push("/login")
+                                        router.push(
+                                            returnTo,
+                                        )
                                     }
                                     className="mt-8 w-full rounded-xl bg-[#e6b24a] px-5 py-3 text-sm font-semibold text-[#06131f] transition hover:bg-[#f0c15e]"
                                 >
-                                    Continue to Evantra Identity
+                                    Continue
                                 </button>
+                            </div>
+                        )}
+
+                        {status === "pending" && (
+                            <div className="text-center">
+                                <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full border border-[#e6b24a]/20 bg-[#e6b24a]/10">
+                                    <Mail
+                                        size={28}
+                                        className="text-[#e6b24a]"
+                                    />
+                                </div>
+
+                                <p className="mb-3 text-xs font-medium uppercase tracking-[0.22em] text-[#e6b24a]">
+                                    Pending verification
+                                </p>
+
+                                <h1 className="text-2xl font-semibold">
+                                    Check your email.
+                                </h1>
+
+                                <p className="mt-3 text-sm leading-6 text-white/50">
+                                    {message}
+                                </p>
+
+                                <div className="mt-8 flex flex-col gap-3">
+                                    <Link
+                                        href={`/verify/resend?returnTo=${encodeURIComponent(
+                                            returnTo,
+                                        )}`}
+                                        className="w-full rounded-xl bg-[#e6b24a] px-5 py-3 text-center text-sm font-semibold text-[#06131f] transition hover:bg-[#f0c15e]"
+                                    >
+                                        Resend verification email
+                                    </Link>
+
+                                    <Link
+                                        href={`/login?returnTo=${encodeURIComponent(
+                                            returnTo,
+                                        )}`}
+                                        className="w-full rounded-xl border border-white/10 px-5 py-3 text-center text-sm font-medium text-white/70 transition hover:bg-white/5 hover:text-white"
+                                    >
+                                        Return to sign in
+                                    </Link>
+                                </div>
                             </div>
                         )}
 
@@ -196,14 +275,18 @@ function VerifyPageContent() {
 
                                 <div className="mt-8 flex flex-col gap-3">
                                     <Link
-                                        href="/verify/resend"
+                                        href={`/verify/resend?returnTo=${encodeURIComponent(
+                                            returnTo,
+                                        )}`}
                                         className="w-full rounded-xl bg-[#e6b24a] px-5 py-3 text-center text-sm font-semibold text-[#06131f] transition hover:bg-[#f0c15e]"
                                     >
                                         Resend verification email
                                     </Link>
 
                                     <Link
-                                        href="/login"
+                                        href={`/login?returnTo=${encodeURIComponent(
+                                            returnTo,
+                                        )}`}
                                         className="w-full rounded-xl border border-white/10 px-5 py-3 text-center text-sm font-medium text-white/70 transition hover:bg-white/5 hover:text-white"
                                     >
                                         Return to sign in

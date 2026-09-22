@@ -23,11 +23,13 @@ import {
 import {
   ClientService,
   ClientRedirectUriService,
+  ClientScopeService,
 } from "../client";
 
 import {
   AuthorizationCodeService,
   TokenService,
+  UserConsentService,
 } from "../authorization";
 
 import {
@@ -171,6 +173,28 @@ export class ServiceFactory {
 
       );
 
+    const clientScopes =
+      new ClientScopeService(
+
+        repositories.clientScopes,
+
+        platform.ids,
+
+        platform.clock,
+
+      );
+
+    const userConsents =
+      new UserConsentService(
+
+        repositories.userConsents,
+
+        platform.ids,
+
+        platform.clock,
+
+      );
+
     // ==========================================================
     // OAuth Authorization
     // ==========================================================
@@ -256,7 +280,7 @@ export class ServiceFactory {
 
   );
 
-  
+
 
     // ==========================================================
     // Registry
@@ -281,7 +305,7 @@ export class ServiceFactory {
       communication,
 
       browserSessions,
-      
+
       emailChanges,
 
       audit,
@@ -293,6 +317,10 @@ export class ServiceFactory {
       clients,
 
       redirectUris,
+
+      clientScopes,
+
+      userConsents,
 
       // OAuth
 

@@ -46,6 +46,13 @@ export interface RegisterAccountInput {
   evantraId: string;
   contactEmail: string;
   password: string;
+
+  /**
+   * Same-origin path to return to
+   * after the contact email is
+   * verified. Used by OAuth clients.
+   */
+  returnTo?: string;
 }
 
 export interface RegisterAccountResponse {
@@ -189,6 +196,9 @@ export async function registerAccount(
         evantraId: input.evantraId.trim().toLowerCase(),
         contactEmail: input.contactEmail.trim(),
         password: input.password,
+        ...(input.returnTo
+          ? { returnTo: input.returnTo }
+          : {}),
       }),
 
       cache: "no-store",
@@ -407,7 +417,28 @@ export async function validateSession(
     },
   );
 
-  const data = await response.json();
+  /*
+   * 400 / 401 simply mean the visitor
+   * has no active browser session yet.
+   *
+   * This function runs from the root
+   * session provider on every page, so
+   * throwing here is expected behaviour
+   * and must never surface as a console
+   * error. Callers treat null as
+   * "not authenticated".
+   */
+  if (
+    response.status === 400 ||
+    response.status === 401
+  ) {
+    return null;
+  }
+
+  const data =
+    await response.json().catch(
+      () => null,
+    );
 
   if (!response.ok) {
     throw new Error(

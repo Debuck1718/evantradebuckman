@@ -61,6 +61,18 @@ export function IdentitySessionProvider({
       const result =
         await validateSession();
 
+      /*
+       * A null result means there is
+       * no active browser session.
+       * That is a normal, unauthenticated
+       * state, not an error.
+       */
+      if (!result) {
+        setAccount(null);
+        setSession(null);
+        return;
+      }
+
       setAccount(
         result.account ?? null,
       );

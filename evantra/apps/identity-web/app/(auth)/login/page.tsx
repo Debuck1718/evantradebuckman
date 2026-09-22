@@ -31,6 +31,37 @@ function LoginPageContent() {
   const searchParams =
     useSearchParams();
 
+  /*
+   * Where to send the user once they
+   * are signed in.
+   *
+   * The identity app only accepts
+   * same-origin relative paths so a
+   * crafted link can never bounce a
+   * visitor to an attacker's site.
+   */
+  const returnTo =
+    searchParams.get("returnTo") ?? "";
+
+  const safeReturnTo =
+    returnTo.startsWith("/") &&
+    !returnTo.startsWith("//")
+      ? returnTo
+      : "/workspace/account";
+
+  /*
+   * Registration is a detour, not a
+   * destination: a visitor who arrived
+   * to sign in must still land on
+   * returnTo after they verify.
+   */
+  const registerHref =
+    safeReturnTo === "/workspace/account"
+      ? "/register"
+      : `/register?returnTo=${encodeURIComponent(
+          safeReturnTo,
+        )}`;
+
   const [evantraId, setEvantraId] =
     useState("");
 
@@ -92,15 +123,6 @@ function LoginPageContent() {
           "Authentication succeeded, but no session was returned.",
         );
       }
-
-      const returnTo =
-        searchParams.get("returnTo") ?? "";
-
-      const safeReturnTo =
-        returnTo.startsWith("/") &&
-        !returnTo.startsWith("//")
-          ? returnTo
-          : "/workspace/account";
 
       router.push(safeReturnTo);
       router.refresh();
@@ -249,7 +271,7 @@ function LoginPageContent() {
         </p>
 
         <Link
-          href="/register"
+          href={registerHref}
           className="mt-2 inline-block text-sm font-medium text-[#e6b24a] transition hover:text-[#f0c15e]"
         >
           Create your Evantra ID

@@ -56,6 +56,14 @@ import {
   PostgresLoginAttemptRepository,
 } from "../../infrastructure/database/PostgresLoginAttemptRepository";
 
+import {
+  PostgresUserConsentRepository,
+} from "../../infrastructure/database/PostgresUserConsentRepository";
+
+import {
+  PostgresClientScopeRepository,
+} from "../../infrastructure/database/PostgresClientScopeRepository";
+
 /**
  * Creates every repository used
  * by Evantra Identity.
@@ -101,6 +109,9 @@ export class RepositoryFactory {
     const redirectUris =
       new PostgresClientRedirectUriRepository(db);
 
+    const clientScopes =
+      new PostgresClientScopeRepository(db);
+
     // ======================================================
     // OAuth
     // ======================================================
@@ -117,7 +128,7 @@ export class RepositoryFactory {
     const emailChanges =
   new PostgresEmailChangeRepository(
     db,
-  );  
+  );
 
   const audits =
   new PostgresAuditRepository(
@@ -126,6 +137,11 @@ export class RepositoryFactory {
 
   const loginAttempts =
   new PostgresLoginAttemptRepository(
+    db,
+  );
+
+  const userConsents =
+  new PostgresUserConsentRepository(
     db,
   );
 
@@ -156,6 +172,10 @@ export class RepositoryFactory {
       clients,
 
       redirectUris,
+
+      clientScopes,
+
+      userConsents,
 
       // OAuth
 

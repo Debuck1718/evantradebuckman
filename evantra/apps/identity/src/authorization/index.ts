@@ -12,4 +12,7 @@ export * from "./RefreshTokenRepository"
 export * from "./TokenService"
 export * from "./AuthorizationResponse"
 export * from "./ResponseType"
+export * from "./UserConsent"
+export * from "./UserConsentRepository"
+export * from "./UserConsentService"
 

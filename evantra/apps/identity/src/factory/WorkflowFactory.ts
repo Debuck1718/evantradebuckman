@@ -176,6 +176,10 @@ const authorize =
 
     services.authorizationCodes,
 
+    services.clientScopes,
+
+    services.userConsents,
+
   );
 
 const exchangeAuthorizationCode =

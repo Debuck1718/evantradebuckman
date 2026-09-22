@@ -21,4 +21,14 @@ export interface RegisterAccountRequest {
   readonly contactEmail: string;
 
   readonly password: string;
+
+  /**
+   * Optional same-origin path the user
+   * is returned to after verifying
+   * their contact email.
+   *
+   * Used by OAuth clients to resume
+   * their authorization round-trip.
+   */
+  readonly returnTo?: string;
 }

@@ -77,6 +77,15 @@ async execute(params: {
   evantraId: string;
   contactEmail: string;
   password: string;
+
+  /**
+   * Where to send the user after they
+   * verify their contact email.
+   *
+   * OAuth clients use this to complete
+   * their authorization round-trip.
+   */
+  returnTo?: string | null;
 }): Promise<Account> {
 
   // ======================================================
@@ -170,6 +179,9 @@ async execute(params: {
 
       expiresAt:
         verification.expiresAt,
+
+      returnTo:
+        params.returnTo ?? null,
 
     });
 

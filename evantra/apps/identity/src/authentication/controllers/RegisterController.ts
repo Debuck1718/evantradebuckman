@@ -62,6 +62,9 @@ export class RegisterController
         password:
           body.password,
 
+        returnTo:
+          body.returnTo ?? null,
+
       });
 
     return RegisterResponseMapper.success(

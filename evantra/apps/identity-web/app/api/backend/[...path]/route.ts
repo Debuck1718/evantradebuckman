@@ -26,20 +26,27 @@ async function forward(request: NextRequest, path: string[]) {
   const contentType = response.headers.get("content-type");
   if (contentType) result.headers.set("content-type", contentType);
 
-  const setCookie = response.headers.get("set-cookie");
-  const sessionMatch = setCookie?.match(/evantra_session_id=([^;]+)/);
-  if (sessionMatch?.[1]) {
-    result.cookies.set("evantra_session_id", sessionMatch[1], {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      path: "/",
-      maxAge: 60 * 60 * 24 * 30,
-    });
-  }
+  /*
+   * Forward every Set-Cookie header from
+   * the identity service verbatim.
+   *
+   * Rebuilding the cookie here used to
+   * force sameSite: "lax", which broke
+   * the session on cross-site and
+   * hardening the value ourselves also
+   * risked drifting from the backend's
+   * own expiry. Passing the header
+   * straight through keeps HttpOnly,
+   * Secure, SameSite and Expires exactly
+   * as Evantra Identity issued them.
+   */
+  const setCookies =
+    typeof response.headers.getSetCookie === "function"
+      ? response.headers.getSetCookie()
+      : [];
 
-  if (request.method === "POST" && path.at(-1) === "logout") {
-    result.cookies.set("evantra_session_id", "", { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax", path: "/", maxAge: 0 });
+  for (const cookie of setCookies) {
+    result.headers.append("set-cookie", cookie);
   }
 
   return result;

@@ -29,3 +29,7 @@ export * from "./PostgresSessionRepository";
 export * from "./PostgresVerificationRepository";
 
 export * from "./PostgresEmailChangeRepository";
+
+export * from "./PostgresUserConsentRepository";
+
+export * from "./PostgresClientScopeRepository";

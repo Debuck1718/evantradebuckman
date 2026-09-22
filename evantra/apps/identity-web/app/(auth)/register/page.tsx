@@ -2,10 +2,14 @@
 
 import {
   FormEvent,
+  Suspense,
   useState,
 } from "react";
 
 import Link from "next/link";
+import {
+  useSearchParams,
+} from "next/navigation";
 
 import {
   CheckCircle2,
@@ -22,7 +26,46 @@ import {
   IdentityShell,
 } from "../../../components/identity/IdentityShell";
 
-export default function RegisterPage() {
+/**
+ * Resolves the caller-supplied
+ * returnTo value into a safe
+ * same-origin path.
+ *
+ * Anything that is not a relative
+ * path is discarded so a malicious
+ * link can never redirect a visitor
+ * off the identity origin.
+ */
+function safeReturnTo(
+  returnTo: string | null,
+): string {
+  const value = returnTo ?? "";
+
+  if (
+    value.startsWith("/") &&
+    !value.startsWith("//")
+  ) {
+    return value;
+  }
+
+  return "/workspace/account";
+}
+
+function RegisterPageContent() {
+  const searchParams =
+    useSearchParams();
+
+  /*
+   * Preserved across registration and
+   * the verification round-trip so a
+   * client app receives the user back
+   * where they started.
+   */
+  const returnTo =
+    safeReturnTo(
+      searchParams.get("returnTo"),
+    );
+
   const [firstName, setFirstName] =
     useState("");
 
@@ -123,6 +166,8 @@ export default function RegisterPage() {
           normalizedEmail,
 
         password,
+
+        returnTo,
       });
 
       /*
@@ -205,14 +250,16 @@ export default function RegisterPage() {
 
           <div className="mt-8 flex flex-col gap-3">
             <Link
-              href="/login"
+              href={returnTo}
               className="w-full rounded-xl bg-gradient-to-r from-[#f7d97f] via-[#e6b24a] to-[#c99322] px-5 py-3 text-center text-sm font-semibold text-[#06131f] shadow-lg shadow-[#e6b24a]/10 transition hover:-translate-y-0.5 hover:shadow-[#e6b24a]/20"
             >
               Continue to sign in
             </Link>
 
             <Link
-              href="/verify/resend"
+              href={`/verify/resend?returnTo=${encodeURIComponent(
+                returnTo,
+              )}`}
               className="w-full rounded-xl border-white/10 px-5 py-3 text-center text-sm font-medium text-white/70 transition hover:bg-white/5 hover:text-white"
             >
               Resend verification email
@@ -422,7 +469,9 @@ export default function RegisterPage() {
         <div className="pt-2 text-center text-sm text-white/40">
           Already have an Evantra ID?{" "}
           <Link
-            href="/login"
+            href={`/login?returnTo=${encodeURIComponent(
+              returnTo,
+            )}`}
             className="font-medium text-[#e6b24a] transition hover:text-[#f7d97f]"
           >
             Sign in
@@ -430,5 +479,28 @@ export default function RegisterPage() {
         </div>
       </form>
     </IdentityShell>
+  );
+}
+
+/**
+ * useSearchParams requires a Suspense
+ * boundary during prerendering.
+ */
+export default function RegisterPage() {
+  return (
+    <Suspense
+      fallback={
+        <IdentityShell
+          title="Create your Evantra ID"
+          description="Create your identity for secure access across the Evantra digital ecosystem."
+        >
+          <div className="flex items-center justify-center py-10 text-sm text-white/50">
+            Loading...
+          </div>
+        </IdentityShell>
+      }
+    >
+      <RegisterPageContent />
+    </Suspense>
   );
 }

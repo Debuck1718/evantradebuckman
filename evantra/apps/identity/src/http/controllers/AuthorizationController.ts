@@ -14,12 +14,26 @@ import {
 } from "../../authorization";
 
 import {
-  InvalidRequestError,
-} from "../../oauth/errors";
-
-import {
   AuthorizationResponseSerializer,
 } from "../oauth/serializers/AuthorizationResponseSerializer";
+
+/**
+ * Public URL of the Evantra Identity web
+ * application.
+ *
+ * This is where human-facing screens
+ * (sign in, registration, verification)
+ * live. The API host itself serves JSON
+ * only, so an unauthenticated OAuth
+ * request must be handed to this origin
+ * to collect credentials.
+ */
+function identityWebUrl(): string {
+  return (
+    process.env.EVANTRA_IDENTITY_WEB_URL ??
+    "http://localhost:3001"
+  ).replace(/\/$/, "");
+}
 
 /**
  * OAuth Authorization Endpoint.
@@ -68,26 +82,68 @@ export class AuthorizationController {
           )
           .find((value) => Boolean(value));
 
-      if (!sessionId) {
-        throw new InvalidRequestError(
-          "Authenticated session is required.",
-        );
+      /*
+       * Resolve the authenticated account.
+       *
+       * When there is no valid browser
+       * session the user is not an error
+       * case: they simply need to sign in
+       * first. RFC6749 section 4.1.1 states
+       * the authorization endpoint directs
+       * the resource owner back to the
+       * client afterwards, so we bounce
+       * through the identity web app with
+       * the entire authorization request
+       * preserved as returnTo.
+       */
+      let accountId: string | null = null;
+
+      if (sessionId) {
+        try {
+          const session =
+            await this.validateSession.execute({
+              sessionId,
+            });
+
+          accountId =
+            session.identity.accountId;
+        } catch {
+          accountId = null;
+        }
       }
 
-      let accountId: string;
+      if (!accountId) {
+        const params = new URLSearchParams();
 
-      try {
-        const session =
-          await this.validateSession.execute({
-            sessionId,
-          });
+        for (
+          const key of [
+            "client_id",
+            "redirect_uri",
+            "response_type",
+            "scope",
+            "state",
+            "nonce",
+            "code_challenge",
+            "code_challenge_method",
+          ]
+        ) {
+          const value = request.query[key];
 
-        accountId =
-          session.identity.accountId;
-      } catch {
-        throw new InvalidRequestError(
-          "Authenticated session is required.",
+          if (typeof value === "string" && value) {
+            params.set(key, value);
+          }
+        }
+
+        const returnTo =
+          `/oauth/authorize?${params.toString()}`;
+
+        response.redirect(
+          `${identityWebUrl()}/login?returnTo=${encodeURIComponent(
+            returnTo,
+          )}`,
         );
+
+        return;
       }
 
       // ======================================================

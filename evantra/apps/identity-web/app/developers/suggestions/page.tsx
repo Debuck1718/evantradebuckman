@@ -9,6 +9,7 @@ import {
 import Link from "next/link";
 
 import { IdentityShell } from "../../../components/identity/IdentityShell";
+import { DeveloperNav } from "../../../components/developer/DeveloperNav";
 
 interface Suggestion {
   id: string;
@@ -84,6 +85,8 @@ export default function SuggestionsPage() {
       description="Submit ideas for Evantra workers and developers to review and improve the identity platform."
     >
       <div className="space-y-6">
+        <DeveloperNav activeHref="/developers/suggestions" />
+
         <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-6">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#e6b24a]">
             Feedback queue
@@ -145,7 +148,10 @@ export default function SuggestionsPage() {
                 className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-white outline-none"
               >
                 <option value="developer experience">Developer experience</option>
+                <option value="oauth and pkce">OAuth and PKCE</option>
+                <option value="mobile and native apps">Mobile and native apps</option>
                 <option value="user onboarding">User onboarding</option>
+                <option value="email verification">Email verification</option>
                 <option value="admin operations">Admin operations</option>
                 <option value="security">Security</option>
                 <option value="docs and terms">Docs and terms</option>

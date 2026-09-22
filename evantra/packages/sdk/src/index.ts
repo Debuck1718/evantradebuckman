@@ -55,3 +55,10 @@ export interface WorkspaceClient {
   listPromises(options?: EvantraRequestOptions): Promise<readonly WorkspacePromise[]>;
   getLifeWorkPlan(options?: EvantraRequestOptions): Promise<LifeWorkPlan>;
 }
+
+/*
+ * OAuth 2.0 / OpenID Connect client for
+ * applications that authenticate users
+ * through Evantra Identity.
+ */
+export * from "./oauth";

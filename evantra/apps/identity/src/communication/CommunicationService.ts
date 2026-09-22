@@ -20,6 +20,44 @@ import {
   ContactEmailChangedTemplate,
 } from "./templates/ContactEmailChangedTemplate";
 /**
+ * Builds the returnTo query fragment
+ * for a verification link.
+ *
+ * Only same-origin relative paths are
+ * forwarded, and the value is always
+ * URL encoded. Anything else is
+ * dropped so a crafted registration
+ * cannot turn a verification email
+ * into an open redirect.
+ */
+function buildReturnToQuery(
+  returnTo?: string | null,
+): string {
+
+  if (!returnTo) {
+
+    return "";
+
+  }
+
+  const value = returnTo.trim();
+
+  if (
+    !value.startsWith("/") ||
+    value.startsWith("//")
+  ) {
+
+    return "";
+
+  }
+
+  return `&returnTo=${encodeURIComponent(
+    value,
+  )}`;
+
+}
+
+/**
  * Coordinates outbound
  * communications.
  */
@@ -46,19 +84,36 @@ export class CommunicationService {
 
     expiresAt: Date;
 
+    /**
+     * Optional same-origin path the
+     * visitor should be returned to
+     * after verifying.
+     *
+     * This is how an OAuth client keeps
+     * its authorization round-trip alive
+     * across registration and email
+     * verification.
+     */
+    returnTo?: string | null;
+
   }): Promise<void> {
+
+    const verificationUrl =
+      `${(
+        process.env.EVANTRA_IDENTITY_WEB_URL ??
+        "http://localhost:3001"
+      ).replace(/\/$/, "")}/verify?token=${encodeURIComponent(
+        params.token,
+      )}${buildReturnToQuery(
+        params.returnTo,
+      )}`;
 
     const template =
       AccountVerificationTemplate.render(
 
         params,
 
-        `${(
-          process.env.EVANTRA_IDENTITY_WEB_URL ??
-          "http://localhost:3001"
-        ).replace(/\/$/, "")}/verify?token=${encodeURIComponent(
-          params.token,
-        )}`,
+        verificationUrl,
 
       );
 

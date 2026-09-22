@@ -1,7 +1,7 @@
 {
   "name": "evantra",
   "private": true,
-  "packageManager": "pnpm@11.20.0",
+  "packageManager": "pnpm@12.5.1",
   "workspaces": [
     "apps/*",
     "packages/*",
