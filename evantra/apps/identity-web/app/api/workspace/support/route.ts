@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { requireAuthenticatedAccount } from "../_store";
+import { requireAuthenticatedAccount, workspaceErrorResponse } from "../_store";
 import { createSupportRequest, listSupportRequestsFor } from "../_support_orgs";
 import { supportCreateSchema } from "../_support_validation";
 
@@ -10,11 +10,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const requests = await listSupportRequestsFor(accountId);
     return NextResponse.json({ requests });
   } catch (error) {
-    const status = error instanceof Error && "status" in error ? 401 : 400;
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unable to load support requests." },
-      { status },
-    );
+    return workspaceErrorResponse(error, "Unable to load support requests.");
   }
 }
 
@@ -30,10 +26,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     return NextResponse.json({ request: created }, { status: 201 });
   } catch (error) {
-    const status = error instanceof Error && "status" in error ? 401 : 400;
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unable to submit the support request." },
-      { status },
-    );
+    return workspaceErrorResponse(error, "Unable to submit the support request.");
   }
 }

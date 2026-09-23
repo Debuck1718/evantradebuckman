@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { requireAuthenticatedAccount } from "../_store";
+import { requireAuthenticatedAccount, workspaceErrorResponse } from "../_store";
 import {
   countUnreadNotifications,
   listNotifications,
@@ -17,11 +17,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     ]);
     return NextResponse.json({ notifications, unread });
   } catch (error) {
-    const status = error instanceof Error && "status" in error ? 401 : 400;
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unable to load notifications." },
-      { status },
-    );
+    return workspaceErrorResponse(error, "Unable to load notifications.");
   }
 }
 
@@ -38,10 +34,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     await markNotificationsRead(accountId, ids);
     return NextResponse.json({ ok: true });
   } catch (error) {
-    const status = error instanceof Error && "status" in error ? 401 : 400;
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unable to update notifications." },
-      { status },
-    );
+    return workspaceErrorResponse(error, "Unable to update notifications.");
   }
 }

@@ -178,26 +178,55 @@ async function workspaceIdFor(accountId: string): Promise<string> {
     return existing.rows[0].id;
   }
 
-  const created = await database.query<WorkspaceRow>(
+  /*
+   * A brand-new account has no workspace yet.
+   *
+   * The personal workspace is derived from the
+   * account id so the slug is deterministic.
+   *
+   * The previous implementation relied on
+   * "ON CONFLICT (slug) DO NOTHING RETURNING id",
+   * which yields no rows whenever the slug
+   * already exists. That left the caller with
+   * an undefined id and made every workspace
+   * feature fail for a first-time user, which
+   * is exactly the 400 the dashboard reported.
+   *
+   * Resolving the row in a single upsert keeps
+   * the create idempotent under concurrent
+   * first requests and always returns an id.
+   */
+  const slug = `personal-${accountId}`.slice(0, 64);
+
+  const upserted = await database.query<WorkspaceRow>(
     `
       INSERT INTO workspace.workspaces (owner_id, name, slug, type, tier)
-      VALUES ($1, $2, $3, 'PERSONAL', 'CORE')
-      ON CONFLICT (slug) DO NOTHING
+      VALUES ($1, 'Personal Workspace', $2, 'PERSONAL', 'CORE')
+      ON CONFLICT (slug) DO UPDATE
+        SET updated_at = NOW()
       RETURNING id
     `,
-    [
-      accountId,
-      "Personal Workspace",
-      `personal-${accountId.slice(-32)}`,
-    ],
+    [accountId, slug],
   );
 
-  if (created.rows[0]) {
-    return created.rows[0].id;
+  if (upserted.rows[0]) {
+    return upserted.rows[0].id;
   }
 
+  /*
+   * Last resort: the row exists but belongs
+   * to someone else's slug. Fall back to any
+   * workspace owned by this account.
+   */
   const afterRace = await database.query<WorkspaceRow>(
-    "SELECT id FROM workspace.workspaces WHERE owner_id = $1 LIMIT 1",
+    `
+      SELECT w.id
+      FROM workspace.workspaces AS w
+      LEFT JOIN workspace.members AS m
+        ON m.workspace_id = w.id AND m.account_id = $1
+      WHERE w.owner_id = $1 OR m.account_id IS NOT NULL
+      LIMIT 1
+    `,
     [accountId],
   );
 

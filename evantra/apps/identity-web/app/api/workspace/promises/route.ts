@@ -8,6 +8,7 @@ import {
 
 import {
   requireAuthenticatedAccount,
+  workspaceErrorResponse,
 } from "../_store";
 import {
   createWorkspacePromise,
@@ -27,10 +28,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       dueSoon: dueSoonPromises(items),
     });
   } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unable to load promises." },
-      { status: error instanceof Error && "status" in error ? 401 : 400 },
-    );
+    return workspaceErrorResponse(error, "Unable to load promises.");
   }
 }
 
@@ -56,10 +54,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       { status: 201 },
     );
   } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unable to create promise." },
-      { status: error instanceof Error && "status" in error ? 401 : 400 },
-    );
+    return workspaceErrorResponse(error, "Unable to create promise.");
   }
 }
 
@@ -79,9 +74,6 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
       dueSoon: dueSoonPromises(items),
     });
   } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unable to update promise." },
-      { status: error instanceof Error && "status" in error ? 401 : 400 },
-    );
+    return workspaceErrorResponse(error, "Unable to update promise.");
   }
 }

@@ -18,6 +18,22 @@ import {
 } from "../platform/Clock";
 
 /**
+ * Idle timeout applied when a session is
+ * rotated.
+ *
+ * This must match the window used at sign in.
+ * The previous value of 30 minutes silently
+ * shortened every rotated session to half an
+ * hour, so an active user was signed out far
+ * sooner than their session panel claimed.
+ */
+const BROWSER_SESSION_IDLE_MINUTES =
+  Number(
+    process.env.SESSION_IDLE_TIMEOUT_MINUTES ??
+      60 * 24,
+  );
+
+/**
  * Rotates a Browser Session.
  *
  * The current Browser Session
@@ -115,7 +131,7 @@ export class RotateBrowserSessionWorkflow {
 
           this.clock.afterMinutes(
 
-            30,
+            BROWSER_SESSION_IDLE_MINUTES,
 
           ),
 

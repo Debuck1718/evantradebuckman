@@ -652,18 +652,34 @@ async function workspaceIdFor(accountId: string): Promise<string> {
 
   if (existing.rows[0]) return existing.rows[0].id;
 
-  const created = await supportDatabase.query<{ id: string }>(
+  /*
+   * Must mirror repository.ts.
+   *
+   * "ON CONFLICT (slug) DO NOTHING RETURNING id"
+   * returns no row when the slug already exists,
+   * which left a first-time account with no
+   * workspace and broke support, invites and
+   * organizations with the same 400.
+   */
+  const slug = `personal-${accountId}`.slice(0, 64);
+
+  const upserted = await supportDatabase.query<{ id: string }>(
     `INSERT INTO workspace.workspaces (owner_id, name, slug, type, tier)
      VALUES ($1, $2, $3, 'PERSONAL', 'CORE')
-     ON CONFLICT (slug) DO NOTHING
+     ON CONFLICT (slug) DO UPDATE SET updated_at = NOW()
      RETURNING id`,
-    [accountId, "Personal Workspace", `personal-${accountId.slice(-32)}`],
+    [accountId, "Personal Workspace", slug],
   );
 
-  if (created.rows[0]) return created.rows[0].id;
+  if (upserted.rows[0]) return upserted.rows[0].id;
 
   const afterRace = await supportDatabase.query<{ id: string }>(
-    "SELECT id FROM workspace.workspaces WHERE owner_id = $1 LIMIT 1",
+    `SELECT w.id
+     FROM workspace.workspaces AS w
+     LEFT JOIN workspace.members AS m
+       ON m.workspace_id = w.id AND m.account_id = $1
+     WHERE w.owner_id = $1 OR m.account_id IS NOT NULL
+     LIMIT 1`,
     [accountId],
   );
   if (!afterRace.rows[0]) throw new Error("Unable to resolve the account workspace.");

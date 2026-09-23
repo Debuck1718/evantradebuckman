@@ -7,6 +7,7 @@ import {
 
 import {
   requireAuthenticatedAccount,
+  workspaceErrorResponse,
 } from "../_store";
 import { getBurden, saveBurden } from "../repository";
 import { burdenSchema } from "../validation";
@@ -21,10 +22,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       assessment: assessBurden(snapshot),
     });
   } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unable to load burden data." },
-      { status: error instanceof Error && "status" in error ? 401 : 400 },
-    );
+    return workspaceErrorResponse(error, "Unable to load burden data.");
   }
 }
 
@@ -51,9 +49,6 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
       assessment: assessBurden(snapshot),
     });
   } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unable to save burden data." },
-      { status: error instanceof Error && "status" in error ? 401 : 400 },
-    );
+    return workspaceErrorResponse(error, "Unable to save burden data.");
   }
 }

@@ -124,16 +124,26 @@ export class BrowserSessionFactory {
           params.context.device.fingerprint ??
           "",
 
+        /*
+         * Previously these fell back to the literal
+         * strings "Unknown Device", "Unknown",
+         * which is why the security screen showed
+         * Unknown for every field even after the
+         * device was detected. The detection layer
+         * now supplies real values, so the fallbacks
+         * are only reached for a genuinely
+         * unparseable client.
+         */
         name:
           params.context.device.name ??
-          "Unknown Device",
+          "Unrecognized Device",
 
         type:
           params.context.device.type,
 
         operatingSystem:
           params.context.device.operatingSystem ??
-          "Unknown",
+          "Unrecognized",
 
         operatingSystemVersion:
           params.context.device.operatingSystemVersion ??
@@ -141,7 +151,7 @@ export class BrowserSessionFactory {
 
         browser:
           params.context.device.browser ??
-          "Unknown",
+          "Unrecognized",
 
         browserVersion:
           params.context.device.browserVersion ??
@@ -149,7 +159,7 @@ export class BrowserSessionFactory {
 
         platform:
           params.context.device.platform ??
-          "Unknown",
+          "Unrecognized",
 
       });
 

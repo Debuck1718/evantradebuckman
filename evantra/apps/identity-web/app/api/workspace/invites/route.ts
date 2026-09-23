@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { requireAuthenticatedAccount } from "../_store";
+import { requireAuthenticatedAccount, workspaceErrorResponse } from "../_store";
 import {
   inviteByEvantraId,
   listPendingInvitesFor,
@@ -19,11 +19,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const invites = await listPendingInvitesFor(accountId);
     return NextResponse.json({ invites });
   } catch (error) {
-    const status = error instanceof Error && "status" in error ? 401 : 400;
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unable to load invitations." },
-      { status },
-    );
+    return workspaceErrorResponse(error, "Unable to load invitations.");
   }
 }
 
@@ -56,10 +52,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     return NextResponse.json({ error: "Invalid invitation request." }, { status: 400 });
   } catch (error) {
-    const status = error instanceof Error && "status" in error ? 401 : 400;
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unable to process the invitation." },
-      { status },
-    );
+    return workspaceErrorResponse(error, "Unable to process the invitation.");
   }
 }

@@ -117,6 +117,8 @@ export class WorkflowFactory {
 
     services.audit,
 
+    platform.clock,
+
 );
 
     // ==========================================================

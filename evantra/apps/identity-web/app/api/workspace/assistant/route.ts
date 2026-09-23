@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireAuthenticatedAccount } from "../_store";
+import { requireAuthenticatedAccount, workspaceErrorResponse } from "../_store";
 import { askWorkspaceAssistant } from "../repository";
 import { assistantRequestSchema } from "../validation";
 
@@ -11,6 +11,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const result = await askWorkspaceAssistant(accountId, parsed.data.threadId, parsed.data.intent, parsed.data.question);
     return NextResponse.json(result);
   } catch (error) {
-    return NextResponse.json({ error: error instanceof Error ? error.message : "Unable to query assistant." }, { status: error instanceof Error && "status" in error ? 401 : 400 });
+    return workspaceErrorResponse(error, "Unable to query assistant.");
   }
 }

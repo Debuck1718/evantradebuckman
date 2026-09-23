@@ -1,7 +1,6 @@
 import {
   AuthenticationClient,
 } from "./AuthenticationClient";
-
 import {
   AuthenticationContext,
 } from "./AuthenticationContext";
@@ -29,6 +28,25 @@ import {
 import {
   HttpRequest,
 } from "../../http";
+
+import {
+  DetectClientDevice,
+} from "../../platform/DetectClientDevice";
+
+import {
+  type UserAgentProfile,
+} from "../../platform/UserAgentDetector";
+
+/**
+ * Shared, stateless parser.
+ *
+ * Detecting the device is pure string work
+ * with no per-request state, so one instance
+ * is reused for every authentication. This
+ * keeps the hot path free of object churn.
+ */
+const deviceDetector =
+  new DetectClientDevice();
 
 /**
  * Body expected by the
@@ -75,6 +93,25 @@ export class AuthenticationContextMapper {
     // Device
     // ========================================================
 
+    /*
+     * The browser already sends a User-Agent on
+     * every request, so it is parsed directly
+     * instead of relying on x-device-* headers
+     * that no browser sets. That is why the
+     * security screen previously reported every
+     * device, browser and operating system as
+     * "Unknown".
+     */
+    const profile: UserAgentProfile =
+      deviceDetector.detect(
+        request.headers["user-agent"],
+      );
+
+    /*
+     * An explicit x-device-* header, when a
+     * native client supplies one, still wins
+     * over the derived value.
+     */
     const device =
       AuthenticationDevice.create({
 
@@ -91,40 +128,42 @@ export class AuthenticationContextMapper {
         name:
           request.headers[
             "x-device-name"
-          ] ?? null,
+          ] ?? profile.deviceName,
 
         /**
-         * Will eventually be supplied
-         * by the Device Detection
-         * Platform Service.
+         * Populated from the User-Agent so the
+         * session carries a real category rather
+         * than UNKNOWN.
          */
         type:
-          DeviceType.UNKNOWN,
+          toDeviceType(
+            profile.deviceType,
+          ),
 
         browser:
           request.headers[
             "x-browser"
-          ] ?? null,
+          ] ?? profile.browser,
 
         browserVersion:
           request.headers[
             "x-browser-version"
-          ] ?? null,
+          ] ?? profile.browserVersion,
 
         operatingSystem:
           request.headers[
             "x-os"
-          ] ?? null,
+          ] ?? profile.operatingSystem,
 
         operatingSystemVersion:
           request.headers[
             "x-os-version"
-          ] ?? null,
+          ] ?? profile.operatingSystemVersion,
 
         platform:
           request.headers[
             "x-platform"
-          ] ?? null,
+          ] ?? profile.platform,
 
       });
 
@@ -145,12 +184,43 @@ export class AuthenticationContextMapper {
             ],
           ),
 
-        /**
-         * Future:
-         * Network Detection Service.
+        /*
+         * Cloudflare and Vercel both front this
+         * service and publish coarse geography on
+         * the request. Capturing it here makes the
+         * security review meaningful without a
+         * paid lookup service.
+         */
+        country:
+          firstHeader(request, [
+            "cf-ipcountry",
+            "x-vercel-ip-country",
+          ]),
+
+        region:
+          firstHeader(request, [
+            "x-vercel-ip-country-region",
+            "cf-region",
+          ]),
+
+        city:
+          firstHeader(request, [
+            "x-vercel-ip-city",
+          ]),
+
+        /*
+         * Network category is inferred from the
+         * mobile hint when a client sends one.
+         * Anything else stays UNKNOWN rather than
+         * guessing, because a wrong value here
+         * would misrepresent a security signal.
          */
         networkType:
-          NetworkType.UNKNOWN,
+          /Mobile/i.test(
+            request.headers["user-agent"] ?? "",
+          )
+            ? NetworkType.CELLULAR
+            : NetworkType.UNKNOWN,
 
       });
 
@@ -233,6 +303,64 @@ export class AuthenticationContextMapper {
 
   }
 
+}
+
+/**
+ * Returns the first non-empty header from a
+ * list of candidate names.
+ *
+ * Geography can arrive from Cloudflare or
+ * Vercel depending on which edge served the
+ * request, so both are accepted in priority
+ * order. A blank or placeholder value ("XX",
+ * "T1", "unknown") is treated as absent so the
+ * security view never shows a fake location.
+ */
+function firstHeader(
+  request: HttpRequest<AuthenticateRequest>,
+  names: readonly string[],
+): string | null {
+  for (const name of names) {
+    const raw = request.headers[name];
+
+    if (typeof raw !== "string") continue;
+
+    const value = raw.trim();
+
+    if (!value) continue;
+
+    if (
+      value.toUpperCase() === "XX" ||
+      value.toUpperCase() === "T1" ||
+      value.toLowerCase() === "unknown"
+    ) {
+      continue;
+    }
+
+    /*
+     * Vercel URL-encodes city names.
+     */
+    try {
+      return decodeURIComponent(value);
+    } catch {
+      return value;
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Narrows a parsed device type string to
+ * the DeviceType enum so a value coming
+ * from the parser is always valid.
+ */
+function toDeviceType(value: string): DeviceType {
+  const candidates = Object.values(DeviceType) as string[];
+
+  return candidates.includes(value)
+    ? (value as DeviceType)
+    : DeviceType.UNKNOWN;
 }
 
 /**

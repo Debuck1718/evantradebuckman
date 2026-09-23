@@ -24,11 +24,13 @@ export default function WorkspacePlanPage() {
   const { account, session, loading } = useIdentitySession();
   const [plan, setPlan] = useState<LifeWorkPlan | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [loadingPlan, setLoadingPlan] = useState(false);
 
   useEffect(() => {
     async function loadPlan(): Promise<void> {
       try {
         setError(null);
+        setLoadingPlan(true);
 
         const response = await fetch(
           "/api/workspace/plan",
@@ -45,6 +47,8 @@ export default function WorkspacePlanPage() {
         setPlan(payload.plan);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Unable to load life-work plan.");
+      } finally {
+        setLoadingPlan(false);
       }
     }
 
@@ -86,11 +90,57 @@ export default function WorkspacePlanPage() {
 
   if (!plan) {
     return (
-      <main className="min-h-screen bg-[#06131f] text-white">
-        <div className="mx-auto flex min-h-screen max-w-6xl items-center justify-center px-6">
-          <p className="text-sm text-white/60">
-            {error ?? "Generating life-work operating plan via Kernel..."}
-          </p>
+      <main className="text-white">
+        <div className="mx-auto flex min-h-[60vh] w-full max-w-2xl items-center justify-center px-6 py-12">
+          {loadingPlan ? (
+            <div className="flex flex-col items-center gap-4 text-center">
+              <Loader2 size={28} className="animate-spin text-[#e6b24a]" />
+              <p className="text-sm text-white/60">
+                Generating your life-work operating plan...
+              </p>
+            </div>
+          ) : (
+            <GlassCard variant="elevated" className="w-full p-8 text-center sm:p-10">
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border-[#e6b24a]/30 bg-[#e6b24a]/10">
+                <Sparkles size={24} className="text-[#e6b24a]" />
+              </div>
+
+              <h1 className="mt-5 text-xl font-semibold text-white">
+                Your plan is ready to be shaped
+              </h1>
+
+              <p className="mt-3 text-sm leading-relaxed text-white/55">
+                A fresh workspace has no burden signals or commitments yet, so there is
+                nothing to schedule. Add your first promise or record how your week is
+                actually landing and the Kernel will build your operating plan from it.
+              </p>
+
+              {error && (
+                <p className="mt-4 text-xs text-white/35">
+                  We could not reach your workspace data just now. You can keep using the
+                  rest of the Workspace and try again.
+                </p>
+              )}
+
+              <div className="mt-7 flex-col gap-3 sm:flex-row sm:justify-center">
+                <Link
+                  href="/workspace/promises"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#e6b24a] px-5 py-3 text-sm font-semibold text-[#06131f] transition hover:bg-[#f0c261]"
+                >
+                  <Target size={15} />
+                  Create your first promise
+                </Link>
+
+                <Link
+                  href="/workspace/burden"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border-white/10 bg-white/[0.04] px-5 py-3 text-sm font-medium text-white/80 transition hover:border-white/20 hover:text-white"
+                >
+                  <BrainCircuit size={15} />
+                  Set your workload
+                </Link>
+              </div>
+            </GlassCard>
+          )}
         </div>
       </main>
     );

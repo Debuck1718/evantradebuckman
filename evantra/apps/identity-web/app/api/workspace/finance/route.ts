@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { requireAuthenticatedAccount } from "../_store";
+import { requireAuthenticatedAccount, workspaceErrorResponse } from "../_store";
 import { createFinanceEntry, listFinanceEntries } from "../repository";
 import { financeRequestSchema } from "../validation";
 
@@ -16,7 +16,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     }, {});
     return NextResponse.json({ entries, overview: { income, expenses, balance: income - expenses, byCategory } });
   } catch (error) {
-    return NextResponse.json({ error: error instanceof Error ? error.message : "Unable to load finance." }, { status: error instanceof Error && "status" in error ? 401 : 400 });
+    return workspaceErrorResponse(error, "Unable to load finance.");
   }
 }
 
@@ -35,6 +35,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     });
     return NextResponse.json({ entry }, { status: 201 });
   } catch (error) {
-    return NextResponse.json({ error: error instanceof Error ? error.message : "Unable to save finance entry." }, { status: error instanceof Error && "status" in error ? 401 : 400 });
+    return workspaceErrorResponse(error, "Unable to save finance entry.");
   }
 }

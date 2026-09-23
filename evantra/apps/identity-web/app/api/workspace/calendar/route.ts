@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { requireAuthenticatedAccount } from "../_store";
+import { requireAuthenticatedAccount, workspaceErrorResponse } from "../_store";
 import { createWorkspaceEvent, listWorkspaceEvents } from "../repository";
 import { calendarRequestSchema } from "../validation";
 
@@ -10,10 +10,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const events = await listWorkspaceEvents(accountId);
     return NextResponse.json({ events });
   } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unable to load calendar." },
-      { status: error instanceof Error && "status" in error ? 401 : 400 },
-    );
+    return workspaceErrorResponse(error, "Unable to load calendar.");
   }
 }
 
@@ -34,9 +31,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     return NextResponse.json({ event }, { status: 201 });
   } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unable to schedule event." },
-      { status: error instanceof Error && "status" in error ? 401 : 400 },
-    );
+    return workspaceErrorResponse(error, "Unable to schedule event.");
   }
 }

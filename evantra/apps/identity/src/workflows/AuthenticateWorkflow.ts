@@ -26,6 +26,29 @@ import {
 
 } from "../audit";
 
+import {
+  Clock,
+} from "../platform/Clock";
+
+/**
+ * Idle timeout applied to a browser session.
+ *
+ * A session ends after this much inactivity
+ * even though the absolute expiry is far
+ * away, which is what makes the security
+ * review meaningful.
+ *
+ * Previously the idle timeout was set to the
+ * absolute expiry (30 days), so both dates
+ * were identical and the idle window was
+ * effectively disabled.
+ */
+const BROWSER_SESSION_IDLE_MINUTES =
+  Number(
+    process.env.SESSION_IDLE_TIMEOUT_MINUTES ??
+      60 * 24,
+  );
+
 /**
  * Coordinates user authentication.
  *
@@ -48,7 +71,9 @@ export class AuthenticateWorkflow {
       BrowserSessionService,
 
      private readonly audit:
-  AuditService, 
+  AuditService,
+
+    private readonly clock: Clock,
 
   ) {}
 
@@ -120,8 +145,15 @@ export class AuthenticateWorkflow {
         expiresAt:
           session.expiresAt,
 
+        /*
+         * A real idle window: the session is
+         * abandoned after inactivity rather than
+         * living for the full absolute lifetime.
+         */
         idleTimeoutAt:
-          session.expiresAt,
+          this.clock.afterMinutes(
+            BROWSER_SESSION_IDLE_MINUTES,
+          ),
 
       });
 

@@ -6,6 +6,7 @@ import {
 
 import {
   requireAuthenticatedAccount,
+  workspaceErrorResponse,
 } from "../_store";
 import { getBurden, listPromises } from "../repository";
 
@@ -32,9 +33,6 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     return NextResponse.json({ plan });
   } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unable to load plan." },
-      { status: error instanceof Error && "status" in error ? 401 : 400 },
-    );
+    return workspaceErrorResponse(error, "Unable to load plan.");
   }
 }
