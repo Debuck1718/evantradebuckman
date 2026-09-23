@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -8,6 +8,7 @@ import {
   Calendar,
   CheckCircle2,
   FileText,
+  Grid2X2,
   KeyRound,
   Layers,
   Loader2,
@@ -171,8 +172,8 @@ export default function WorkspaceHubPage() {
 
   if (!account || !session) {
     return (
-      <main className="min-h-screen bg-[#06131f] text-white">
-        <div className="mx-auto flex min-h-screen max-w-xl items-center justify-center px-6">
+      <main className="text-white">
+        <div className="mx-auto flex min-h-[70vh] w-full max-w-xl items-center justify-center px-6">
           <GlassCard variant="elevated" className="w-full p-8 text-center sm:p-10">
             <EvantraBrandIcon size={48} className="mx-auto" />
             <h1 className="mt-6 text-2xl font-semibold">Sign in required</h1>
@@ -180,7 +181,7 @@ export default function WorkspaceHubPage() {
               Sign in to enter the Evantra Workspace OS command center.
             </p>
             <Link
-              href="/login"
+              href="/login?returnTo=/workspace/hub"
               className="mt-7 inline-flex items-center justify-center rounded-xl bg-[#e6b24a] px-6 py-3 text-sm font-semibold text-[#06131f] transition hover:bg-[#f0c261]"
             >
               Sign in with Evantra ID
@@ -230,45 +231,46 @@ export default function WorkspaceHubPage() {
   const bandStyles = getBandStyles(burdenBand);
 
   return (
-    <main className="min-h-screen bg-[#06131f] text-white">
-      <div className="mx-auto w-full max-w-6xl px-6 py-10 md:px-8 md:py-14">
+    <main className="text-white">
+      <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 md:py-10 lg:px-10">
         {/* Executive Hero Banner */}
         <GlassCard
           variant="gold"
-          className="mb-10 p-8 sm:p-10 border-[#e6b24a]/25 bg-gradient-to-br from-[#0b4f71]/30 via-[#06131f] to-[#071826]"
+          className="mb-8 border-[#e6b24a]/25 bg-gradient-to-br from-[#0b4f71]/30 via-[#06131f] to-[#071826] p-6 sm:p-8 lg:p-10"
+          hover={false}
         >
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-            <div>
-              <div className="flex flex-wrap items-center gap-3">
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-[#e6b24a]/30 bg-[#e6b24a]/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-[#fae59a]">
-                  <Zap size={13} className="text-[#e6b24a]" />
+          <div className="flex flex-col gap-6 xl:flex-row xl:items-center xl:justify-between">
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-2.5">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-[#e6b24a]/30 bg-[#e6b24a]/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-[#fae59a]">
+                  <Zap size={12} className="text-[#e6b24a]" />
                   Evantra Workspace OS
                 </span>
 
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-xs text-emerald-300">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-[11px] text-emerald-300">
+                  <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
                   Kernel 1.0 Active
                 </span>
               </div>
 
-              <h1 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl">
+              <h1 className="mt-4 text-2xl font-semibold tracking-tight sm:text-3xl lg:text-4xl xl:text-5xl">
                 Command center for{" "}
                 <span className="bg-gradient-to-r from-[#fae59a] via-[#e6b24a] to-[#c99322] bg-clip-text text-transparent">
                   {account.firstName} {account.lastName}
                 </span>
               </h1>
 
-              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/70 sm:text-base">
+              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/70">
                 Your native operating system for life, work, and identity. Backed by the
                 Evantra Kernel with zero-knowledge security, cognitive burden defense, and
                 promise accountability.
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row lg:flex-col gap-3 shrink-0">
+            <div className="flex flex-col gap-3 sm:flex-row xl:shrink-0 xl:flex-col">
               <Link
                 href="/workspace/promises"
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#e6b24a] px-5 py-3 text-sm font-semibold text-[#06131f] shadow-lg shadow-[#e6b24a]/10 transition hover:bg-[#f0c261] hover:-translate-y-0.5"
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#e6b24a] px-5 py-3 text-sm font-semibold text-[#06131f] shadow-lg shadow-[#e6b24a]/10 transition hover:-translate-y-0.5 hover:bg-[#f0c261]"
               >
                 <Plus size={16} />
                 <span>Capture Promise</span>
@@ -286,14 +288,15 @@ export default function WorkspaceHubPage() {
         </GlassCard>
 
         {/* Live Telemetry Cockpit */}
-        <div className="mb-12">
-          <div className="mb-5 flex items-center justify-between">
+        <section className="mb-10">
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2">
               <Layers size={16} className="text-[#e6b24a]" />
-              <h2 className="text-xs font-semibold uppercase tracking-[0.24em] text-white/50">
+              <h2 className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/50">
                 Live Intelligence Telemetry
               </h2>
             </div>
+
             <Link
               href="/workspace/plan"
               className="text-xs font-medium text-[#e6b24a] transition hover:text-[#fae59a] hover:underline"
@@ -302,16 +305,17 @@ export default function WorkspaceHubPage() {
             </Link>
           </div>
 
-          <div className="grid gap-5 md:grid-cols-3">
+          <div className="grid gap-4 sm:gap-5 lg:grid-cols-3">
             {/* Burden Meter Card */}
-            <GlassCard variant="default" className="p-6 flex flex-col justify-between">
+            <GlassCard variant="default" className="flex flex-col justify-between p-6" hover={false}>
               <div>
-                <div className="flex items-center justify-between">
+                <div className="flex items-start justify-between gap-3">
                   <span className="text-xs uppercase tracking-wider text-white/40">
                     Burden Index
                   </span>
+
                   <span
-                    className={`rounded-full border px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider ${bandStyles.bgColor} ${bandStyles.textColor}`}
+                    className={`shrink-0 rounded-full border px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider ${bandStyles.bgColor} ${bandStyles.textColor}`}
                   >
                     {bandStyles.label}
                   </span>
@@ -324,7 +328,6 @@ export default function WorkspaceHubPage() {
                   <span className="text-xs text-white/40">/ 100 max</span>
                 </div>
 
-                {/* Progress bar */}
                 <div className="mt-4 h-2 w-full overflow-hidden rounded-full bg-white/10">
                   <div
                     className={`h-full rounded-full transition-all duration-700 ${bandStyles.barColor}`}
@@ -347,13 +350,13 @@ export default function WorkspaceHubPage() {
             </GlassCard>
 
             {/* Promises Due Card */}
-            <GlassCard variant="default" className="p-6 flex flex-col justify-between">
+            <GlassCard variant="default" className="flex flex-col justify-between p-6" hover={false}>
               <div>
-                <div className="flex items-center justify-between">
+                <div className="flex items-start justify-between gap-3">
                   <span className="text-xs uppercase tracking-wider text-white/40">
                     Promise Graph
                   </span>
-                  <span className="rounded-full border border-blue-400/20 bg-blue-400/10 px-2.5 py-0.5 text-[11px] font-medium text-blue-300">
+                  <span className="shrink-0 rounded-full border border-blue-400/20 bg-blue-400/10 px-2.5 py-0.5 text-[11px] font-medium text-blue-300">
                     72h Window
                   </span>
                 </div>
@@ -370,13 +373,13 @@ export default function WorkspaceHubPage() {
                     plan.promisesDueSoon.slice(0, 2).map((item) => (
                       <div
                         key={item.id}
-                        className="rounded-xl border border-white/5 bg-white/[0.02] p-2.5 text-xs text-white/80 truncate"
+                        className="truncate rounded-xl border border-white/5 bg-white/[0.02] p-2.5 text-xs text-white/80"
                       >
-                        • {item.title}
+                        â€¢ {item.title}
                       </div>
                     ))
                   ) : (
-                    <p className="text-xs text-white/40 italic py-2">
+                    <p className="py-2 text-xs italic text-white/40">
                       No commitments due in the next 72 hours.
                     </p>
                   )}
@@ -393,13 +396,13 @@ export default function WorkspaceHubPage() {
             </GlassCard>
 
             {/* Guardrails Card */}
-            <GlassCard variant="default" className="p-6 flex flex-col justify-between">
+            <GlassCard variant="default" className="flex flex-col justify-between p-6" hover={false}>
               <div>
-                <div className="flex items-center justify-between">
+                <div className="flex items-start justify-between gap-3">
                   <span className="text-xs uppercase tracking-wider text-white/40">
                     Cognitive Guardrails
                   </span>
-                  <span className="rounded-full border border-purple-400/20 bg-purple-400/10 px-2.5 py-0.5 text-[11px] font-medium text-purple-300">
+                  <span className="shrink-0 rounded-full border border-purple-400/20 bg-purple-400/10 px-2.5 py-0.5 text-[11px] font-medium text-purple-300">
                     Active
                   </span>
                 </div>
@@ -430,52 +433,47 @@ export default function WorkspaceHubPage() {
               </Link>
             </GlassCard>
           </div>
-        </div>
+        </section>
 
         {/* First-Party Native Kernel Workspace Applications Suite */}
-        <div className="mb-12">
-          <div className="mb-6 flex items-center justify-between">
+        <section className="mb-10">
+          <div className="mb-5 flex flex-wrap items-end justify-between gap-2">
             <div className="flex items-center gap-2">
-              <Sparkles size={16} className="text-[#e6b24a]" />
-              <h2 className="text-xs font-semibold uppercase tracking-[0.24em] text-white/50">
-                Evantra Kernel Workspace Suite
+              <Grid2X2 size={16} className="text-[#e6b24a]" />
+              <h2 className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/50">
+                Workspace Applications
               </h2>
             </div>
             <span className="text-xs text-white/40">Included with your Evantra ID</span>
           </div>
 
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3">
             {kernelModules.map((module) => {
               const Icon = module.icon;
 
               return (
-                <Link
-                  key={module.title}
-                  href={module.href}
-                  className="group block"
-                >
+                <Link key={module.title} href={module.href} className="group block">
                   <GlassCard
                     variant="default"
-                    className="h-full p-6 transition-all duration-300 group-hover:border-[#e6b24a]/40"
+                    className="h-full p-5 transition-all duration-300 group-hover:border-[#e6b24a]/40 sm:p-6"
+                    hover={false}
                   >
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-start justify-between gap-3">
                       <div
-                        className={`flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-gradient-to-br ${module.accent}`}
+                        className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-gradient-to-br ${module.accent}`}
                       >
                         <Icon size={20} className="text-[#fae59a]" />
                       </div>
 
-                      <span className="rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-0.5 text-[10px] uppercase tracking-wider text-white/40 group-hover:border-[#e6b24a]/30 group-hover:text-[#fae59a] transition">
+                      <span className="rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-0.5 text-[10px] uppercase tracking-wider text-white/40 transition group-hover:border-[#e6b24a]/30 group-hover:text-[#fae59a]">
                         {module.badge}
                       </span>
                     </div>
 
-                    <h3 className="mt-5 text-base font-semibold text-white group-hover:text-[#fae59a] transition">
+                    <h3 className="mt-5 text-base font-semibold text-white transition group-hover:text-[#fae59a]">
                       {module.title}
                     </h3>
-                    <p className="text-xs font-medium text-[#e6b24a]/80">
-                      {module.tagline}
-                    </p>
+                    <p className="text-xs font-medium text-[#e6b24a]/80">{module.tagline}</p>
 
                     <p className="mt-3 text-xs leading-relaxed text-white/55">
                       {module.description}
@@ -485,15 +483,15 @@ export default function WorkspaceHubPage() {
               );
             })}
           </div>
-        </div>
+        </section>
 
         {/* Daily Operating Playbook */}
-        <GlassCard variant="default" className="p-7 sm:p-8">
+        <GlassCard variant="default" className="p-6 sm:p-8" hover={false}>
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#e6b24a]/30 bg-[#e6b24a]/10">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#e6b24a]/30 bg-[#e6b24a]/10">
               <CheckCircle2 size={20} className="text-[#e6b24a]" />
             </div>
-            <div>
+            <div className="min-w-0">
               <h3 className="text-base font-semibold">Daily Operating Protocol</h3>
               <p className="text-xs text-white/40">
                 Actionable guidelines to maximize cognitive clarity and output
@@ -501,17 +499,17 @@ export default function WorkspaceHubPage() {
             </div>
           </div>
 
-          <div className="mt-6 grid gap-3 sm:grid-cols-2">
+          <div className="mt-6 grid gap-3 md:grid-cols-2">
             {starterActions.map((action, index) => (
               <Link
                 key={index}
                 href={action.href}
                 className="group flex items-start gap-3 rounded-2xl border border-white/5 bg-white/[0.02] p-4 transition hover:border-[#e6b24a]/30 hover:bg-white/[0.04]"
               >
-                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/10 text-xs font-semibold text-[#fae59a] group-hover:bg-[#e6b24a] group-hover:text-[#06131f] transition">
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/10 text-xs font-semibold text-[#fae59a] transition group-hover:bg-[#e6b24a] group-hover:text-[#06131f]">
                   {index + 1}
                 </span>
-                <p className="text-xs leading-5 text-white/70 group-hover:text-white transition">
+                <p className="text-xs leading-5 text-white/70 transition group-hover:text-white">
                   {action.text}
                 </p>
               </Link>

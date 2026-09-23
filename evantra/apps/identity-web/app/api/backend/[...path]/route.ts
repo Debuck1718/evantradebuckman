@@ -26,30 +26,44 @@ async function forward(request: NextRequest, path: string[]) {
   const contentType = response.headers.get("content-type");
   if (contentType) result.headers.set("content-type", contentType);
 
-  /*
-   * Forward every Set-Cookie header from
-   * the identity service verbatim.
-   *
-   * Rebuilding the cookie here used to
-   * force sameSite: "lax", which broke
-   * the session on cross-site and
-   * hardening the value ourselves also
-   * risked drifting from the backend's
-   * own expiry. Passing the header
-   * straight through keeps HttpOnly,
-   * Secure, SameSite and Expires exactly
-   * as Evantra Identity issued them.
-   */
+
   const setCookies =
     typeof response.headers.getSetCookie === "function"
       ? response.headers.getSetCookie()
       : [];
 
   for (const cookie of setCookies) {
-    result.headers.append("set-cookie", cookie);
+    result.headers.append("set-cookie", stripForeignDomain(cookie));
   }
 
   return result;
+}
+
+/**
+ * Removes a Domain attribute that cannot
+ * match the public origin serving this
+ * request, so the browser keeps the
+ * cookie on the site the visitor is on.
+ */
+function stripForeignDomain(cookie: string): string {
+  const domainMatch = cookie.match(/;\s*Domain=([^;]+)/i);
+
+  if (!domainMatch) return cookie;
+
+  const domain = domainMatch[1].trim().toLowerCase();
+  const upstreamHost = new URL(IDENTITY_API_URL).hostname.toLowerCase();
+
+  /*
+   * Only an upstream-specific domain is
+   * unsafe. A shared parent domain such as
+   * .evantradebuckman.com is intentional
+   * and is preserved.
+   */
+  if (domain === upstreamHost) {
+    return cookie.replace(/;\s*Domain=[^;]+/i, "");
+  }
+
+  return cookie;
 }
 
 export async function GET(request: NextRequest, context: { params: Promise<{ path: string[] }> }) {

@@ -8,12 +8,7 @@ import {
 } from "../../workspace/_support_orgs";
 import { supportResolveSchema } from "../../workspace/_support_validation";
 
-/**
- * Lists every support request in
- * the platform. Accessible only
- * to members of the Evantra Team
- * organization.
- */
+
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const accountId = await requireAuthenticatedAccount(request);
@@ -36,10 +31,6 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   }
 }
 
-/**
- * Updates the status of a support
- * request (Evantra Team only).
- */
 export async function PATCH(request: NextRequest): Promise<NextResponse> {
   try {
     const parsed = supportResolveSchema.safeParse(await request.json());

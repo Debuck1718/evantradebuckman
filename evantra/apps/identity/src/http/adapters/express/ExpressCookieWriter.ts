@@ -30,6 +30,8 @@ export class ExpressCookieWriter {
 
     ) {
 
+      const domain = cookie.domain;
+
       response.cookie(
 
         cookie.name,
@@ -53,6 +55,8 @@ export class ExpressCookieWriter {
           path:
 
             cookie.path,
+
+          ...(domain ? { domain } : {}),
 
           expires:
 

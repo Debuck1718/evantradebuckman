@@ -62,7 +62,25 @@ export function ErrorMiddleware(
 
   if (error instanceof SessionError) {
 
+    /*
+     * A missing session is an authentication
+     * condition, not a missing resource.
+     *
+     * "session_not_found" is returned when the
+     * browser presents a stale, expired or
+     * unknown session cookie. Answering 404
+     * made the front end treat a normal
+     * signed-out state as a broken route and
+     * also tripped server logs and monitors
+     * with false 404 alerts.
+     *
+     * Every session failure that simply means
+     * "you are not signed in" must be 401 so
+     * callers can react by sending the visitor
+     * to sign in again.
+     */
     const unauthorizedCodes = [
+      "session_not_found",
       "session_expired",
       "session_idle_timeout",
       "session_locked",
@@ -72,13 +90,11 @@ export function ErrorMiddleware(
     ];
 
     const status =
-      error.error === "session_not_found"
-        ? HttpStatus.NOT_FOUND
-        : unauthorizedCodes.includes(
-            error.error,
-          )
-          ? HttpStatus.UNAUTHORIZED
-          : HttpStatus.BAD_REQUEST;
+      unauthorizedCodes.includes(
+        error.error,
+      )
+        ? HttpStatus.UNAUTHORIZED
+        : HttpStatus.BAD_REQUEST;
 
     response
       .status(status)

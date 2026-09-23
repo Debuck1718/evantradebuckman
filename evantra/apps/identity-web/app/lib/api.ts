@@ -47,11 +47,6 @@ export interface RegisterAccountInput {
   contactEmail: string;
   password: string;
 
-  /**
-   * Same-origin path to return to
-   * after the contact email is
-   * verified. Used by OAuth clients.
-   */
   returnTo?: string;
 }
 
@@ -421,6 +416,13 @@ export async function validateSession(
    * 400 / 401 simply mean the visitor
    * has no active browser session yet.
    *
+   * 404 is tolerated as well because
+   * older Evantra Identity builds
+   * answered "session not found" with a
+   * 404, and a stale production cookie
+   * must never wedge the UI. 403 covers
+   * a revoked or terminated session.
+   *
    * This function runs from the root
    * session provider on every page, so
    * throwing here is expected behaviour
@@ -430,7 +432,9 @@ export async function validateSession(
    */
   if (
     response.status === 400 ||
-    response.status === 401
+    response.status === 401 ||
+    response.status === 403 ||
+    response.status === 404
   ) {
     return null;
   }

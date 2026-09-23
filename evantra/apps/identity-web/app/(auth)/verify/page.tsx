@@ -25,10 +25,27 @@ import {
     verifyAccount,
 } from "../../lib/api";
 
+import {
+    useIdentitySession,
+} from "../../../components/identity/IdentitySessionProvider";
+
 function VerifyPageContent() {
     const router = useRouter();
     const searchParams =
         useSearchParams();
+
+    /*
+     * Verification activates the account but
+     * does not itself create a browser
+     * session, so the cookie on this device
+     * can still be the stale pre-verification
+     * value. Refreshing the shared session
+     * context here means the Workspace opens
+     * already knowing who the visitor is,
+     * instead of racing the sign-in gate.
+     */
+    const { refresh } =
+        useIdentitySession();
 
     const token =
         searchParams.get("token");
@@ -50,11 +67,20 @@ function VerifyPageContent() {
     const requestedReturnTo =
         searchParams.get("returnTo") ?? "";
 
+    /*
+     * A visitor who verified a normal
+     * (non-OAuth) Evantra ID should land
+     * directly in the Workspace, not on the
+     * sign-in form they have already
+     * satisfied. OAuth flows always pass an
+     * explicit returnTo, so the fallback
+     * only applies to first-party sign-ups.
+     */
     const returnTo =
         requestedReturnTo.startsWith("/") &&
         !requestedReturnTo.startsWith("//")
             ? requestedReturnTo
-            : "/login";
+            : "/workspace/hub";
 
     const [status, setStatus] =
         useState<
@@ -99,6 +125,23 @@ function VerifyPageContent() {
                 setMessage(
                     "Your Evantra ID has been verified successfully.",
                 );
+
+                /*
+                 * Re-read the session now that the
+                 * account is active so the Workspace
+                 * does not flash the sign-in gate.
+                 */
+                await refresh().catch(() => undefined);
+
+                /*
+                 * Move the visitor straight into the
+                 * Workspace once verification lands.
+                 * The button remains for anyone who
+                 * wants to read the confirmation.
+                 */
+                if (!cancelled) {
+                    router.replace(returnTo);
+                }
             } catch (error) {
                 if (cancelled) {
                     return;
@@ -119,7 +162,7 @@ function VerifyPageContent() {
         return () => {
             cancelled = true;
         };
-    }, [token]);
+    }, [token, refresh, router, returnTo]);
 
     return (
         <main className="min-h-screen bg-[#06131f] text-white">

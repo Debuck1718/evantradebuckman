@@ -6,13 +6,7 @@ import {
   supportDatabase,
 } from "../../../workspace/_support_db";
 
-/**
- * Verify the Svix signature that
- * Resend signs every webhook with
- * (svix-id, svix-timestamp, svix-signature headers).
- * Secret is the "whsec_..." from the
- * Resend dashboard webhook settings.
- */
+
 function verifySvixSignature(
   id: string,
   timestamp: string,

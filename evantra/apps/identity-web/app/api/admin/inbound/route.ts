@@ -7,12 +7,7 @@ import {
   markInboundEmailRead,
 } from "../../workspace/_support_orgs";
 
-/**
- * Lists every inbound email received
- * through the Resend inbound webhook.
- * Accessible only to members of the
- * Evantra Team organization.
- */
+
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const accountId = await requireAuthenticatedAccount(request);
@@ -35,10 +30,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   }
 }
 
-/**
- * Marks an inbound email as read
- * (Evantra Team only).
- */
+
 export async function PATCH(request: NextRequest): Promise<NextResponse> {
   try {
     const body = (await request.json()) as { id?: unknown };
