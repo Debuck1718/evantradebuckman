@@ -1,18 +1,24 @@
-import { Pool } from "pg";
+import type { Pool } from "pg";
+
+import { getWorkspacePool } from "./_database";
 
 /**
- * Shared database pool for the
+ * Shared database handle for the
  * support / organization layer.
- * Reuses the same connection
- * settings as the workspace
- * repository.
+ * Reuses the single workspace pool so the
+ * support routes resolve the same connection
+ * (and the same missing-config error) as the
+ * workspace repository.
+ *
+ * The Proxy preserves pg's generic query
+ * overloads while resolving the pool lazily.
  */
-export const supportDatabase = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === "production"
-    ? { rejectUnauthorized: false }
-    : undefined,
-  max: 10,
+export const supportDatabase = new Proxy({} as Pool, {
+  get(_target, property) {
+    const pool = getWorkspacePool();
+    const value = Reflect.get(pool, property) as unknown;
+    return typeof value === "function" ? value.bind(pool) : value;
+  },
 });
 
 /**

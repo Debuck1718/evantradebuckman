@@ -3,6 +3,7 @@ import {
   PLATFORM_ORG_SLUG,
   supportDatabase,
 } from "./_support_db";
+import { ensurePersonalWorkspace } from "./provisioning";
 
 /* ============================================================
    Types
@@ -634,54 +635,15 @@ export async function countUnreadNotifications(accountId: string): Promise<numbe
 }
 
 /* ============================================================
-   Shared workspace resolution (same logic as repository.ts)
+   Shared workspace resolution
    ============================================================ */
 
+/*
+ * Delegates to ./provisioning so support shares the single
+ * implementation that creates the workspace AND its owner
+ * membership row (previously the members row was never
+ * written, leaving accounts with no workspace membership).
+ */
 async function workspaceIdFor(accountId: string): Promise<string> {
-  const existing = await supportDatabase.query<{ id: string }>(
-    `SELECT w.id
-     FROM workspace.workspaces AS w
-     LEFT JOIN workspace.members AS m
-       ON m.workspace_id = w.id
-      AND m.account_id = $1
-     WHERE w.owner_id = $1 OR m.account_id IS NOT NULL
-     ORDER BY (w.owner_id = $1) DESC, w.created_at ASC
-     LIMIT 1`,
-    [accountId],
-  );
-
-  if (existing.rows[0]) return existing.rows[0].id;
-
-  /*
-   * Must mirror repository.ts.
-   *
-   * "ON CONFLICT (slug) DO NOTHING RETURNING id"
-   * returns no row when the slug already exists,
-   * which left a first-time account with no
-   * workspace and broke support, invites and
-   * organizations with the same 400.
-   */
-  const slug = `personal-${accountId}`.slice(0, 64);
-
-  const upserted = await supportDatabase.query<{ id: string }>(
-    `INSERT INTO workspace.workspaces (owner_id, name, slug, type, tier)
-     VALUES ($1, $2, $3, 'PERSONAL', 'CORE')
-     ON CONFLICT (slug) DO UPDATE SET updated_at = NOW()
-     RETURNING id`,
-    [accountId, "Personal Workspace", slug],
-  );
-
-  if (upserted.rows[0]) return upserted.rows[0].id;
-
-  const afterRace = await supportDatabase.query<{ id: string }>(
-    `SELECT w.id
-     FROM workspace.workspaces AS w
-     LEFT JOIN workspace.members AS m
-       ON m.workspace_id = w.id AND m.account_id = $1
-     WHERE w.owner_id = $1 OR m.account_id IS NOT NULL
-     LIMIT 1`,
-    [accountId],
-  );
-  if (!afterRace.rows[0]) throw new Error("Unable to resolve the account workspace.");
-  return afterRace.rows[0].id;
+  return ensurePersonalWorkspace(accountId);
 }

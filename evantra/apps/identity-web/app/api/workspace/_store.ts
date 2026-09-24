@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { DatabaseConfigError } from "./_database";
+
 /**
  * Base URL of Evantra Identity.
  *
@@ -63,6 +65,28 @@ export function workspaceErrorResponse(
             : "An authenticated session is required.",
       },
       { status: 401 },
+    );
+  }
+
+  /*
+   * A missing database configuration is an
+   * operator problem, not a transient fault,
+   * and every workspace route would report the
+   * same blank 500. Name it as a 503 with an
+   * actionable message so the cause is visible
+   * instead of being hidden behind a generic
+   * "could not complete this request".
+   */
+  if (error instanceof DatabaseConfigError) {
+    console.error("[workspace]", error.message);
+
+    return NextResponse.json(
+      {
+        error:
+          "Workspace storage is not configured. " +
+          "Set DATABASE_URL in identity-web's environment and redeploy.",
+      },
+      { status: 503 },
     );
   }
 

@@ -1,9 +1,9 @@
-import { Pool } from "pg";
 import {
   AuthorizedWorkspaceContextProvider,
   WorkspaceAssistant,
   type AssistantIntent,
 } from "@evantra/assistant";
+import type { Pool } from "pg";
 
 import {
   assessBurden,
@@ -13,17 +13,29 @@ import {
   type WorkspacePromise,
 } from "../../workspace/lib/intelligence";
 
-const database = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === "production"
-    ? { rejectUnauthorized: false }
-    : undefined,
-  max: 10,
-});
+import { getWorkspacePool } from "./_database";
+import { ensurePersonalWorkspace } from "./provisioning";
 
-interface WorkspaceRow {
-  id: string;
-}
+/*
+ * Persistence goes through the shared pool so
+ * every workspace route resolves the same
+ * connection (and the same missing-config
+ * behaviour). getWorkspacePool() throws a
+ * DatabaseConfigError when DATABASE_URL is
+ * absent, which workspaceErrorResponse maps to
+ * a clear 503 instead of a generic 500.
+ *
+ * A Proxy keeps pg's generic query overloads
+ * intact (query<T>(...)) while still resolving
+ * the pool lazily, per call.
+ */
+const database = new Proxy({} as Pool, {
+  get(_target, property) {
+    const pool = getWorkspacePool();
+    const value = Reflect.get(pool, property) as unknown;
+    return typeof value === "function" ? value.bind(pool) : value;
+  },
+});
 
 interface BurdenRow {
   open_tasks: number;
@@ -159,82 +171,14 @@ function mapFinance(row: FinanceRow) {
   };
 }
 
+/*
+ * Resolution and provisioning both live in
+ * ./provisioning so repository and support
+ * share one implementation (and one place that
+ * creates the workspace.members owner row).
+ */
 async function workspaceIdFor(accountId: string): Promise<string> {
-  const existing = await database.query<WorkspaceRow>(
-    `
-      SELECT w.id
-      FROM workspace.workspaces AS w
-      LEFT JOIN workspace.members AS m
-        ON m.workspace_id = w.id
-       AND m.account_id = $1
-      WHERE w.owner_id = $1 OR m.account_id IS NOT NULL
-      ORDER BY (w.owner_id = $1) DESC, w.created_at ASC
-      LIMIT 1
-    `,
-    [accountId],
-  );
-
-  if (existing.rows[0]) {
-    return existing.rows[0].id;
-  }
-
-  /*
-   * A brand-new account has no workspace yet.
-   *
-   * The personal workspace is derived from the
-   * account id so the slug is deterministic.
-   *
-   * The previous implementation relied on
-   * "ON CONFLICT (slug) DO NOTHING RETURNING id",
-   * which yields no rows whenever the slug
-   * already exists. That left the caller with
-   * an undefined id and made every workspace
-   * feature fail for a first-time user, which
-   * is exactly the 400 the dashboard reported.
-   *
-   * Resolving the row in a single upsert keeps
-   * the create idempotent under concurrent
-   * first requests and always returns an id.
-   */
-  const slug = `personal-${accountId}`.slice(0, 64);
-
-  const upserted = await database.query<WorkspaceRow>(
-    `
-      INSERT INTO workspace.workspaces (owner_id, name, slug, type, tier)
-      VALUES ($1, 'Personal Workspace', $2, 'PERSONAL', 'CORE')
-      ON CONFLICT (slug) DO UPDATE
-        SET updated_at = NOW()
-      RETURNING id
-    `,
-    [accountId, slug],
-  );
-
-  if (upserted.rows[0]) {
-    return upserted.rows[0].id;
-  }
-
-  /*
-   * Last resort: the row exists but belongs
-   * to someone else's slug. Fall back to any
-   * workspace owned by this account.
-   */
-  const afterRace = await database.query<WorkspaceRow>(
-    `
-      SELECT w.id
-      FROM workspace.workspaces AS w
-      LEFT JOIN workspace.members AS m
-        ON m.workspace_id = w.id AND m.account_id = $1
-      WHERE w.owner_id = $1 OR m.account_id IS NOT NULL
-      LIMIT 1
-    `,
-    [accountId],
-  );
-
-  if (!afterRace.rows[0]) {
-    throw new Error("Unable to resolve the account workspace.");
-  }
-
-  return afterRace.rows[0].id;
+  return ensurePersonalWorkspace(accountId);
 }
 
 export async function getBurden(accountId: string): Promise<BurdenSnapshot> {
