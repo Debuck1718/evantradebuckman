@@ -61,4 +61,4 @@ export interface WorkspaceClient {
  * applications that authenticate users
  * through Evantra Identity.
  */
-export * from "./oauth";
+export * from "./oauth.js";

@@ -110,7 +110,7 @@ prefix or wildcard matching. Three shapes are supported:
 ### 3.1 Install
 
 ```bash
-pnpm add @evantra/identity-react
+pnpm add @evantra-identity/react
 ```
 
 ### 3.2 Configure the provider
@@ -119,7 +119,7 @@ pnpm add @evantra/identity-react
 // app/providers.tsx
 "use client";
 
-import { EvantraIdentityProvider } from "@evantra/identity-react";
+import { EvantraIdentityProvider } from "@evantra-identity/react";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -147,7 +147,7 @@ import {
   createEvantraPkcePair,
   createEvantraState,
   useEvantraIdentity,
-} from "@evantra/identity-react";
+} from "@evantra-identity/react";
 
 export function SignInButton() {
   const config = useEvantraIdentity();
@@ -196,7 +196,7 @@ import { useEffect, useRef, useState } from "react";
 import {
   consumeEvantraWebCallback,
   exchangeEvantraCode,
-} from "@evantra/identity-react";
+} from "@evantra-identity/react";
 
 export default function CallbackPage() {
   const [status, setStatus] = useState("Completing sign in…");
@@ -315,7 +315,7 @@ import {
   createEvantraState,
   consumeEvantraNativeCallback,
   exchangeEvantraCode,
-} from "@evantra/identity-react";
+} from "@evantra-identity/react";
 
 const REDIRECT_URI = "com.example.app://oauth/callback";
 const CLIENT_ID = "evt_client_9f2c…";
@@ -426,7 +426,7 @@ import {
   createEvantraPkcePair,
   createEvantraState,
   parseEvantraCallback,
-} from "@evantra/sdk";
+} from "@evantra-identity/sdk";
 
 const server = createServer();
 server.listen(0, "127.0.0.1");
@@ -515,7 +515,7 @@ If you want a **standalone** sign-up button rather than going through
 OAuth:
 
 ```tsx
-import { createEvantraRegisterUrl } from "@evantra/identity-react";
+import { createEvantraRegisterUrl } from "@evantra-identity/react";
 
 const url = createEvantraRegisterUrl(
   "https://identity.evantradebuckman.com",

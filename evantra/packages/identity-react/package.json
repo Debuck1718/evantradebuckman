@@ -1,7 +1,36 @@
 {
-  "name": "@evantra/identity-react",
+  "name": "@evantra-identity/react",
   "version": "0.1.0",
   "private": false,
+  "description": "Sign in with Evantra — React, React Native and Expo components plus the OAuth 2.0 / PKCE core for Evantra Identity.",
+  "keywords": [
+    "evantra",
+    "identity",
+    "react",
+    "react-native",
+    "expo",
+    "oauth2",
+    "oidc",
+    "openid",
+    "pkce",
+    "authentication",
+    "single-sign-on",
+    "sign-in-with-evantra"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/Debuck1718/evantradebuckman/tree/main/evantra/packages/identity-react#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Debuck1718/evantradebuckman.git",
+    "directory": "evantra/packages/identity-react"
+  },
+  "bugs": {
+    "url": "https://github.com/Debuck1718/evantradebuckman/issues"
+  },
+  "author": {
+    "name": "Evantra De-Buckman Ventures",
+    "url": "https://evantradebuckman.com"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -11,15 +40,30 @@
       "default": "./dist/index.js"
     }
   },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
-    "prepublishOnly": "pnpm run build"
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run build"
   },
   "peerDependencies": {
     "react": ">=18"
   },
   "devDependencies": {
+    "@types/react": "^19.2.17",
+    "react": "^19.2.7",
     "typescript": "^5.9.3"
   }
 }

@@ -1,14 +1,60 @@
 {
-  "name": "@evantra/sdk",
+  "name": "@evantra-identity/sdk",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
+  "description": "Official Evantra Identity SDK — OAuth 2.0 Authorization Code flow with PKCE and Evantra Workspace types.",
+  "keywords": [
+    "evantra",
+    "identity",
+    "oauth2",
+    "oidc",
+    "openid",
+    "pkce",
+    "sdk",
+    "authentication",
+    "single-sign-on",
+    "sign-in-with-evantra"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/Debuck1718/evantradebuckman/tree/main/evantra/packages/sdk#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Debuck1718/evantradebuckman.git",
+    "directory": "evantra/packages/sdk"
+  },
+  "bugs": {
+    "url": "https://github.com/Debuck1718/evantradebuckman/issues"
+  },
+  "author": {
+    "name": "Evantra De-Buckman Ventures",
+    "url": "https://evantradebuckman.com"
+  },
   "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./src/index.ts"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "build": "tsc",
-    "dev": "tsc --watch"
+    "dev": "tsc --watch",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run build"
   },
   "devDependencies": {
     "typescript": "^5.9.3"

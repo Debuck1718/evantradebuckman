@@ -152,14 +152,14 @@ export default function ApplicationsPage() {
 
                 <p className="max-w-2xl text-xs leading-relaxed text-white/65 sm:text-sm">
                   Add unified Evantra authentication to your application in minutes with our official
-                  <code className="mx-1.5 rounded bg-white/10 px-1.5 py-0.5 font-mono text-[#fae59a]">@evantra/identity-react</code>
+                  <code className="mx-1.5 rounded bg-white/10 px-1.5 py-0.5 font-mono text-[#fae59a]">@evantra-identity/react</code>
                   SDK.
                 </p>
 
                 <div className="rounded-2xl border border-white/10 bg-black/60 p-4 font-mono text-xs text-white/80 overflow-x-auto">
                   <span className="text-purple-400">import</span> &#123; EvantraSignInButton &#125;{" "}
                   <span className="text-purple-400">from</span>{" "}
-                  <span className="text-emerald-300">&quot;@evantra/identity-react&quot;</span>;
+                  <span className="text-emerald-300">&quot;@evantra-identity/react&quot;</span>;
                   <br />
                   <br />
                   <span className="text-blue-400">&lt;EvantraSignInButton</span>{" "}

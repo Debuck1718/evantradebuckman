@@ -32,3 +32,8 @@ Thumbs.db
 # TypeScript
 *.tsbuildinfo
 
+# npm pack artifacts
+*.tgz
+# ...except the distributable SDK tarballs, which are shipped to consumers.
+!evantra/dist-artifacts/*.tgz
+

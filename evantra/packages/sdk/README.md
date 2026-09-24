@@ -1,10 +1,14 @@
-# @evantra/sdk
+# @evantra-identity/sdk
 
-Server-side and native SDK for Evantra Identity and the Evantra
-Workspace.
+Official, public SDK for **Sign in with Evantra** — named for the
+server-side, desktop and CLI use cases, and for the Evantra Workspace
+types.
 
 - **`EvantraOAuthClient`** — OAuth 2.0 Authorization Code flow with PKCE
 - **Workspace types** — Burden, Promise Graph, Life-Work Plan
+
+Licensed **MIT**. Implements RFC6749 (OAuth 2.0), RFC7636 (PKCE) and
+RFC8252 (native apps).
 
 > Full walkthrough: [Evantra Identity — Client Integration Guide](../../docs/identity-client-integration.md)
 
@@ -13,8 +17,20 @@ Workspace.
 ## Install
 
 ```bash
-pnpm add @evantra/sdk
+pnpm add @evantra-identity/sdk
 ```
+
+Ships as ESM (`type: module`) with TypeScript declarations. Node 18+.
+No runtime dependencies.
+
+> **Not on the npm registry yet.** Until the release lands, install the
+> prebuilt tarball instead — the import path is identical:
+>
+> ```bash
+> npm install ./evantra/dist-artifacts/evantra-identity-sdk-0.1.0.tgz
+> ```
+>
+> See the [Distribution Guide](../../docs/distribution.md).
 
 ---
 
@@ -22,7 +38,7 @@ pnpm add @evantra/sdk
 
 Use this from a **server**, a **desktop app**, a **CLI** or a
 **confidential backend**. For browser and mobile apps, prefer
-[`@evantra/identity-react`](../identity-react/README.md), which handles
+[`@evantra-identity/react`](../identity-react/README.md), which handles
 redirects and secure storage for you.
 
 ```ts
@@ -31,7 +47,7 @@ import {
   createEvantraPkcePair,
   createEvantraState,
   parseEvantraCallback,
-} from "@evantra/sdk";
+} from "@evantra-identity/sdk";
 
 const client = new EvantraOAuthClient({
   clientId: "evt_client_…",
@@ -103,7 +119,7 @@ console.log("Signed in as", profile.evantra_id);
 ## Error handling
 
 ```ts
-import { EvantraOAuthError } from "@evantra/sdk";
+import { EvantraOAuthError } from "@evantra-identity/sdk";
 
 try {
   await client.completeAuthorization({ code, codeVerifier });

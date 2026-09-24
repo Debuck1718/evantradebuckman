@@ -1,13 +1,15 @@
-# @evantra/identity-react
+# @evantra-identity/react
 
-React and React Native components, plus the OAuth 2.0 / PKCE core, for
-Evantra Identity.
+Official, public package for **Sign in with Evantra** — React and React
+Native components, plus the OAuth 2.0 / PKCE core.
 
 - **Web (React / Next.js)** — provider, buttons and URL helpers
 - **Mobile (React Native / Expo)** — framework-agnostic core with
   deep-link handling
 - **OAuth** — authorization code flow with PKCE (RFC6749, RFC7636,
   RFC8252)
+
+Licensed **MIT**.
 
 > Full walkthrough: [Evantra Identity — Client Integration Guide](../../docs/identity-client-integration.md)
 
@@ -16,8 +18,20 @@ Evantra Identity.
 ## Install
 
 ```bash
-pnpm add @evantra/identity-react
+pnpm add @evantra-identity/react
 ```
+
+Ships as ESM (`type: module`) with TypeScript declarations. React 18+ is
+a peer dependency. Node 18+.
+
+> **Not on the npm registry yet.** Until the release lands, install the
+> prebuilt tarball instead — the import path is identical:
+>
+> ```bash
+> npm install ./evantra/dist-artifacts/evantra-identity-react-0.1.0.tgz
+> ```
+>
+> See the [Distribution Guide](../../docs/distribution.md).
 
 ---
 
@@ -28,7 +42,7 @@ import {
   EvantraIdentityProvider,
   EvantraSignInButton,
   EvantraRegisterButton,
-} from "@evantra/identity-react";
+} from "@evantra-identity/react";
 
 export function AuthButtons() {
   return (
@@ -66,7 +80,7 @@ import {
   createEvantraState,
   consumeEvantraWebCallback,
   exchangeEvantraCode,
-} from "@evantra/identity-react";
+} from "@evantra-identity/react";
 
 // 1. Start
 const { verifier, challenge } = await createEvantraPkcePair();
@@ -114,7 +128,7 @@ import {
   createEvantraAuthorizeUrl,
   createEvantraPkcePair,
   createEvantraState,
-} from "@evantra/identity-react";
+} from "@evantra-identity/react";
 
 const REDIRECT_URI = "com.example.app://oauth/callback";
 

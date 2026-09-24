@@ -6,7 +6,7 @@
  * PKCE.
  *
  * Browser applications should normally use
- * `@evantra/identity-react`, which wraps
+ * `@evantra-identity/react`, which wraps
  * this logic with the redirect and storage
  * handling a browser needs.
  *

@@ -13,14 +13,14 @@ import {
   defaultIdentityWebBaseUrl,
   normalizeBaseUrl,
   type EvantraAuthorizeParams,
-} from "./oauth";
+} from "./oauth.js";
 
 /*
  * Re-export the framework-agnostic OAuth
  * core so web, React Native and Expo
  * clients can share one implementation.
  */
-export * from "./oauth";
+export * from "./oauth.js";
 
 export interface EvantraIdentityConfig {
   identityWebBaseUrl: string;

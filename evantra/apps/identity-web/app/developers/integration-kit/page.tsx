@@ -4,15 +4,15 @@ import { IdentityShell } from "../../../components/identity/IdentityShell";
 import { DeveloperNav } from "../../../components/developer/DeveloperNav";
 import { CodeBlock } from "../../../components/developer/CodeBlock";
 
-const installReact = "pnpm add @evantra/identity-react";
+const installReact = "pnpm add @evantra-identity/react";
 
-const installSdk = "pnpm add @evantra/sdk";
+const installSdk = "pnpm add @evantra-identity/sdk";
 
 const webFlow = `import {
   createEvantraAuthorizeUrl,
   createEvantraPkcePair,
   createEvantraState,
-} from "@evantra/identity-react";
+} from "@evantra-identity/react";
 
 // The authorize endpoint lives on the identity API host.
 const API = "https://evantra-headquarters.onrender.com";
@@ -44,7 +44,7 @@ import { useEffect } from "react";
 import {
   consumeEvantraWebCallback,
   exchangeEvantraCode,
-} from "@evantra/identity-react";
+} from "@evantra-identity/react";
 
 const REDIRECT_URI = "https://app.example.com/oauth/callback";
 
@@ -86,7 +86,7 @@ const reactButtons = `import {
   EvantraIdentityProvider,
   EvantraSignInButton,
   EvantraRegisterButton,
-} from "@evantra/identity-react";
+} from "@evantra-identity/react";
 
 // returnTo is a same-origin path on the identity app,
 // so the identity service can never be used as an
@@ -119,7 +119,7 @@ import {
   createEvantraState,
   consumeEvantraNativeCallback,
   exchangeEvantraCode,
-} from "@evantra/identity-react";
+} from "@evantra-identity/react";
 
 const API = "https://evantra-headquarters.onrender.com";
 const REDIRECT_URI = "com.example.app://oauth/callback";
@@ -160,7 +160,7 @@ const tokens = await exchangeEvantraCode(
   },
 );`;
 
-const serverFlow = `import { EvantraOAuthClient, parseEvantraCallback } from "@evantra/sdk";
+const serverFlow = `import { EvantraOAuthClient, parseEvantraCallback } from "@evantra-identity/sdk";
 
 const client = new EvantraOAuthClient({
   clientId: "evt_client_...",
