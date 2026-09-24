@@ -1,40 +1,47 @@
 import { Pool } from "pg";
 
-/**
- * Single PostgreSQL pool for every workspace
- * API route.
- *
- * Every workspace route (plan, burden,
- * promises, knowledge, calendar, finance) plus
- * the support / organization layer resolved
- * their own `pg.Pool` straight from
- * `process.env.DATABASE_URL`. When that
- * variable was missing the pool silently fell
- * back to a localhost connection, every query
- * failed, and each route answered with the
- * same opaque 500. That is what turned a
- * first plan load into a wall of 500s.
- *
- * Configuring the pool once, and failing with
- * a message that names the missing variable,
- * keeps the failure diagnosable instead of
- * surfacing as a generic "unable to load".
- */
 
-export const DATABASE_URL = process.env.DATABASE_URL?.trim();
+
+const CANDIDATE_VARIABLES = [
+  "DATABASE_URL",
+  "IDENTITY_DATABASE_URL",
+  "WORKSPACE_DATABASE_URL",
+  "POSTGRES_URL",
+] as const;
+
+function resolveDatabaseUrl(): {
+  url: string | undefined;
+  source: string | undefined;
+} {
+  for (const name of CANDIDATE_VARIABLES) {
+    const value = process.env[name]?.trim();
+
+    if (value) return { url: value, source: name };
+  }
+
+  return { url: undefined, source: undefined };
+}
+
+const resolved = resolveDatabaseUrl();
+
+export const DATABASE_URL = resolved.url;
+
+export const DATABASE_URL_SOURCE = resolved.source;
 
 if (!DATABASE_URL) {
   /*
-   * Thrown at module load (i.e. when the first
-   * route imports this file) so the server log
-   * names the exact problem. workspaceErrorResponse
-   * turns a DatabaseConfigError into a 503 with a
+   * Logged when the first route imports this
+   * file so the server log names the exact
+   * problem. workspaceErrorResponse turns a
+   * DatabaseConfigError into a 503 with a
    * configuration hint instead of a blank 500.
    */
   console.error(
-    "[workspace] DATABASE_URL is not set. " +
+    "[workspace] No database connection string is set. " +
     "Workspace persistence (plan, burden, promises, knowledge, calendar, finance, organizations) " +
-    "cannot connect. Set DATABASE_URL in identity-web's environment.",
+    "cannot connect. Set " +
+    CANDIDATE_VARIABLES.join(" or ") +
+    " in identity-web's environment (use the same database as the Evantra Identity service).",
   );
 }
 
@@ -51,7 +58,8 @@ export class DatabaseConfigError extends Error {
 function createPool(): Pool {
   if (!DATABASE_URL) {
     throw new DatabaseConfigError(
-      "DATABASE_URL is not configured for identity-web.",
+      "No database connection string is configured for identity-web. " +
+        "Set DATABASE_URL (or IDENTITY_DATABASE_URL) to the Evantra Identity database.",
     );
   }
 
@@ -65,16 +73,7 @@ function createPool(): Pool {
   });
 }
 
-/**
- * The shared pool.
- *
- * Created lazily and memoised: importing a
- * route must not open a socket at build time,
- * and a missing DATABASE_URL must surface as a
- * catchable DatabaseConfigError when the route
- * actually runs, not as a hard module-load
- * crash that breaks `next build`.
- */
+
 let cachedPool: Pool | undefined;
 
 export function getWorkspacePool(): Pool {
