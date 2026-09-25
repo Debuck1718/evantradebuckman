@@ -114,8 +114,19 @@ function VerifyPageContent() {
         let cancelled = false;
 
         async function verify() {
+            /*
+             * Re-check the token inside the
+             * closure. The guard above does not
+             * narrow `token` here because this
+             * async function can run after the
+             * effect body has completed.
+             */
+            if (!token?.trim()) {
+                return;
+            }
+
             try {
-                await verifyAccount(token);
+                await verifyAccount(token.trim());
 
                 if (cancelled) {
                     return;
