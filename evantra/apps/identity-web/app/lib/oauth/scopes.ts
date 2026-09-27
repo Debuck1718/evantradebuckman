@@ -21,6 +21,18 @@ export const OAUTH_SCOPES = {
 export type OAuthScope =
   keyof typeof OAUTH_SCOPES;
 
+/**
+ * The scope set Evantra Identity grants when an
+ * authorization request omits `scope`.
+ *
+ * Kept in step with the SDK's EVANTRA_DEFAULT_SCOPE and
+ * the identity service's registered default, so the
+ * consent screen discloses exactly what will be
+ * granted.
+ */
+export const EVANTRA_DEFAULT_SCOPE =
+  "openid profile email";
+
 interface DescribedScope {
   scope: string;
   definition: {

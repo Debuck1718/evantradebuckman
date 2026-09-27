@@ -131,6 +131,22 @@ export class AuthorizationRequest {
     // Scope
     // ======================================================
 
+    /*
+     * RFC6749 section 3.3 makes `scope` OPTIONAL.
+     *
+     * A request that omits it is asking for the
+     * default set, which the authorization endpoint
+     * resolves from the client's registered scopes.
+     * Reporting a missing scope as `invalid_scope`
+     * was wrong and actively misleading: it tells the
+     * integrator their scope string is bad when they
+     * never sent one. An EMPTY scope ("scope=") is
+     * still rejected, because that is a malformed
+     * request rather than an omitted one.
+     */
+    const scopeProvided =
+      params.scope !== undefined;
+
     const scopes =
       (params.scope ?? "")
         .trim()
@@ -138,6 +154,7 @@ export class AuthorizationRequest {
         .filter(Boolean);
 
     if (
+      scopeProvided &&
       scopes.length === 0
     ) {
 

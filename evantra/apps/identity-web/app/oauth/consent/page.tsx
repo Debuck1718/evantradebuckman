@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { IdentityShell } from "../../../components/identity/IdentityShell";
-import { describeScopes } from "../../lib/oauth/scopes";
+import { describeScopes, EVANTRA_DEFAULT_SCOPE } from "../../lib/oauth/scopes";
 
 interface OAuthConsentPageProps {
   searchParams?: Promise<{
@@ -53,9 +53,20 @@ export default async function OAuthConsentPage({
 }: OAuthConsentPageProps) {
   const resolvedSearchParams = (await searchParams) ?? {};
 
-  const scopes = describeScopes(
-    resolvedSearchParams.scope ?? "",
-  );
+  /*
+   * RFC6749 makes `scope` optional; when it is
+   * omitted the authorization endpoint grants the
+   * client's registered default set. The consent
+   * screen therefore shows that same default rather
+   * than claiming nothing is being requested — a
+   * consent prompt must never under-report what is
+   * about to be granted.
+   */
+  const requestedScope =
+    resolvedSearchParams.scope?.trim() ||
+    EVANTRA_DEFAULT_SCOPE;
+
+  const scopes = describeScopes(requestedScope);
 
   const clientName =
     readParam(resolvedSearchParams.client_id) ??
@@ -168,8 +179,7 @@ export default async function OAuthConsentPage({
               This request did not name any scopes, so the application will
               receive only your authenticated identity.
             </p>
-          )}
-        </div>
+          )}        </div>
 
         <div className="grid gap-4 sm:grid-cols-[1.1fr_0.9fr]">
           <a

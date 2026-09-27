@@ -95,10 +95,24 @@ export class AuthorizeWorkflow {
     // Scopes
     // ======================================================
 
+    /*
+     * A request with no `scope` (RFC6749 makes it
+     * optional) resolves to everything the client is
+     * registered for. A request that names scopes is
+     * checked against the same registered set, so this
+     * cannot widen access either way — it only decides
+     * whether an omission is treated as "the default
+     * set" or as an error.
+     */
     const requested =
       request.scopes();
 
-    if (requested.length === 0) {
+    const effective =
+      requested.length > 0
+        ? requested
+        : await this.clientScopes.values(client.id);
+
+    if (effective.length === 0) {
 
       throw new InvalidScopeError();
 
@@ -118,11 +132,11 @@ export class AuthorizeWorkflow {
           client.id,
 
         scopes:
-          requested,
+          effective,
 
       });
 
-    if (granted.length !== requested.length) {
+    if (granted.length !== effective.length) {
 
       throw new InvalidScopeError();
 
