@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import type { ReactNode } from "react";
 import { EvantraBrandIcon } from "../brand/EvantraBrandIcon";
+import { useIdentitySession } from "./IdentitySessionProvider";
 
 interface IdentityShellProps {
   children: ReactNode;
@@ -11,11 +12,30 @@ interface IdentityShellProps {
   description?: string;
 }
 
+/*
+ * The "Go to Workspace" affordance is only meaningful
+ * for a visitor who actually has a session.
+ *
+ * It used to render unconditionally, so the sign-in
+ * screen advertised an authenticated destination to an
+ * anonymous visitor. During the OAuth loop that was
+ * actively misleading: the page looked signed-in while
+ * behaving signed-out, which made the redirect cycle
+ * much harder to read.
+ */
 export function IdentityShell({
   children,
   title = "Evantra Identity",
   description = "Secure access to the Evantra digital ecosystem.",
 }: IdentityShellProps) {
+  const { authenticated, loading } = useIdentitySession();
+
+  /*
+   * Stay quiet until the session probe settles, so the
+   * link does not flicker in and out on first paint.
+   */
+  const showWorkspaceLink = !loading && authenticated;
+
   return (
     <main className="min-h-screen px-6 py-10">
       <div className="mx-auto flex min-h-[calc(100vh-5rem)] max-w-6xl items-center justify-center">
@@ -42,13 +62,15 @@ export function IdentityShell({
                   </div>
                 </Link>
 
-                <Link
-                  href="/workspace/hub"
-                  className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1.5 text-xs text-white/70 transition hover:border-[#e6b24a]/40 hover:bg-[#e6b24a]/10 hover:text-[#e6b24a]"
-                >
-                  <span>Workspace</span>
-                  <ArrowRight size={13} />
-                </Link>
+                {showWorkspaceLink && (
+                  <Link
+                    href="/workspace/hub"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1.5 text-xs text-white/70 transition hover:border-[#e6b24a]/40 hover:bg-[#e6b24a]/10 hover:text-[#e6b24a]"
+                  >
+                    <span>Workspace</span>
+                    <ArrowRight size={13} />
+                  </Link>
+                )}
               </div>
 
               <p className="mb-5 text-xs font-medium uppercase tracking-[0.28em] text-[#e6b24a]">
@@ -75,12 +97,14 @@ export function IdentityShell({
                 <p className="mt-0.5">Unified Auth &amp; Enterprise SSO</p>
               </div>
 
-              <Link
-                href="/workspace/hub"
-                className="text-[#e6b24a] transition hover:text-[#fae59a] hover:underline"
-              >
-                Go to Workspace &rarr;
-              </Link>
+              {showWorkspaceLink && (
+                <Link
+                  href="/workspace/hub"
+                  className="text-[#e6b24a] transition hover:text-[#fae59a] hover:underline"
+                >
+                  Go to Workspace &rarr;
+                </Link>
+              )}
             </div>
           </section>
 
@@ -107,12 +131,14 @@ export function IdentityShell({
                   </div>
                 </Link>
 
-                <Link
-                  href="/workspace/hub"
-                  className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs text-white/70 transition hover:border-[#e6b24a]/40 hover:text-[#e6b24a]"
-                >
-                  Workspace
-                </Link>
+                {showWorkspaceLink && (
+                  <Link
+                    href="/workspace/hub"
+                    className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs text-white/70 transition hover:border-[#e6b24a]/40 hover:text-[#e6b24a]"
+                  >
+                    Workspace
+                  </Link>
+                )}
               </div>
 
               <div className="mb-8">
@@ -135,12 +161,14 @@ export function IdentityShell({
 
               <div className="mt-8 flex flex-col items-center gap-2 text-center text-xs text-white/35">
                 <p>Protected by Evantra Identity</p>
-                <Link
-                  href="/workspace/hub"
-                  className="text-white/45 transition hover:text-[#e6b24a]"
-                >
-                  Switch to Workspace
-                </Link>
+                {showWorkspaceLink && (
+                  <Link
+                    href="/workspace/hub"
+                    className="text-white/45 transition hover:text-[#e6b24a]"
+                  >
+                    Switch to Workspace
+                  </Link>
+                )}
               </div>
             </div>
           </section>

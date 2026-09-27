@@ -1,8 +1,14 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 import { IdentityShell } from "../../../components/identity/IdentityShell";
-import { AuthorizeAutoContinue } from "../../../components/identity/AuthorizeAutoContinue";
-import { describeScopes } from "../../lib/oauth/scopes";
+
+const IDENTITY_API_URL = (
+  process.env.IDENTITY_API_URL ??
+  process.env.NEXT_PUBLIC_IDENTITY_API_URL ??
+  "https://evantra-headquarters.onrender.com"
+).replace(/\/$/, "");
 
 interface OAuthAuthorizePageProps {
   searchParams?: Promise<{
@@ -27,6 +33,40 @@ function buildQuery(params: Record<string, string | undefined>) {
   }
 
   return query.toString();
+}
+
+/**
+ * Reports whether the browser has a live Evantra session.
+ *
+ * This runs on the server so the decision to continue or
+ * to sign in is made from the real cookie before any HTML
+ * is sent. The previous client-side version raced the
+ * session probe: it redirected to /login while the probe
+ * was still resolving, which cancelled the in-flight
+ * navigation and produced the
+ * /oauth/authorize -> /login loop.
+ *
+ * A failure here is treated as "not signed in" rather than
+ * an error: the visitor is then sent to sign in, which is
+ * the correct recovery either way.
+ */
+async function hasActiveSession(): Promise<boolean> {
+  const sessionId = (await cookies()).get("evantra_session_id")?.value?.trim();
+
+  if (!sessionId) return false;
+
+  try {
+    const response = await fetch(`${IDENTITY_API_URL}/identity/session`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ sessionId }),
+      cache: "no-store",
+    });
+
+    return response.ok;
+  } catch {
+    return false;
+  }
 }
 
 /**
@@ -60,10 +100,6 @@ export default async function OAuthAuthorizePage({
 
   const query = buildQuery(resolvedSearchParams);
 
-  const scopes = describeScopes(
-    resolvedSearchParams.scope ?? "",
-  );
-
   const clientName =
     readParam(resolvedSearchParams.client_id) ??
     "External application";
@@ -78,8 +114,43 @@ export default async function OAuthAuthorizePage({
   const consentUrl = `/oauth/consent${query ? `?${query}` : ""}`;
 
   const cancelUrl =
-    resolvedSearchParams.redirect_uri ?? "/";
+    readParam(resolvedSearchParams.redirect_uri) ?? "/";
 
+  /*
+   * Resume the authorization request server-side.
+   *
+   * The identity API sends a signed-in user here to
+   * finish the request, and an anonymous one to
+   * /login?returnTo=/oauth/authorize?… . Because this
+   * page is the landing point for both, it has to make
+   * the decision itself.
+   *
+   * Doing it here — before any HTML is streamed — means
+   * the browser receives a real HTTP redirect. The
+   * earlier client-side version decided after hydration,
+   * raced the session probe, and cancelled its own
+   * navigation, which is what produced the
+   * /oauth/authorize -> /login loop.
+   *
+   * An anonymous visitor goes to sign-in with the whole
+   * request preserved, so nothing is lost. A signed-in
+   * one goes straight to consent, which is the screen
+   * that actually grants access and returns the code.
+   */
+  const signedIn = await hasActiveSession();
+
+  if (signedIn) {
+    redirect(consentUrl);
+  }
+
+  redirect(signInUrl);
+
+  /*
+   * redirect() throws, so this is only reached if the
+   * framework ever stops doing that. It keeps the page
+   * honest instead of rendering a blank screen: the
+   * visitor can still move forward manually.
+   */
   return (
     <IdentityShell
       title="Authorize application"
@@ -87,41 +158,12 @@ export default async function OAuthAuthorizePage({
     >
       <div className="space-y-6">
         <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-6">
-          <div className="flex items-center justify-between gap-4">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#e6b24a]">
-                OAuth request
-              </p>
-              <h3 className="mt-4 text-2xl font-semibold text-white">
-                Authorize {clientName}
-              </h3>
-            </div>
-          </div>
-
-          <p className="mt-4 text-sm leading-6 text-white/60">
-            This application is requesting permission to sign you in with your Evantra
-            identity and access the requested account data.
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#e6b24a]">
+            OAuth request
           </p>
-
-          <div className="mt-6 grid gap-3 sm:grid-cols-2">
-            <div className="rounded-3xl border border-white/10 bg-white/[0.02] p-4">
-              <p className="text-xs uppercase tracking-[0.2em] text-white/40">
-                Client
-              </p>
-              <p className="mt-2 text-sm text-white/80">
-                {clientName}
-              </p>
-            </div>
-
-            <div className="rounded-3xl border border-white/10 bg-white/[0.02] p-4">
-              <p className="text-xs uppercase tracking-[0.2em] text-white/40">
-                Response type
-              </p>
-              <p className="mt-2 text-sm text-white/80">
-                {resolvedSearchParams.response_type ?? "code"}
-              </p>
-            </div>
-          </div>
+          <h3 className="mt-4 text-2xl font-semibold text-white">
+            Authorize {clientName}
+          </h3>
 
           <div className="mt-6 rounded-3xl border border-white/10 bg-white/[0.02] p-4">
             <p className="text-xs uppercase tracking-[0.2em] text-white/40">
@@ -131,40 +173,6 @@ export default async function OAuthAuthorizePage({
               {redirectUri ?? "Not provided"}
             </p>
           </div>
-        </div>
-
-        <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-6">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/40">
-            Requested scopes
-          </p>
-
-          {scopes.length > 0 ? (
-            <div className="mt-5 space-y-4">
-              {scopes.map((item) => (
-                <div
-                  key={item.scope}
-                  className="rounded-3xl border border-white/10 bg-white/[0.02] p-4"
-                >
-                  <div className="flex flex-wrap items-center gap-2">
-                    <p className="text-sm font-semibold text-white">
-                      {item.definition.title}
-                    </p>
-                    <span className="rounded-lg border border-white/10 bg-white/[0.03] px-2 py-0.5 font-mono text-[11px] text-[#fae59a]">
-                      {item.scope}
-                    </span>
-                  </div>
-                  <p className="mt-2 text-sm leading-6 text-white/60">
-                    {item.definition.description}
-                  </p>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="mt-5 text-sm leading-6 text-white/50">
-              No specific scopes were requested. This application will only
-              receive your authenticated identity.
-            </p>
-          )}
         </div>
 
         <div className="grid gap-4 sm:grid-cols-[1.1fr_0.9fr]">
@@ -182,11 +190,6 @@ export default async function OAuthAuthorizePage({
             Review consent
           </Link>
         </div>
-
-        <AuthorizeAutoContinue
-          consentUrl={consentUrl}
-          signInUrl={signInUrl}
-        />
 
         <div className="text-sm text-white/40">
           <p>

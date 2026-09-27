@@ -13,7 +13,6 @@ import {
 	CheckCircle2,
 	Clock,
 	Loader2,
-	ShieldCheck,
 } from "lucide-react";
 
 import {
