@@ -33,13 +33,23 @@ export default function CalendarPage() {
       cache: "no-store",
       headers: {},
     });
-    if (!response.ok) throw new Error("Unable to load calendar.");
+    if (!response.ok) {
+      const payload = (await response
+        .json()
+        .catch(() => ({}))) as { error?: string };
+
+      throw new Error(payload.error ?? "Unable to load calendar.");
+    }
     const payload = (await response.json()) as { events: CalendarEvent[] };
     setEvents(payload.events);
   }
 
   useEffect(() => {
-    void loadEvents().catch(() => setError("Unable to load calendar."));
+    void loadEvents().catch(err =>
+      setError(
+        err instanceof Error ? err.message : "Unable to load calendar.",
+      ),
+    );
   }, [session]);
 
   async function submit(event: FormEvent<HTMLFormElement>): Promise<void> {

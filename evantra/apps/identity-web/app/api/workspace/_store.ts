@@ -45,17 +45,26 @@ export function workspaceErrorResponse(
   if (error instanceof DatabaseConfigError) {
     console.error("[workspace]", error.message);
 
+    /*
+     * This 503 means the running identity-web process
+     * could not resolve a usable postgres URL. It is
+     * NOT about the identity API service's environment:
+     * the workspace routes execute inside this app, so
+     * the variable has to be attached to THIS Render
+     * service. The message names the variable and the
+     * service so the fix is unambiguous.
+     */
     return NextResponse.json(
       {
         error:
-          "Workspace storage is not configured. " +
-          "Set DATABASE_URL (or IDENTITY_DATABASE_URL) to the Evantra Identity " +
-          "database in identity-web's environment and redeploy.",
+          "Workspace storage is not configured. Set DATABASE_URL (or " +
+          "IDENTITY_DATABASE_URL) to the Evantra Identity database on the " +
+          "identity-web service itself (the workspace routes run in this app, " +
+          "not in the identity API), then redeploy.",
       },
       { status: 503 },
     );
   }
-
 
   const message =
     error instanceof Error ? error.message : fallbackMessage;

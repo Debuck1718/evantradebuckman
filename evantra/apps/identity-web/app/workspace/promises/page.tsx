@@ -84,7 +84,13 @@ export default function WorkspacePromisesPage() {
         );
 
         if (!response.ok) {
-          throw new Error("Unable to load commitments.");
+          const payload = (await response
+            .json()
+            .catch(() => ({}))) as { error?: string };
+
+          throw new Error(
+            payload.error ?? "Unable to load commitments.",
+          );
         }
 
         const payload = (await response.json()) as { items: WorkspacePromise[] };

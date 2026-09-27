@@ -24,13 +24,25 @@ export default function FinancePage() {
   async function load(): Promise<void> {
     if (!session) return;
     const response = await fetch("/api/workspace/finance", { cache: "no-store" });
-    if (!response.ok) throw new Error("Unable to load finance.");
+    if (!response.ok) {
+      const payload = (await response
+        .json()
+        .catch(() => ({}))) as { error?: string };
+
+      throw new Error(payload.error ?? "Unable to load finance.");
+    }
     const payload = (await response.json()) as { entries: Entry[]; overview: Overview };
     setEntries(payload.entries);
     setOverview(payload.overview);
   }
 
-  useEffect(() => { void load().catch(() => setError("Unable to load finance.")); }, [session]);
+  useEffect(() => {
+    void load().catch(err =>
+      setError(
+        err instanceof Error ? err.message : "Unable to load finance.",
+      ),
+    );
+  }, [session]);
 
   async function submit(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();

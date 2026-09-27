@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import {
-  ArrowRight,
   Code2,
   KeyRound,
   Plus,
@@ -10,26 +9,24 @@ import {
 } from "lucide-react";
 import { GlassCard } from "../../../components/ui/GlassCard";
 
-const applications = [
-  {
-    name: "StoreForge",
-    slug: "storeforge",
-    description: "Evantra commerce and multi-merchant storefront infrastructure.",
-    status: "Verified Ecosystem App",
-    scopes: ["openid", "profile", "email"],
-    type: "First-Party",
-    badgeColor: "border-emerald-400/20 bg-emerald-400/10 text-emerald-300",
-  },
-  {
-    name: "Evantra Headquarters",
-    slug: "evantra-hq",
-    description: "Architectural portal, telemetry console, and global workspace network.",
-    status: "Verified Ecosystem App",
-    scopes: ["openid", "profile", "email", "workspace:read"],
-    type: "First-Party",
-    badgeColor: "border-[#e6b24a]/25 bg-[#e6b24a]/10 text-[#fae59a]",
-  },
-];
+/*
+ * This page previously rendered two hardcoded
+ * applications ("StoreForge", "Evantra Headquarters")
+ * under the heading "Registered OAuth Clients" with a
+ * "2 Active" counter.
+ *
+ * They were not real. The identity service exposes no
+ * list-clients endpoint, so the page could not show the
+ * signed-in developer's own clients, and a developer who
+ * had just registered one saw somebody else's sample
+ * data instead of their own application. That reads as
+ * data loss and destroys confidence in the product.
+ *
+ * Until a list endpoint exists, the honest thing is to
+ * say what is actually true: registration is open, and
+ * a new client waits for admin approval before it can
+ * complete an OAuth flow.
+ */
 
 export default function ApplicationsPage() {
   return (
@@ -64,78 +61,55 @@ export default function ApplicationsPage() {
           </Link>
         </div>
 
-        {/* Connected Applications List */}
+        {/* Registered clients */}
         <section className="mt-12">
-          <div className="mb-5 flex items-center justify-between">
-            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.24em] text-white/45">
-              <ShieldCheck size={16} className="text-[#e6b24a]" />
-              Registered OAuth Clients
-            </div>
-            <span className="text-xs text-white/40">{applications.length} Active</span>
+          <div className="mb-5 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.24em] text-white/45">
+            <ShieldCheck size={16} className="text-[#e6b24a]" />
+            Registered OAuth Clients
           </div>
 
-          <div className="space-y-4">
-            {applications.map((application) => (
-              <GlassCard
-                key={application.name}
-                variant="default"
-                className="p-6 sm:p-7"
-              >
-                <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3.5">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-gradient-to-br from-[#e6b24a]/20 to-white/[0.02] text-lg font-bold text-[#fae59a]">
-                        {application.name.charAt(0)}
-                      </div>
+          <GlassCard variant="default" className="p-7 sm:p-9">
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+              <div className="max-w-2xl space-y-3">
+                <h2 className="text-lg font-semibold text-white">
+                  Client listing is not available in this view yet
+                </h2>
 
-                      <div>
-                        <div className="flex items-center gap-2.5">
-                          <h2 className="text-lg font-semibold text-white">
-                            {application.name}
-                          </h2>
-                          <span
-                            className={`rounded-full border px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${application.badgeColor}`}
-                          >
-                            {application.type}
-                          </span>
-                        </div>
+                <p className="text-sm leading-relaxed text-white/60">
+                  Applications you register are recorded against your account and
+                  are awaiting approval. This page cannot display them yet because
+                  the identity service does not expose a list-clients endpoint, so
+                  we show nothing rather than a placeholder that might be mistaken
+                  for your own data.
+                </p>
 
-                        <p className="text-xs text-white/40">
-                          client_id: <span className="font-mono text-white/60">client_{application.slug}</span>
-                        </p>
-                      </div>
-                    </div>
+                <p className="text-sm leading-relaxed text-white/60">
+                  Keep the <span className="font-mono text-[#fae59a]">client_id</span>{" "}
+                  and <span className="font-mono text-[#fae59a]">client_secret</span>{" "}
+                  you received at registration. The secret is shown only once.
+                </p>
 
-                    <p className="max-w-2xl text-xs leading-relaxed text-white/60 sm:text-sm">
-                      {application.description}
-                    </p>
-
-                    <div className="flex flex-wrap items-center gap-2 pt-1">
-                      <span className="text-[11px] text-white/40">Approved Scopes:</span>
-                      {application.scopes.map((scope) => (
-                        <span
-                          key={scope}
-                          className="rounded-lg border border-white/10 bg-white/[0.03] px-2 py-0.5 font-mono text-[11px] text-[#fae59a]"
-                        >
-                          {scope}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-3 shrink-0">
-                    <Link
-                      href={`/workspace/applications/new`}
-                      className="inline-flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-xs font-semibold text-white transition hover:border-[#e6b24a]/40 hover:text-[#fae59a]"
-                    >
-                      Configure
-                      <ArrowRight size={14} />
-                    </Link>
-                  </div>
+                <div className="flex items-start gap-3 rounded-2xl border border-[#e6b24a]/25 bg-[#e6b24a]/10 p-4">
+                  <ShieldCheck size={17} className="mt-0.5 shrink-0 text-[#fae59a]" />
+                  <p className="text-xs leading-relaxed text-white/70">
+                    A newly registered client starts in{" "}
+                    <span className="font-semibold text-[#fae59a]">PENDING_APPROVAL</span>{" "}
+                    and cannot complete an OAuth flow until an Evantra administrator
+                    approves it. Registering the same application again does not
+                    speed this up.
+                  </p>
                 </div>
-              </GlassCard>
-            ))}
-          </div>
+              </div>
+
+              <Link
+                href="/workspace/applications/new"
+                className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-[#e6b24a] px-5 py-3 text-sm font-semibold text-[#06131f] transition hover:bg-[#f0c261]"
+              >
+                <Plus size={16} />
+                Register Application
+              </Link>
+            </div>
+          </GlassCard>
         </section>
 
         {/* Developer Integration Quickstart */}

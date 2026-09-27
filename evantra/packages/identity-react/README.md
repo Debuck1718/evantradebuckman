@@ -91,7 +91,7 @@ sessionStorage.setItem("evantra_oauth_state", state);
 
 window.location.assign(
   createEvantraAuthorizeUrl(
-    "https://evantra-headquarters.onrender.com",
+    defaultIdentityApiBaseUrl(),
     {
       clientId: "evt_client_…",
       redirectUri: "https://app.example.com/oauth/callback",
@@ -114,6 +114,15 @@ const tokens = await exchangeEvantraCode(
 );
 ```
 
+> **Why the authorize URL points at the identity API host, not the web
+> app.** `/oauth/authorize` is the API's authorization endpoint. When the
+> visitor has no session the API redirects them to the identity web app to
+> sign in (and register, and verify their email), then completes the
+> request and returns the code to your `redirectUri`. Pointing at the web
+> app directly would skip the endpoint that issues the code. Use
+> `defaultIdentityApiBaseUrl()` rather than hardcoding the host so a future
+> endpoint change needs no edit.
+
 `consumeEvantraWebCallback` also strips the code from the address bar so
 it is not bookmarked or shared.
 
@@ -128,6 +137,7 @@ import {
   createEvantraAuthorizeUrl,
   createEvantraPkcePair,
   createEvantraState,
+  defaultIdentityApiBaseUrl,
 } from "@evantra-identity/react";
 
 const REDIRECT_URI = "com.example.app://oauth/callback";
@@ -140,7 +150,7 @@ await SecureStore.setItemAsync("evantra_oauth_state", state);
 
 const result = await WebBrowser.openAuthSessionAsync(
   createEvantraAuthorizeUrl(
-    "https://evantra-headquarters.onrender.com",
+    defaultIdentityApiBaseUrl(),
     {
       clientId: "evt_client_…",
       redirectUri: REDIRECT_URI,
@@ -194,12 +204,15 @@ Registered redirect URI shapes:
 | `createEvantraAuthorizeUrl()` | Builds the authorize URL |
 | `createEvantraLoginUrl()` | Hosted sign-in URL |
 | `createEvantraRegisterUrl()` | Hosted registration URL |
+| `defaultIdentityApiBaseUrl()` | The identity API origin (authorize/token/userinfo) |
+| `defaultIdentityWebBaseUrl()` | The identity web origin (login/register screens) |
 | `consumeEvantraWebCallback()` | Reads the code from the browser URL |
 | `consumeEvantraNativeCallback()` | Reads the code from a deep link |
 | `exchangeEvantraCode()` | Code → tokens |
 | `refreshEvantraToken()` | Refresh token → tokens |
 | `revokeEvantraToken()` | Revokes a token |
 | `fetchEvantraUserInfo()` | Loads the user profile |
+| `EVANTRA_DEFAULT_SCOPE` | `"openid profile email"` |
 | `EvantraOAuthError` | Typed OAuth failure |
 
 ---
@@ -209,10 +222,17 @@ Registered redirect URI shapes:
 - Always use PKCE (`S256`).
 - Never embed a `client_secret` in a browser or mobile app. Those are
   **public clients**.
-- Always send `state` and verify it on return.
+- Always send `state` and verify it on return. `consumeEvantraWebCallback(state)`
+  and `consumeEvantraNativeCallback(url, state)` throw `invalid_state` when
+  the value does not match.
 - Store the PKCE verifier in `sessionStorage` (web) or
   `SecureStore`/keystore (native) — never `localStorage`.
 - Exchange the code on your backend when your client is confidential.
 - Check `email_verified` before trusting an address.
+- **Verify the `id_token` before trusting its claims.** This package does
+  not verify ID tokens for you: signature checking needs the JWKS and is
+  deliberately left to the caller. Use a dedicated library (`jose`,
+  `openid-client`) against the identity service's JWKS, and validate `iss`,
+  `aud`, `exp` and `nonce`. Treat the token as untrusted until then.
 
 See [Security checklist](../../docs/identity-client-integration.md#10-security-checklist).

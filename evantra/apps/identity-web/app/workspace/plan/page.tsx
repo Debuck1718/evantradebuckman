@@ -40,7 +40,21 @@ export default function WorkspacePlanPage() {
         );
 
         if (!response.ok) {
-          throw new Error("Unable to load life-work plan.");
+          /*
+           * Surface the server's own message (for
+           * example the 503 "Workspace storage is
+           * not configured") instead of a generic
+           * one. The generic text hid the actual
+           * cause and made the page look like it
+           * silently failed.
+           */
+          const payload = (await response
+            .json()
+            .catch(() => ({}))) as { error?: string };
+
+          throw new Error(
+            payload.error ?? "Unable to load life-work plan.",
+          );
         }
 
         const payload = (await response.json()) as { plan: LifeWorkPlan };
@@ -116,10 +130,14 @@ export default function WorkspacePlanPage() {
               </p>
 
               {error && (
-                <p className="mt-4 text-xs text-white/35">
-                  We could not reach your workspace data just now. You can keep using the
-                  rest of the Workspace and try again.
-                </p>
+                <div className="mt-5 rounded-2xl border border-red-400/20 bg-red-400/[0.06] px-4 py-3 text-left">
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-red-300/80">
+                    Workspace data unavailable
+                  </p>
+                  <p className="mt-1.5 text-xs leading-relaxed text-white/60">
+                    {error}
+                  </p>
+                </div>
               )}
 
               <div className="mt-7 flex-col gap-3 sm:flex-row sm:justify-center">

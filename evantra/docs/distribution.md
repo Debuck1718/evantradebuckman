@@ -18,9 +18,17 @@ evantra-identity-sdk-0.1.0.tgz
 evantra-identity-react-0.1.0.tgz
 ```
 
-They contain the compiled `dist/` plus `README.md` and `LICENSE`. No build
-step and no install scripts are required, so they work in every package
+They contain the compiled `dist/` plus `README.md`, `LICENSE` and
+`package.json`. No build step is required, so they work in every package
 manager and every CI.
+
+> **One caveat, confirmed by testing.** Because both packages declare a
+> `prepare` script, `npm install <tarball>` may print
+> `npm warn allow-scripts ... (prepare: npm run build)`. The warning is
+> harmless for a tarball — the `dist/` is already inside it — but it does
+> mean the install is not entirely script-free. pnpm and Yarn behave the
+> same way. If your CI fails on script warnings, install with
+> `npm install --ignore-scripts <tarball>`.
 
 ### Install from a local path
 
@@ -88,6 +96,12 @@ way to ship before a registry release.
 3. Share the release link. Consumers follow Option 1.
 
 ### Suggested release notes
+
+The full release notes for this version live in
+[`release-notes-identity-v0.1.0.md`](./release-notes-identity-v0.1.0.md).
+Paste that file into the GitHub Release body.
+
+A short version, if you prefer:
 
 ```markdown
 ## Evantra Identity SDK v0.1.0

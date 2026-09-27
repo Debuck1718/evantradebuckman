@@ -116,7 +116,13 @@ export default function WorkspaceBurdenPage() {
         );
 
         if (!response.ok) {
-          throw new Error("Unable to load burden data.");
+          const payload = (await response
+            .json()
+            .catch(() => ({}))) as { error?: string };
+
+          throw new Error(
+            payload.error ?? "Unable to load burden data.",
+          );
         }
 
         const payload = (await response.json()) as { snapshot: BurdenSnapshot };

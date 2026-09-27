@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { IdentityShell } from "../../../components/identity/IdentityShell";
+import { AuthorizeAutoContinue } from "../../../components/identity/AuthorizeAutoContinue";
 import { describeScopes } from "../../lib/oauth/scopes";
 
 interface OAuthAuthorizePageProps {
@@ -11,6 +12,8 @@ interface OAuthAuthorizePageProps {
     scope?: string;
     state?: string;
     nonce?: string;
+    code_challenge?: string;
+    code_challenge_method?: string;
   }>;
 }
 
@@ -26,6 +29,30 @@ function buildQuery(params: Record<string, string | undefined>) {
   return query.toString();
 }
 
+/**
+ * Reads a query value that may arrive
+ * percent-encoded.
+ *
+ * Next.js does not always decode search
+ * params, so a redirect_uri such as
+ * https%3A%2F%2Fapp.example.com%2Fcb would
+ * otherwise render literally and read as
+ * though no URI were present.
+ */
+function readParam(
+  value: string | undefined,
+): string | undefined {
+  if (!value) return undefined;
+
+  try {
+    const decoded = decodeURIComponent(value);
+
+    return decoded || undefined;
+  } catch {
+    return value;
+  }
+}
+
 export default async function OAuthAuthorizePage({
   searchParams,
 }: OAuthAuthorizePageProps) {
@@ -38,9 +65,11 @@ export default async function OAuthAuthorizePage({
   );
 
   const clientName =
-    resolvedSearchParams.client_id
-      ? decodeURIComponent(resolvedSearchParams.client_id)
-      : "External application";
+    readParam(resolvedSearchParams.client_id) ??
+    "External application";
+
+  const redirectUri =
+    readParam(resolvedSearchParams.redirect_uri);
 
   const signInUrl = `/login?returnTo=${encodeURIComponent(
     `/oauth/authorize${query ? `?${query}` : ""}`,
@@ -99,7 +128,7 @@ export default async function OAuthAuthorizePage({
               Redirect URI
             </p>
             <p className="mt-2 break-all text-sm text-white/70">
-              {resolvedSearchParams.redirect_uri ?? "Not provided"}
+              {redirectUri ?? "Not provided"}
             </p>
           </div>
         </div>
@@ -116,9 +145,14 @@ export default async function OAuthAuthorizePage({
                   key={item.scope}
                   className="rounded-3xl border border-white/10 bg-white/[0.02] p-4"
                 >
-                  <p className="text-sm font-semibold text-white">
-                    {item.definition.title}
-                  </p>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <p className="text-sm font-semibold text-white">
+                      {item.definition.title}
+                    </p>
+                    <span className="rounded-lg border border-white/10 bg-white/[0.03] px-2 py-0.5 font-mono text-[11px] text-[#fae59a]">
+                      {item.scope}
+                    </span>
+                  </div>
                   <p className="mt-2 text-sm leading-6 text-white/60">
                     {item.definition.description}
                   </p>
@@ -148,6 +182,11 @@ export default async function OAuthAuthorizePage({
             Review consent
           </Link>
         </div>
+
+        <AuthorizeAutoContinue
+          consentUrl={consentUrl}
+          signInUrl={signInUrl}
+        />
 
         <div className="text-sm text-white/40">
           <p>

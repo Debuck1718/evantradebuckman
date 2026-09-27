@@ -38,13 +38,25 @@ export default function KnowledgePage() {
       headers: {},
     });
 
-    if (!response.ok) throw new Error("Unable to load knowledge.");
+    if (!response.ok) {
+      const payload = (await response
+        .json()
+        .catch(() => ({}))) as { error?: string };
+
+      throw new Error(payload.error ?? "Unable to load knowledge.");
+    }
     const payload = (await response.json()) as { items: KnowledgeItem[] };
     setItems(payload.items);
   }
 
   useEffect(() => {
-    if (session) void loadItems("").catch(() => setError("Unable to load knowledge."));
+    if (session) {
+      void loadItems("").catch(err =>
+        setError(
+          err instanceof Error ? err.message : "Unable to load knowledge.",
+        ),
+      );
+    }
   }, [session]);
 
   async function submit(event: FormEvent<HTMLFormElement>): Promise<void> {

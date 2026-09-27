@@ -11,6 +11,7 @@ import Link from "next/link";
 import {
 	ArrowLeft,
 	CheckCircle2,
+	Clock,
 	Loader2,
 	ShieldCheck,
 } from "lucide-react";
@@ -52,6 +53,7 @@ export default function RegisterApplicationPage() {
 		clientId: string;
 		clientSecret: string;
 		redirectUri: string;
+		status: string;
 	} | null>(null);
 
 	const canSubmit = useMemo(
@@ -117,6 +119,7 @@ export default function RegisterApplicationPage() {
 				clientSecret: created.clientSecret,
 				redirectUri:
 					createdRedirect.redirectUri.redirectUri,
+				status: created.client.status,
 			});
 		} catch (err) {
 			setError(
@@ -330,8 +333,42 @@ export default function RegisterApplicationPage() {
 						<div className="flex items-center gap-2 text-emerald-300">
 							<CheckCircle2 size={18} />
 							<p className="text-sm font-semibold">
-								OAuth client created
+								Application submitted
 							</p>
+						</div>
+
+						{/*
+						 * New clients are created as
+						 * PENDING_APPROVAL and cannot run an
+						 * OAuth flow until an admin approves
+						 * them. Without this notice the form
+						 * simply sat there after submit, so
+						 * people re-submitted thinking the
+						 * request had failed.
+						 */}
+						<div className="mt-5 flex items-start gap-3 rounded-2xl border border-[#e6b24a]/25 bg-[#e6b24a]/10 p-4">
+							<Clock
+								size={17}
+								className="mt-0.5 shrink-0 text-[#fae59a]"
+							/>
+							<div className="text-sm leading-relaxed text-white/75">
+								<p className="font-semibold text-[#fae59a]">
+									{result.status === "PENDING_APPROVAL"
+										? "Pending admin approval"
+										: `Status: ${result.status}`}
+								</p>
+								<p className="mt-1.5 text-white/65">
+									Your application has been registered and is now
+									queued for review. An Evantra administrator must
+									approve it before it can complete an OAuth flow.
+									There is nothing else to submit — you do not need
+									to register it again.
+								</p>
+								<p className="mt-1.5 text-white/50">
+									You will be able to use these credentials once the
+									client is approved.
+								</p>
+							</div>
 						</div>
 
 						<div className="mt-5 space-y-4 text-sm">
@@ -366,6 +403,14 @@ export default function RegisterApplicationPage() {
 						<p className="mt-4 text-xs text-white/45">
 							Store the client secret now. It is only returned at creation time.
 						</p>
+
+						<Link
+							href="/workspace/applications"
+							className="mt-5 inline-flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-xs font-semibold text-white transition hover:border-[#e6b24a]/40 hover:text-[#fae59a]"
+						>
+							<ArrowLeft size={14} />
+							Back to applications
+						</Link>
 					</section>
 				)}
 			</div>
