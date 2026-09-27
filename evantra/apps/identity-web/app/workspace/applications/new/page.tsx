@@ -42,6 +42,12 @@ export default function RegisterApplicationPage() {
 	const [description, setDescription] =
 		useState("");
 
+
+	const [clientType, setClientType] =
+		useState<"public" | "confidential">(
+			"confidential",
+		);
+
 	const [loading, setLoading] =
 		useState(false);
 
@@ -50,7 +56,7 @@ export default function RegisterApplicationPage() {
 
 	const [result, setResult] = useState<{
 		clientId: string;
-		clientSecret: string;
+		clientSecret: string | null;
 		redirectUri: string;
 		status: string;
 	} | null>(null);
@@ -104,6 +110,7 @@ export default function RegisterApplicationPage() {
 				slug,
 				homepageUrl,
 				description,
+				clientType,
 			});
 
 			const createdRedirect =
@@ -263,6 +270,45 @@ export default function RegisterApplicationPage() {
 
 						<div>
 							<label
+								htmlFor="clientType"
+								className="mb-2 block text-sm text-white/75"
+							>
+								Application type
+							</label>
+
+							<select
+								id="clientType"
+								value={clientType}
+								onChange={(event) =>
+									setClientType(
+										event.target
+											.value as
+												| "public"
+												| "confidential",
+									)
+								}
+								disabled={loading}
+								className="w-full appearance-none rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-white outline-none transition focus:border-[#e6b24a]/60 focus:ring-2 focus:ring-[#e6b24a]/10 disabled:opacity-50"
+							>
+								<option value="confidential">
+									Confidential — runs on a
+									server (backend, CLI, worker)
+								</option>
+								<option value="public">
+									Public — runs in a browser
+									or mobile app (no secret)
+								</option>
+							</select>
+
+							<p className="mt-2 text-xs leading-relaxed text-white/45">
+								{clientType === "public"
+									? "No client secret is issued. Sign-in is proven with PKCE, which is the only correct arrangement for an app that ships to users."
+									: "A client secret is issued once and shown only here. Keep it on your server."}
+							</p>
+						</div>
+
+						<div>
+							<label
 								htmlFor="redirectUri"
 								className="mb-2 block text-sm text-white/75"
 							>
@@ -336,15 +382,7 @@ export default function RegisterApplicationPage() {
 							</p>
 						</div>
 
-						{/*
-						 * New clients are created as
-						 * PENDING_APPROVAL and cannot run an
-						 * OAuth flow until an admin approves
-						 * them. Without this notice the form
-						 * simply sat there after submit, so
-						 * people re-submitted thinking the
-						 * request had failed.
-						 */}
+						
 						<div className="mt-5 flex items-start gap-3 rounded-2xl border border-[#e6b24a]/25 bg-[#e6b24a]/10 p-4">
 							<Clock
 								size={17}
@@ -380,14 +418,31 @@ export default function RegisterApplicationPage() {
 								</p>
 							</div>
 
-							<div>
-								<p className="text-xs uppercase tracking-[0.16em] text-white/35">
-									Client Secret
+							
+							{result.clientSecret ? (
+								<>
+									<div>
+										<p className="text-xs uppercase tracking-[0.16em] text-white/35">
+											Client Secret
+										</p>
+										<p className="mt-1 break-all text-white/85">
+											{result.clientSecret}
+										</p>
+									</div>
+
+									<p className="text-xs text-white/45">
+										Store the client secret now. It is only
+										returned at creation time.
+									</p>
+								</>
+							) : (
+								<p className="text-xs text-white/45">
+									This is a public client, so no secret was
+									issued. That is correct: a secret shipped
+									inside an app is extractable and proves
+									nothing. Sign-in is proven with PKCE instead.
 								</p>
-								<p className="mt-1 break-all text-white/85">
-									{result.clientSecret}
-								</p>
-							</div>
+							)}
 
 							<div>
 								<p className="text-xs uppercase tracking-[0.16em] text-white/35">
@@ -398,10 +453,6 @@ export default function RegisterApplicationPage() {
 								</p>
 							</div>
 						</div>
-
-						<p className="mt-4 text-xs text-white/45">
-							Store the client secret now. It is only returned at creation time.
-						</p>
 
 						<Link
 							href="/workspace/applications"

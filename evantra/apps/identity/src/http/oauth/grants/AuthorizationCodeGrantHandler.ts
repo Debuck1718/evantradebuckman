@@ -118,8 +118,18 @@ export class AuthorizationCodeGrantHandler
       clientId:
         request.client_id,
 
+      /*
+       * Passed through AS-IS, including undefined.
+       *
+       * This used to be `request.client_secret ?? ""`,
+       * which erased the one distinction that matters:
+       * a public client sends no secret, and collapsing
+       * that to an empty string made it
+       * indistinguishable from a confidential client
+       * that failed to send one.
+       */
       clientSecret:
-        request.client_secret ?? "",
+        request.client_secret,
 
       code:
         request.code,

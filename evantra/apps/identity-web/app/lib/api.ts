@@ -215,6 +215,9 @@ export interface RegisterOAuthClientInput {
   homepageUrl?: string;
   description?: string;
   firstParty?: boolean;
+
+  
+  clientType?: "public" | "confidential";
 }
 
 export interface RegisterOAuthClientResponse {
@@ -227,10 +230,16 @@ export interface RegisterOAuthClientResponse {
     homepageUrl?: string;
     description?: string;
     firstParty: boolean;
+    clientType: "public" | "confidential";
+    scopes: string[];
     status: string;
     createdAt: string;
   };
-  clientSecret: string;
+
+  /**
+   * Null for public clients — they have no secret.
+   */
+  clientSecret: string | null;
 }
 
 export interface RegisterOAuthRedirectUriInput {
@@ -274,6 +283,9 @@ export async function registerOAuthClient(
           : {}),
         ...(input.firstParty !== undefined
           ? { firstParty: input.firstParty }
+          : {}),
+        ...(input.clientType !== undefined
+          ? { clientType: input.clientType }
           : {}),
       }),
 
@@ -412,24 +424,7 @@ export async function validateSession(
     },
   );
 
-  /*
-   * 400 / 401 simply mean the visitor
-   * has no active browser session yet.
-   *
-   * 404 is tolerated as well because
-   * older Evantra Identity builds
-   * answered "session not found" with a
-   * 404, and a stale production cookie
-   * must never wedge the UI. 403 covers
-   * a revoked or terminated session.
-   *
-   * This function runs from the root
-   * session provider on every page, so
-   * throwing here is expected behaviour
-   * and must never surface as a console
-   * error. Callers treat null as
-   * "not authenticated".
-   */
+
   if (
     response.status === 400 ||
     response.status === 401 ||

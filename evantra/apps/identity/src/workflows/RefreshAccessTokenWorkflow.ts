@@ -33,7 +33,12 @@ export class RefreshAccessTokenWorkflow {
 
     clientId: string;
 
-    clientSecret: string;
+    /*
+     * Optional: public clients hold no secret.
+     * `| undefined` is explicit because this package
+     * sets exactOptionalPropertyTypes.
+     */
+    clientSecret?: string | undefined;
 
     refreshToken: string;
 

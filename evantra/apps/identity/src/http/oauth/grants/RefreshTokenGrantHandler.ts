@@ -97,8 +97,13 @@ export class RefreshTokenGrantHandler
       clientId:
         request.client_id,
 
+      /*
+       * Passed through as-is, including undefined, so
+       * a public client stays distinguishable from a
+       * confidential client that omitted its secret.
+       */
       clientSecret:
-        request.client_secret ?? "",
+        request.client_secret,
 
       refreshToken:
         request.refresh_token,

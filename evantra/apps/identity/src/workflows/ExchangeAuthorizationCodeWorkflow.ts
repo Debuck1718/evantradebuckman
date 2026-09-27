@@ -46,7 +46,13 @@ export class ExchangeAuthorizationCodeWorkflow {
    */
   async execute(params: {
     clientId: string;
-    clientSecret: string;
+
+    /*
+     * Optional: public clients hold no secret.
+     * `| undefined` is explicit because this package
+     * sets exactOptionalPropertyTypes.
+     */
+    clientSecret?: string | undefined;
     code: string;
     codeVerifier: string;
     redirectUri: string;

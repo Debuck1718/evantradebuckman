@@ -259,6 +259,23 @@ export class Client {
   }
 
   /**
+   * Returns true when this is a PUBLIC client —
+   * one that holds no secret and authenticates
+   * with PKCE alone.
+   *
+   * RFC8252 requires this for native and browser
+   * apps: a secret shipped inside an app binary is
+   * not a secret. Publicness is derived from the
+   * absence of a stored hash rather than a separate
+   * flag, so the two can never disagree.
+   */
+  isPublic(): boolean {
+
+    return this.clientSecretHash === "";
+
+  }
+
+  /**
    * Returns the secret version.
    */
   getSecretVersion(): number {

@@ -70,6 +70,31 @@ export class RegisterClientController {
         request.body.firstParty === true ||
         request.body.firstParty === "true";
 
+      /*
+       * "public" for browser and native apps, which
+       * must never hold a secret. Anything else stays
+       * confidential so the default is unchanged.
+       */
+      const clientType =
+        request.body.clientType === "public"
+          ? "public"
+          : "confidential";
+
+      /*
+       * Optional explicit scope set. The workflow
+       * applies the OIDC identity defaults when this
+       * is omitted, so a client that says nothing
+       * still gets a working sign-in.
+       */
+      const requestedScopes =
+        Array.isArray(request.body.scopes)
+          ? request.body.scopes
+              .map((scope: unknown) =>
+                String(scope ?? "").trim(),
+              )
+              .filter(Boolean)
+          : undefined;
+
       if (
         !name ||
         !slug
@@ -92,12 +117,19 @@ export class RegisterClientController {
         homepageUrl?: string;
         description?: string;
         firstParty?: boolean;
+        clientType?: "public" | "confidential";
+        scopes?: string[];
       } = {
         ownerAccountId,
         name,
         slug,
         firstParty,
+        clientType,
       };
+
+      if (requestedScopes) {
+        payload.scopes = requestedScopes;
+      }
 
       if (homepageUrl) {
         payload.homepageUrl = homepageUrl;
@@ -125,6 +157,15 @@ export class RegisterClientController {
             result.client.description,
           firstParty:
             result.client.firstParty,
+          clientType:
+            result.client.isPublic()
+              ? "public"
+              : "confidential",
+          scopes: requestedScopes ?? [
+            "openid",
+            "profile",
+            "email",
+          ],
           status:
             result.client.getStatus(),
           createdAt:

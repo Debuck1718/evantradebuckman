@@ -68,7 +68,16 @@ export class ClientService {
 
   async authenticate(params: {
     clientId: string;
-    clientSecret: string;
+
+    /*
+     * Optional: a public client sends no secret.
+     * Declared optional rather than required-and-empty
+     * so the "no secret was sent" case is distinguishable
+     * from "an empty secret was sent". `| undefined` is
+     * explicit because this package sets
+     * exactOptionalPropertyTypes.
+     */
+    clientSecret?: string | undefined;
   }): Promise<Client> {
 
     const client =
@@ -88,9 +97,39 @@ export class ClientService {
       );
     }
 
+    /*
+     * Public clients hold no secret, so there is
+     * nothing to verify. Verifying anyway would make
+     * hasher.verify("", "") the only way in, which is
+     * not a credential. Identity is established by PKCE
+     * at the grant layer, not here.
+     */
+    if (client.isPublic()) {
+
+      if (
+        params.clientSecret !== undefined &&
+        params.clientSecret !== ""
+      ) {
+
+        throw new Error(
+          "A public client cannot present a client secret.",
+        );
+
+      }
+
+      return client;
+    }
+
+    /*
+     * Confidential clients must present a secret.
+     * An absent secret is treated as a failed
+     * verification rather than a missing parameter,
+     * so a caller cannot probe for which clients
+     * are public.
+     */
     const verified =
       await this.hasher.verify(
-        params.clientSecret,
+        params.clientSecret ?? "",
         client.secretHash(),
       );
 

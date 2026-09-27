@@ -130,6 +130,8 @@ export class WorkflowFactory {
 
         services.clients,
 
+        services.clientScopes,
+
         platform.ids,
 
         platform.clientCredentials,
