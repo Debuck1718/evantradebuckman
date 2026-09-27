@@ -4,6 +4,8 @@ import { Client } from "./Client";
 import { ClientId } from "./ClientId";
 import { ClientRepository } from "./ClientRepository";
 
+import { InvalidClientError } from "../oauth/errors";
+
 /**
  * Coordinates OAuth Client
  * operations.
@@ -86,15 +88,11 @@ export class ClientService {
       );
 
     if (!client) {
-      throw new Error(
-        "Invalid client credentials.",
-      );
+      throw new InvalidClientError();
     }
 
     if (!client.isActive()) {
-      throw new Error(
-        "Client is not active.",
-      );
+      throw new InvalidClientError();
     }
 
     /*
@@ -111,9 +109,7 @@ export class ClientService {
         params.clientSecret !== ""
       ) {
 
-        throw new Error(
-          "A public client cannot present a client secret.",
-        );
+        throw new InvalidClientError();
 
       }
 
@@ -134,9 +130,7 @@ export class ClientService {
       );
 
     if (!verified) {
-      throw new Error(
-        "Invalid client credentials.",
-      );
+      throw new InvalidClientError();
     }
 
     return client;
