@@ -1,5 +1,6 @@
 "use client";
 
+import { useId } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
@@ -50,6 +51,7 @@ export default function Navigation({
   dark = false,
 }: NavigationProps) {
   const pathname = usePathname();
+  const indicatorId = useId();
 
   const isActive = (href: string) => {
     if (href === "/") {
@@ -102,7 +104,7 @@ export default function Navigation({
             </span>
 
             <motion.span
-              layoutId="navigation-indicator"
+              layoutId={`navigation-indicator-${indicatorId}`}
               transition={{
                 type: "spring",
                 stiffness: 360,

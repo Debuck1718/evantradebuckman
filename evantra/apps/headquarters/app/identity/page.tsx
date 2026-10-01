@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { GlobalFooter, GlobalHeader } from "@/components/layout";
+import WorkspacePreview from "@/components/identity/WorkspacePreview";
 
 const identityWebUrl =
   process.env.NEXT_PUBLIC_IDENTITY_WEB_URL ??
@@ -96,6 +97,8 @@ export default function IdentityPage() {
             </div>
           </div>
         </section>
+
+        <WorkspacePreview workspaceWebUrl={workspaceWebUrl} />
 
         <section id="docs" className="border-t border-white/10 px-6 py-24 lg:px-10">
           <div className="mx-auto grid max-w-[1440px] gap-6 lg:grid-cols-3">

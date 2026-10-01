@@ -337,7 +337,7 @@ export default function TermsPage() {
             <Link href="/privacy" className="hover:text-white">
               Privacy Policy
             </Link>
-            <Link href="/security" className="hover:text-white">
+            <Link href="/companies/cybersecurity" className="hover:text-white">
               Security
             </Link>
             <Link href="/contact" className="hover:text-white">

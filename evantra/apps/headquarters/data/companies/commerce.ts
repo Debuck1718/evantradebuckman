@@ -22,7 +22,7 @@ export const commerceCompany: CompanyData = {
     description:
       "The Evantra Commerce Center develops enterprise-grade commerce technologies that enable businesses to launch, operate and scale secure digital commerce ecosystems. From multi-tenant storefronts and intelligent inventory systems to payment infrastructure and AI-powered business analytics, we engineer platforms that help organizations succeed in the modern digital economy.",
 
-    image: "/images/companies/commerce/commerce-hero.webp",
+    image: "/images/campus/global-commerce-center.webp",
 
     primaryAction: {
       label: "Explore StoreForge",
@@ -65,10 +65,10 @@ export const commerceCompany: CompanyData = {
     subtitle: "Enterprise Commerce Platform",
 
     description:
-      "StoreForge is Evantra's flagship commerce platform built for entrepreneurs, retailers and enterprises. It provides everything needed to launch, manage and scale modern online businesses—from storefront management and inventory to payments, analytics and AI-powered commerce intelligence.",
+      "StoreForge is Evantra's flagship commerce platform built for entrepreneurs, retailers and enterprises. It provides everything needed to launch, manage and scale modern online businessesÃ¢â‚¬â€from storefront management and inventory to payments, analytics and AI-powered commerce intelligence.",
 
     image:
-      "/images/companies/commerce/storeforge-dashboard.webp",
+      "/images/showcase/commerce-dashboard.svg",
 
     primaryAction: {
       label: "Explore StoreForge",

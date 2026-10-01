@@ -112,12 +112,15 @@ export default function ShowcaseBackground() {
 
       <motion.div
         animate={{
+          x: "-50%",
           y: [0, -18, 0],
         }}
         transition={{
-          duration: 8,
-          repeat: Infinity,
-          ease: "easeInOut",
+          y: {
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut",
+          },
         }}
         className="
           absolute
@@ -127,8 +130,6 @@ export default function ShowcaseBackground() {
 
           h-40
           w-40
-
-          -translate-x-1/2
 
           rounded-full
 

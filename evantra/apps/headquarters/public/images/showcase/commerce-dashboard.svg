@@ -1,0 +1,275 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" width="1600" height="1000" font-family="Inter, 'Segoe UI', system-ui, -apple-system, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a1508"/>
+      <stop offset="50%" stop-color="#12240d"/>
+      <stop offset="100%" stop-color="#0b1a12"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f7d97f"/>
+      <stop offset="100%" stop-color="#c99322"/>
+    </linearGradient>
+    <linearGradient id="teal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#4be0b8"/>
+      <stop offset="100%" stop-color="#0f9b7a"/>
+    </linearGradient>
+    <linearGradient id="area" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e6b24a" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#e6b24a" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#e6b24a" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#e6b24a" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soft" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="26"/>
+    </filter>
+    <filter id="card" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="18" flood-color="#000" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="1000" fill="url(#bg)"/>
+  <circle cx="1380" cy="150" r="330" fill="url(#glow)"/>
+  <circle cx="160" cy="860" r="300" fill="#0f9b7a" opacity="0.08" filter="url(#soft)"/>
+
+  <g opacity="0.05" stroke="#ffffff" stroke-width="1">
+    <path d="M0 100 H1600 M0 200 H1600 M0 300 H1600 M0 400 H1600 M0 500 H1600 M0 600 H1600 M0 700 H1600 M0 800 H1600 M0 900 H1600"/>
+    <path d="M100 0 V1000 M200 0 V1000 M300 0 V1000 M400 0 V1000 M500 0 V1000 M600 0 V1000 M700 0 V1000 M800 0 V1000 M900 0 V1000 M1000 0 V1000 M1100 0 V1000 M1200 0 V1000 M1300 0 V1000 M1400 0 V1000 M1500 0 V1000"/>
+  </g>
+
+  <!-- Sidebar -->
+  <rect x="0" y="0" width="268" height="1000" fill="#0b1a12" opacity="0.92"/>
+  <line x1="268" y1="0" x2="268" y2="1000" stroke="#ffffff" stroke-opacity="0.07"/>
+
+  <g transform="translate(34,44)">
+    <rect width="38" height="38" rx="11" fill="url(#gold)"/>
+    <path d="M13 22 h12 l3 6 h-18z M15 28 v6 h8 v-6" stroke="#0b1a12" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="52" y="18" fill="#ffffff" font-size="17" font-weight="700" letter-spacing="0.5">StoreForge</text>
+    <text x="52" y="35" fill="#8fc7a8" font-size="11" letter-spacing="2">COMMERCE CLOUD</text>
+  </g>
+
+  <text x="34" y="128" fill="#6d9c7e" font-size="11" letter-spacing="2.5" font-weight="600">COMMERCE</text>
+  <g font-size="14.5">
+    <rect x="20" y="142" width="228" height="46" rx="12" fill="#173318"/>
+    <rect x="20" y="142" width="4" height="46" rx="2" fill="url(#gold)"/>
+    <circle cx="46" cy="165" r="7" fill="none" stroke="#e6b24a" stroke-width="2"/>
+    <text x="66" y="170" fill="#ffffff" font-weight="600">Dashboard</text>
+
+    <g fill="#a8c9b4">
+      <circle cx="46" cy="221" r="7" fill="none" stroke="#86ab93" stroke-width="2"/>
+      <text x="66" y="226">Orders</text>
+      <circle cx="46" cy="277" r="7" fill="none" stroke="#86ab93" stroke-width="2"/>
+      <text x="66" y="282">Storefronts</text>
+      <circle cx="46" cy="333" r="7" fill="none" stroke="#86ab93" stroke-width="2"/>
+      <text x="66" y="338">Inventory</text>
+      <circle cx="46" cy="389" r="7" fill="none" stroke="#86ab93" stroke-width="2"/>
+      <text x="66" y="394">Payments</text>
+      <circle cx="46" cy="445" r="7" fill="none" stroke="#86ab93" stroke-width="2"/>
+      <text x="66" y="450">Customers</text>
+    </g>
+  </g>
+
+  <text x="34" y="524" fill="#6d9c7e" font-size="11" letter-spacing="2.5" font-weight="600">INTELLIGENCE</text>
+  <g fill="#a8c9b4" font-size="14.5">
+    <circle cx="46" cy="556" r="7" fill="none" stroke="#86ab93" stroke-width="2"/>
+    <text x="66" y="561">AI Analytics</text>
+    <circle cx="46" cy="612" r="7" fill="none" stroke="#86ab93" stroke-width="2"/>
+    <text x="66" y="617">Logistics</text>
+    <circle cx="46" cy="668" r="7" fill="none" stroke="#86ab93" stroke-width="2"/>
+    <text x="66" y="673">Supply Chain</text>
+  </g>
+
+  <rect x="20" y="878" width="228" height="86" rx="14" fill="#16311c"/>
+  <circle cx="44" cy="906" r="5" fill="#3ddc97"/>
+  <text x="60" y="911" fill="#d6efdd" font-size="12.5" font-weight="600">Storefronts online</text>
+  <text x="44" y="936" fill="#86ab93" font-size="11.5">1,240 active tenants</text>
+  <rect x="44" y="946" width="180" height="6" rx="3" fill="#1e4024"/>
+  <rect x="44" y="946" width="164" height="6" rx="3" fill="url(#gold)"/>
+
+  <!-- Top bar -->
+  <rect x="268" y="0" width="1332" height="88" fill="#0b1a12" opacity="0.55"/>
+  <line x1="268" y1="88" x2="1600" y2="88" stroke="#ffffff" stroke-opacity="0.07"/>
+  <text x="308" y="40" fill="#ffffff" font-size="19" font-weight="700">StoreForge — Enterprise Commerce</text>
+  <text x="308" y="63" fill="#86ab93" font-size="12.5">Multi-tenant storefront operations &amp; revenue intelligence</text>
+
+  <rect x="980" y="26" width="180" height="38" rx="19" fill="#16311c" stroke="#ffffff" stroke-opacity="0.08"/>
+  <text x="1004" y="50" fill="#d6efdd" font-size="12.5" font-weight="600">+ New Storefront</text>
+  <rect x="1180" y="26" width="118" height="38" rx="19" fill="#16311c" stroke="#ffffff" stroke-opacity="0.08"/>
+  <text x="1206" y="50" fill="#d6efdd" font-size="12.5" font-weight="600">Live</text>
+  <circle cx="1280" cy="45" r="4" fill="#3ddc97"/>
+  <circle cx="1374" cy="45" r="18" fill="url(#gold)"/>
+  <text x="1366" y="50" fill="#0b1a12" font-size="13" font-weight="700">SF</text>
+
+  <!-- KPIs -->
+  <g filter="url(#card)">
+    <g transform="translate(304,120)">
+      <rect width="300" height="132" rx="18" fill="#132a1a" stroke="#ffffff" stroke-opacity="0.07"/>
+      <text x="24" y="36" fill="#86ab93" font-size="12" letter-spacing="1.5">GROSS MERCHANDISE VALUE</text>
+      <text x="24" y="82" fill="#ffffff" font-size="38" font-weight="700">$4.82M</text>
+      <text x="24" y="110" fill="#3ddc97" font-size="12.5" font-weight="600">▲ 18.6% this quarter</text>
+    </g>
+    <g transform="translate(628,120)">
+      <rect width="300" height="132" rx="18" fill="#132a1a" stroke="#ffffff" stroke-opacity="0.07"/>
+      <text x="24" y="36" fill="#86ab93" font-size="12" letter-spacing="1.5">ORDERS TODAY</text>
+      <text x="24" y="82" fill="#ffffff" font-size="38" font-weight="700">12,408</text>
+      <text x="24" y="110" fill="#3ddc97" font-size="12.5" font-weight="600">▲ 6.2% vs yesterday</text>
+    </g>
+    <g transform="translate(952,120)">
+      <rect width="300" height="132" rx="18" fill="#132a1a" stroke="#ffffff" stroke-opacity="0.07"/>
+      <text x="24" y="36" fill="#86ab93" font-size="12" letter-spacing="1.5">CONVERSION RATE</text>
+      <text x="24" y="82" fill="#ffffff" font-size="38" font-weight="700">4.7%</text>
+      <text x="24" y="110" fill="#e6b24a" font-size="12.5" font-weight="600">AI-optimised funnels</text>
+    </g>
+    <g transform="translate(1276,120)">
+      <rect width="300" height="132" rx="18" fill="#132a1a" stroke="#ffffff" stroke-opacity="0.07"/>
+      <text x="24" y="36" fill="#86ab93" font-size="12" letter-spacing="1.5">ACTIVE TENANTS</text>
+      <text x="24" y="82" fill="#ffffff" font-size="38" font-weight="700">1,240</text>
+      <text x="24" y="110" fill="#3ddc97" font-size="12.5" font-weight="600">12 markets</text>
+    </g>
+  </g>
+
+  <!-- Revenue chart -->
+  <g transform="translate(304,286)" filter="url(#card)">
+    <rect width="836" height="356" rx="20" fill="#132a1a" stroke="#ffffff" stroke-opacity="0.07"/>
+    <text x="28" y="44" fill="#ffffff" font-size="16" font-weight="700">Revenue &amp; Order Volume</text>
+    <text x="28" y="68" fill="#86ab93" font-size="12.5">Across all tenants — trailing 12 months</text>
+
+    <g stroke="#ffffff" stroke-opacity="0.06">
+      <line x1="28" y1="300" x2="808" y2="300"/>
+      <line x1="28" y1="246" x2="808" y2="246"/>
+      <line x1="28" y1="192" x2="808" y2="192"/>
+      <line x1="28" y1="138" x2="808" y2="138"/>
+      <line x1="28" y1="84" x2="808" y2="84"/>
+    </g>
+
+    <!-- bars -->
+    <g fill="url(#gold)" opacity="0.85">
+      <rect x="52" y="228" width="34" height="72" rx="6"/>
+      <rect x="132" y="212" width="34" height="88" rx="6"/>
+      <rect x="212" y="232" width="34" height="68" rx="6"/>
+      <rect x="292" y="192" width="34" height="108" rx="6"/>
+      <rect x="372" y="176" width="34" height="124" rx="6"/>
+      <rect x="452" y="188" width="34" height="112" rx="6"/>
+      <rect x="532" y="150" width="34" height="150" rx="6"/>
+      <rect x="612" y="132" width="34" height="168" rx="6"/>
+      <rect x="692" y="108" width="34" height="192" rx="6"/>
+      <rect x="772" y="86" width="34" height="214" rx="6"/>
+    </g>
+
+    <!-- trend line -->
+    <path d="M69 236 C150 220 230 226 309 196 C390 164 470 178 549 150 C630 122 710 108 789 90" fill="none" stroke="#4be0b8" stroke-width="3.5" stroke-linecap="round"/>
+    <circle cx="789" cy="90" r="6" fill="#132a1a" stroke="#4be0b8" stroke-width="3"/>
+
+    <g fill="#6d9c7e" font-size="11">
+      <text x="52" y="326">Jan</text>
+      <text x="212" y="326">Mar</text>
+      <text x="372" y="326">May</text>
+      <text x="532" y="326">Jul</text>
+      <text x="692" y="326">Sep</text>
+      <text x="772" y="326">Nov</text>
+    </g>
+  </g>
+
+  <!-- Top products -->
+  <g transform="translate(1168,286)" filter="url(#card)">
+    <rect width="408" height="356" rx="20" fill="#132a1a" stroke="#ffffff" stroke-opacity="0.07"/>
+    <text x="26" y="44" fill="#ffffff" font-size="16" font-weight="700">Top Storefronts</text>
+
+    <g font-size="12.5">
+      <g transform="translate(26,74)">
+        <rect width="356" height="56" rx="12" fill="#173318"/>
+        <circle cx="28" cy="28" r="14" fill="#0f9b7a"/>
+        <text x="28" y="33" text-anchor="middle" fill="#eafff5" font-size="12" font-weight="700">1</text>
+        <text x="56" y="24" fill="#ffffff" font-weight="600">Nova Retail Group</text>
+        <text x="56" y="42" fill="#86ab93" font-size="11.5">$684K revenue</text>
+        <text x="330" y="32" text-anchor="end" fill="#3ddc97" font-size="12" font-weight="700">+22%</text>
+      </g>
+      <g transform="translate(26,142)">
+        <rect width="356" height="56" rx="12" fill="#173318"/>
+        <circle cx="28" cy="28" r="14" fill="#c99322"/>
+        <text x="28" y="33" text-anchor="middle" fill="#1a1205" font-size="12" font-weight="700">2</text>
+        <text x="56" y="24" fill="#ffffff" font-weight="600">Accra Market Co.</text>
+        <text x="56" y="42" fill="#86ab93" font-size="11.5">$512K revenue</text>
+        <text x="330" y="32" text-anchor="end" fill="#3ddc97" font-size="12" font-weight="700">+15%</text>
+      </g>
+      <g transform="translate(26,210)">
+        <rect width="356" height="56" rx="12" fill="#173318"/>
+        <circle cx="28" cy="28" r="14" fill="#0f9b7a"/>
+        <text x="28" y="33" text-anchor="middle" fill="#eafff5" font-size="12" font-weight="700">3</text>
+        <text x="56" y="24" fill="#ffffff" font-weight="600">Sahara Logistics</text>
+        <text x="56" y="42" fill="#86ab93" font-size="11.5">$431K revenue</text>
+        <text x="330" y="32" text-anchor="end" fill="#3ddc97" font-size="12" font-weight="700">+9%</text>
+      </g>
+      <g transform="translate(26,278)">
+        <rect width="356" height="56" rx="12" fill="#173318"/>
+        <circle cx="28" cy="28" r="14" fill="#c99322"/>
+        <text x="28" y="33" text-anchor="middle" fill="#1a1205" font-size="12" font-weight="700">4</text>
+        <text x="56" y="24" fill="#ffffff" font-weight="600">Lagos Fresh Foods</text>
+        <text x="56" y="42" fill="#86ab93" font-size="11.5">$388K revenue</text>
+        <text x="330" y="32" text-anchor="end" fill="#3ddc97" font-size="12" font-weight="700">+7%</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- Payments + orders -->
+  <g transform="translate(304,680)">
+    <g filter="url(#card)">
+      <g transform="translate(0,10)">
+        <rect width="558" height="270" rx="20" fill="#132a1a" stroke="#ffffff" stroke-opacity="0.07"/>
+        <text x="26" y="42" fill="#ffffff" font-size="16" font-weight="700">Payment Methods</text>
+        <g font-size="12.5">
+          <text x="26" y="82" fill="#d6efdd">Card</text>
+          <text x="520" y="82" text-anchor="end" fill="#86ab93">62%</text>
+          <rect x="26" y="94" width="494" height="8" rx="4" fill="#1e4024"/>
+          <rect x="26" y="94" width="306" height="8" rx="4" fill="url(#gold)"/>
+
+          <text x="26" y="138" fill="#d6efdd">Mobile Money</text>
+          <text x="520" y="138" text-anchor="end" fill="#86ab93">24%</text>
+          <rect x="26" y="150" width="494" height="8" rx="4" fill="#1e4024"/>
+          <rect x="26" y="150" width="118" height="8" rx="4" fill="url(#teal)"/>
+
+          <text x="26" y="194" fill="#d6efdd">Bank Transfer</text>
+          <text x="520" y="194" text-anchor="end" fill="#86ab93">9%</text>
+          <rect x="26" y="206" width="494" height="8" rx="4" fill="#1e4024"/>
+          <rect x="26" y="206" width="44" height="8" rx="4" fill="#4be0b8"/>
+
+          <text x="26" y="250" fill="#d6efdd">Wallet &amp; Credit</text>
+          <text x="520" y="250" text-anchor="end" fill="#86ab93">5%</text>
+        </g>
+      </g>
+    </g>
+
+    <g transform="translate(586,10)" filter="url(#card)">
+      <rect width="558" height="270" rx="20" fill="#132a1a" stroke="#ffffff" stroke-opacity="0.07"/>
+      <text x="26" y="42" fill="#ffffff" font-size="16" font-weight="700">Recent Orders</text>
+      <g font-size="12.5">
+        <text x="26" y="80" fill="#86ab93" letter-spacing="1">ORDER</text>
+        <text x="230" y="80" fill="#86ab93" letter-spacing="1">TENANT</text>
+        <text x="410" y="80" fill="#86ab93" letter-spacing="1">TOTAL</text>
+        <text x="520" y="80" fill="#86ab93" letter-spacing="1">STATUS</text>
+
+        <line x1="26" y1="94" x2="532" y2="94" stroke="#ffffff" stroke-opacity="0.07"/>
+        <text x="26" y="124" fill="#d6efdd">#SF-98412</text>
+        <text x="230" y="124" fill="#d6efdd">Nova Retail</text>
+        <text x="410" y="124" fill="#ffffff" font-weight="600">$1,284</text>
+        <rect x="490" y="110" width="44" height="20" rx="10" fill="#0f9b7a" opacity="0.25"/>
+        <text x="512" y="124" text-anchor="middle" fill="#4be0b8" font-size="10.5" font-weight="700">PAID</text>
+
+        <line x1="26" y1="146" x2="532" y2="146" stroke="#ffffff" stroke-opacity="0.05"/>
+        <text x="26" y="176" fill="#d6efdd">#SF-98411</text>
+        <text x="230" y="176" fill="#d6efdd">Accra Market</text>
+        <text x="410" y="176" fill="#ffffff" font-weight="600">$642</text>
+        <rect x="484" y="162" width="56" height="20" rx="10" fill="#c99322" opacity="0.25"/>
+        <text x="512" y="176" text-anchor="middle" fill="#e6b24a" font-size="10.5" font-weight="700">SHIPPED</text>
+
+        <line x1="26" y1="198" x2="532" y2="198" stroke="#ffffff" stroke-opacity="0.05"/>
+        <text x="26" y="228" fill="#d6efdd">#SF-98410</text>
+        <text x="230" y="228" fill="#d6efdd">Sahara Logistics</text>
+        <text x="410" y="228" fill="#ffffff" font-weight="600">$3,910</text>
+        <rect x="492" y="214" width="40" height="20" rx="10" fill="#0f9b7a" opacity="0.25"/>
+        <text x="512" y="228" text-anchor="middle" fill="#4be0b8" font-size="10.5" font-weight="700">PAID</text>
+      </g>
+    </g>
+  </g>
+</svg>

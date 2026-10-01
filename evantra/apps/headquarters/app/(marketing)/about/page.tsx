@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import {
   ArrowRight,
   Building2,
@@ -23,7 +24,7 @@ const principles = [
     eyebrow: "SECURITY",
     title: "Trust by Design",
     description:
-      "Security, privacy, resilience and responsible technology are considered from the beginning—not added after the system is built.",
+      "Security, privacy, resilience and responsible technology are considered from the beginningâ€”not added after the system is built.",
   },
   {
     icon: Users,
@@ -70,8 +71,18 @@ export default function AboutPage() {
             HERO
         ====================================================== */}
 
-        <section className="relative overflow-hidden bg-[#071522] px-6 pb-24 pt-36 text-white md:px-10 md:pb-32 md:pt-44">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_25%,rgba(230,178,74,0.14),transparent_30%),radial-gradient(circle_at_15%_80%,rgba(36,91,125,0.18),transparent_35%)]" />
+        <section className="relative isolate overflow-hidden bg-[#071522] px-6 pb-24 pt-36 text-white md:px-10 md:pb-32 md:pt-44">
+          {/* Background image */}
+          <Image
+            src="/images/hero/about.webp"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="absolute inset-0 -z-10 h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#071522] via-[#071522]/85 to-[#071522]/45" />
+          <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_75%_25%,rgba(230,178,74,0.18),transparent_30%),radial-gradient(circle_at_15%_80%,rgba(36,91,125,0.22),transparent_35%)]" />
 
           <div className="relative mx-auto max-w-7xl">
             <div className="max-w-4xl">
@@ -98,7 +109,7 @@ export default function AboutPage() {
               <p className="mt-8 max-w-3xl text-lg leading-8 text-white/65 md:text-xl md:leading-9">
                 Evantra De-Buckman Ventures is building a technology
                 enterprise around engineering, research, innovation and
-                responsible digital systems—creating solutions designed
+                responsible digital systemsâ€”creating solutions designed
                 to make complex technology useful, secure and human-centered.
               </p>
             </div>
@@ -399,7 +410,7 @@ export default function AboutPage() {
 
             <p className="mx-auto mt-8 max-w-3xl text-lg leading-8 text-[#60708a]">
               We envision a future where complex technology serves society
-              transparently, sustainably and ethically—and where engineering
+              transparently, sustainably and ethicallyâ€”and where engineering
               becomes a practical force for improving the way people live,
               work and build.
             </p>
@@ -417,8 +428,8 @@ export default function AboutPage() {
             </p>
 
             <blockquote className="mt-7 text-3xl font-medium leading-tight tracking-tight text-[#111a2f] md:text-5xl">
-              “Do not make a decision that you will regret if not now,
-              in the future. Do the right thing even if it is difficult.”
+              â€œDo not make a decision that you will regret if not now,
+              in the future. Do the right thing even if it is difficult.â€
             </blockquote>
 
             <p className="mt-7 max-w-2xl leading-7 text-[#60708a]">

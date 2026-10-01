@@ -1,0 +1,250 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" width="1600" height="1000" font-family="Inter, 'Segoe UI', system-ui, -apple-system, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#031c1c"/>
+      <stop offset="52%" stop-color="#062b2b"/>
+      <stop offset="100%" stop-color="#04211f"/>
+    </linearGradient>
+    <linearGradient id="teal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#5ff0d4"/>
+      <stop offset="100%" stop-color="#0f9b8a"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f7d97f"/>
+      <stop offset="100%" stop-color="#c99322"/>
+    </linearGradient>
+    <linearGradient id="area" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5ff0d4" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#5ff0d4" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#14b8a6" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#14b8a6" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soft" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="26"/>
+    </filter>
+    <filter id="card" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="18" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="1000" fill="url(#bg)"/>
+  <circle cx="1340" cy="170" r="330" fill="url(#glow)"/>
+  <circle cx="200" cy="880" r="300" fill="#0f9b8a" opacity="0.09" filter="url(#soft)"/>
+
+  <g opacity="0.05" stroke="#ffffff" stroke-width="1">
+    <path d="M0 100 H1600 M0 200 H1600 M0 300 H1600 M0 400 H1600 M0 500 H1600 M0 600 H1600 M0 700 H1600 M0 800 H1600 M0 900 H1600"/>
+    <path d="M100 0 V1000 M200 0 V1000 M300 0 V1000 M400 0 V1000 M500 0 V1000 M600 0 V1000 M700 0 V1000 M800 0 V1000 M900 0 V1000 M1000 0 V1000 M1100 0 V1000 M1200 0 V1000 M1300 0 V1000 M1400 0 V1000 M1500 0 V1000"/>
+  </g>
+
+  <!-- Sidebar -->
+  <rect x="0" y="0" width="268" height="1000" fill="#04211f" opacity="0.92"/>
+  <line x1="268" y1="0" x2="268" y2="1000" stroke="#ffffff" stroke-opacity="0.07"/>
+
+  <g transform="translate(34,44)">
+    <rect width="38" height="38" rx="11" fill="url(#teal)"/>
+    <g stroke="#04211f" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="11" y="15" width="16" height="12" rx="2"/>
+      <path d="M15 15 v-3 h8 v3 M19 27 v4 M11 31 h16"/>
+    </g>
+    <text x="52" y="18" fill="#ffffff" font-size="17" font-weight="700" letter-spacing="0.5">Evantra</text>
+    <text x="52" y="35" fill="#8fd8cd" font-size="11" letter-spacing="2">ENGINEERING OS</text>
+  </g>
+
+  <text x="34" y="128" fill="#5fa79c" font-size="11" letter-spacing="2.5" font-weight="600">FLEET</text>
+  <g font-size="14.5">
+    <rect x="20" y="142" width="228" height="46" rx="12" fill="#0b3b38"/>
+    <rect x="20" y="142" width="4" height="46" rx="2" fill="url(#teal)"/>
+    <circle cx="46" cy="165" r="7" fill="none" stroke="#5ff0d4" stroke-width="2"/>
+    <text x="66" y="170" fill="#ffffff" font-weight="600">Control Room</text>
+
+    <g fill="#a3cbc4">
+      <circle cx="46" cy="221" r="7" fill="none" stroke="#7fb0a8" stroke-width="2"/>
+      <text x="66" y="226">Robotics</text>
+      <circle cx="46" cy="277" r="7" fill="none" stroke="#7fb0a8" stroke-width="2"/>
+      <text x="66" y="282">Autonomous Units</text>
+      <circle cx="46" cy="333" r="7" fill="none" stroke="#7fb0a8" stroke-width="2"/>
+      <text x="66" y="338">Edge Nodes</text>
+      <circle cx="46" cy="389" r="7" fill="none" stroke="#7fb0a8" stroke-width="2"/>
+      <text x="66" y="394">IoT Sensors</text>
+      <circle cx="46" cy="445" r="7" fill="none" stroke="#7fb0a8" stroke-width="2"/>
+      <text x="66" y="450">Digital Twins</text>
+    </g>
+  </g>
+
+  <text x="34" y="524" fill="#5fa79c" font-size="11" letter-spacing="2.5" font-weight="600">ANALYTICS</text>
+  <g fill="#a3cbc4" font-size="14.5">
+    <circle cx="46" cy="556" r="7" fill="none" stroke="#7fb0a8" stroke-width="2"/>
+    <text x="66" y="561">Telemetry</text>
+    <circle cx="46" cy="612" r="7" fill="none" stroke="#7fb0a8" stroke-width="2"/>
+    <text x="66" y="617">Predictive Maint.</text>
+    <circle cx="46" cy="668" r="7" fill="none" stroke="#7fb0a8" stroke-width="2"/>
+    <text x="66" y="673">Safety Systems</text>
+  </g>
+
+  <rect x="20" y="878" width="228" height="86" rx="14" fill="#0b3b38"/>
+  <circle cx="44" cy="906" r="5" fill="#5ff0d4"/>
+  <text x="60" y="911" fill="#d6f4ef" font-size="12.5" font-weight="600">Fleet operational</text>
+  <text x="44" y="936" fill="#7fb0a8" font-size="11.5">312 units · 0 critical</text>
+  <rect x="44" y="946" width="180" height="6" rx="3" fill="#12514c"/>
+  <rect x="44" y="946" width="172" height="6" rx="3" fill="url(#teal)"/>
+
+  <!-- Top bar -->
+  <rect x="268" y="0" width="1332" height="88" fill="#04211f" opacity="0.55"/>
+  <line x1="268" y1="88" x2="1600" y2="88" stroke="#ffffff" stroke-opacity="0.07"/>
+  <text x="308" y="40" fill="#ffffff" font-size="19" font-weight="700">Autonomous Systems Control</text>
+  <text x="308" y="63" fill="#7fb0a8" font-size="12.5">Robotics, mobility &amp; connected infrastructure telemetry</text>
+
+  <rect x="1080" y="26" width="140" height="38" rx="19" fill="#0b3b38" stroke="#ffffff" stroke-opacity="0.08"/>
+  <text x="1106" y="50" fill="#d6f4ef" font-size="12.5" font-weight="600">Simulate</text>
+  <rect x="1232" y="26" width="118" height="38" rx="19" fill="#0b3b38" stroke="#ffffff" stroke-opacity="0.08"/>
+  <text x="1256" y="50" fill="#d6f4ef" font-size="12.5" font-weight="600">Field</text>
+  <circle cx="1332" cy="45" r="4" fill="#5ff0d4"/>
+  <circle cx="1374" cy="45" r="18" fill="url(#teal)"/>
+  <text x="1366" y="50" fill="#04211f" font-size="13" font-weight="700">EN</text>
+
+  <!-- KPIs -->
+  <g filter="url(#card)">
+    <g transform="translate(304,120)">
+      <rect width="300" height="132" rx="18" fill="#0a302e" stroke="#ffffff" stroke-opacity="0.07"/>
+      <text x="24" y="36" fill="#7fb0a8" font-size="12" letter-spacing="1.5">UNITS ONLINE</text>
+      <text x="24" y="82" fill="#ffffff" font-size="40" font-weight="700">312</text>
+      <text x="24" y="110" fill="#5ff0d4" font-size="12.5" font-weight="600">99.4% availability</text>
+    </g>
+    <g transform="translate(628,120)">
+      <rect width="300" height="132" rx="18" fill="#0a302e" stroke="#ffffff" stroke-opacity="0.07"/>
+      <text x="24" y="36" fill="#7fb0a8" font-size="12" letter-spacing="1.5">AUTONOMY LEVEL</text>
+      <text x="24" y="82" fill="#ffffff" font-size="40" font-weight="700">L4</text>
+      <text x="24" y="110" fill="#5ff0d4" font-size="12.5" font-weight="600">Supervised autonomy</text>
+    </g>
+    <g transform="translate(952,120)">
+      <rect width="300" height="132" rx="18" fill="#0a302e" stroke="#ffffff" stroke-opacity="0.07"/>
+      <text x="24" y="36" fill="#7fb0a8" font-size="12" letter-spacing="1.5">SENSOR EVENTS / SEC</text>
+      <text x="24" y="82" fill="#ffffff" font-size="40" font-weight="700">48K</text>
+      <text x="24" y="110" fill="#5ff0d4" font-size="12.5" font-weight="600">Edge-processed</text>
+    </g>
+    <g transform="translate(1276,120)">
+      <rect width="300" height="132" rx="18" fill="#0a302e" stroke="#ffffff" stroke-opacity="0.07"/>
+      <text x="24" y="36" fill="#7fb0a8" font-size="12" letter-spacing="1.5">SAFETY INCIDENTS</text>
+      <text x="24" y="82" fill="#ffffff" font-size="40" font-weight="700">0</text>
+      <text x="24" y="110" fill="#e6b24a" font-size="12.5" font-weight="600">Continuous monitoring</text>
+    </g>
+  </g>
+
+  <!-- Telemetry chart -->
+  <g transform="translate(304,286)" filter="url(#card)">
+    <rect width="836" height="356" rx="20" fill="#0a302e" stroke="#ffffff" stroke-opacity="0.07"/>
+    <text x="28" y="44" fill="#ffffff" font-size="16" font-weight="700">Fleet Telemetry</text>
+    <text x="28" y="68" fill="#7fb0a8" font-size="12.5">Real-time signal throughput across the autonomous fleet</text>
+
+    <g stroke="#ffffff" stroke-opacity="0.06">
+      <line x1="28" y1="300" x2="808" y2="300"/>
+      <line x1="28" y1="246" x2="808" y2="246"/>
+      <line x1="28" y1="192" x2="808" y2="192"/>
+      <line x1="28" y1="138" x2="808" y2="138"/>
+      <line x1="28" y1="84" x2="808" y2="84"/>
+    </g>
+
+    <!-- area + line -->
+    <path d="M28 250 C90 244 130 200 190 208 C250 216 300 168 360 176 C420 184 460 220 520 200 C580 180 620 132 680 140 C730 148 770 120 808 110 L808 300 L28 300 Z" fill="url(#area)"/>
+    <path d="M28 250 C90 244 130 200 190 208 C250 216 300 168 360 176 C420 184 460 220 520 200 C580 180 620 132 680 140 C730 148 770 120 808 110" fill="none" stroke="url(#teal)" stroke-width="3.5" stroke-linecap="round"/>
+
+    <!-- secondary dashed gold -->
+    <path d="M28 276 C110 268 160 250 220 246 C300 240 360 214 430 210 C510 204 570 182 650 170 C720 160 770 150 808 142" fill="none" stroke="url(#gold)" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="8 8"/>
+
+    <circle cx="680" cy="140" r="5.5" fill="#0a302e" stroke="#5ff0d4" stroke-width="3"/>
+
+    <g fill="#5fa79c" font-size="11">
+      <text x="28" y="326">00:00</text>
+      <text x="180" y="326">04:00</text>
+      <text x="340" y="326">08:00</text>
+      <text x="500" y="326">12:00</text>
+      <text x="660" y="326">16:00</text>
+      <text x="780" y="326">20:00</text>
+    </g>
+  </g>
+
+  <!-- Unit health -->
+  <g transform="translate(1168,286)" filter="url(#card)">
+    <rect width="408" height="356" rx="20" fill="#0a302e" stroke="#ffffff" stroke-opacity="0.07"/>
+    <text x="26" y="44" fill="#ffffff" font-size="16" font-weight="700">Unit Health</text>
+
+    <g transform="translate(120,196)">
+      <circle r="76" fill="none" stroke="#12514c" stroke-width="20"/>
+      <circle r="76" fill="none" stroke="url(#teal)" stroke-width="20" stroke-dasharray="382 478" stroke-linecap="round" transform="rotate(-90)"/>
+      <circle r="76" fill="none" stroke="url(#gold)" stroke-width="20" stroke-dasharray="48 478" stroke-dashoffset="-382" stroke-linecap="round" transform="rotate(-90)"/>
+      <text x="0" y="-2" text-anchor="middle" fill="#ffffff" font-size="32" font-weight="700">94%</text>
+      <text x="0" y="22" text-anchor="middle" fill="#7fb0a8" font-size="10.5" letter-spacing="1.5">NOMINAL</text>
+    </g>
+
+    <g font-size="12.5">
+      <circle cx="252" cy="150" r="5" fill="#5ff0d4"/>
+      <text x="268" y="155" fill="#d6f4ef">Nominal</text>
+      <text x="372" y="155" fill="#7fb0a8">292</text>
+      <circle cx="252" cy="184" r="5" fill="#e6b24a"/>
+      <text x="268" y="189" fill="#d6f4ef">Maintenance</text>
+      <text x="378" y="189" fill="#7fb0a8">14</text>
+      <circle cx="252" cy="218" r="5" fill="#4aa3f0"/>
+      <text x="268" y="223" fill="#d6f4ef">Charging</text>
+      <text x="378" y="223" fill="#7fb0a8">6</text>
+      <circle cx="252" cy="252" r="5" fill="#ef6f6f"/>
+      <text x="268" y="257" fill="#d6f4ef">Offline</text>
+      <text x="382" y="257" fill="#7fb0a8">0</text>
+    </g>
+  </g>
+
+  <!-- Zones + events -->
+  <g transform="translate(304,680)">
+    <g filter="url(#card)">
+      <g transform="translate(0,10)">
+        <rect width="558" height="270" rx="20" fill="#0a302e" stroke="#ffffff" stroke-opacity="0.07"/>
+        <text x="26" y="42" fill="#ffffff" font-size="16" font-weight="700">Deployment Zones</text>
+        <g font-size="12.5">
+          <text x="26" y="82" fill="#d6f4ef">Smart City Grid</text>
+          <text x="520" y="82" text-anchor="end" fill="#7fb0a8">128 units</text>
+          <rect x="26" y="94" width="494" height="8" rx="4" fill="#12514c"/>
+          <rect x="26" y="94" width="400" height="8" rx="4" fill="url(#teal)"/>
+
+          <text x="26" y="138" fill="#d6f4ef">Industrial Plant</text>
+          <text x="520" y="138" text-anchor="end" fill="#7fb0a8">96 units</text>
+          <rect x="26" y="150" width="494" height="8" rx="4" fill="#12514c"/>
+          <rect x="26" y="150" width="300" height="8" rx="4" fill="url(#gold)"/>
+
+          <text x="26" y="194" fill="#d6f4ef">Logistics Hub</text>
+          <text x="520" y="194" text-anchor="end" fill="#7fb0a8">64 units</text>
+          <rect x="26" y="206" width="494" height="8" rx="4" fill="#12514c"/>
+          <rect x="26" y="206" width="200" height="8" rx="4" fill="#5ff0d4"/>
+
+          <text x="26" y="250" fill="#d6f4ef">Research Campus</text>
+          <text x="520" y="250" text-anchor="end" fill="#7fb0a8">24 units</text>
+        </g>
+      </g>
+    </g>
+
+    <g transform="translate(586,10)" filter="url(#card)">
+      <rect width="558" height="270" rx="20" fill="#0a302e" stroke="#ffffff" stroke-opacity="0.07"/>
+      <text x="26" y="42" fill="#ffffff" font-size="16" font-weight="700">Live Events</text>
+      <g font-size="12.5">
+        <circle cx="34" cy="82" r="5" fill="#5ff0d4"/>
+        <text x="52" y="86" fill="#d6f4ef">Unit AX-118 entered Zone 3</text>
+        <text x="52" y="103" fill="#5fa79c" font-size="11">Autonomous navigation · just now</text>
+        <line x1="34" y1="92" x2="34" y2="122" stroke="#ffffff" stroke-opacity="0.1"/>
+
+        <circle cx="34" cy="132" r="5" fill="#e6b24a"/>
+        <text x="52" y="136" fill="#d6f4ef">Predictive maintenance · Unit RB-42</text>
+        <text x="52" y="153" fill="#5fa79c" font-size="11">Bearing wear detected · 6m ago</text>
+        <line x1="34" y1="142" x2="34" y2="172" stroke="#ffffff" stroke-opacity="0.1"/>
+
+        <circle cx="34" cy="182" r="5" fill="#4aa3f0"/>
+        <text x="52" y="186" fill="#d6f4ef">Edge model OTA update deployed</text>
+        <text x="52" y="203" fill="#5fa79c" font-size="11">Fleet-wide · 24m ago</text>
+        <line x1="34" y1="192" x2="34" y2="222" stroke="#ffffff" stroke-opacity="0.1"/>
+
+        <circle cx="34" cy="232" r="5" fill="#5ff0d4"/>
+        <text x="52" y="236" fill="#d6f4ef">Digital twin sync completed</text>
+        <text x="52" y="253" fill="#5fa79c" font-size="11">Plant model v9 · 1h ago</text>
+      </g>
+    </g>
+  </g>
+</svg>

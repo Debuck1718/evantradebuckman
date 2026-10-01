@@ -228,7 +228,7 @@ export const companiesData: CampusCenter[] = [
     imageAlt:
       "Global Commerce Center within the Evantra Innovation Campus.",
 
-    href: "/companies/global-commerce",
+    href: "/companies/commerce",
 
     accent: "teal",
 

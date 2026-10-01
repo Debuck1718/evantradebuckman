@@ -7,9 +7,9 @@ const groups = [
     title: "Company",
     links: [
       ["About", "/about"],
-      ["Leadership", "/leadership"],
-      ["Careers", "/careers"],
-      ["News", "/news"],
+      ["Company", "/company"],
+      ["Careers", "/resources#careers"],
+      ["News", "/resources#news"],
     ],
   },
   {
@@ -25,10 +25,10 @@ const groups = [
     title: "Resources",
     links: [
       ["Research", "/research"],
-      ["Innovation", "/innovation"],
+      ["Innovation", "/companies/innovation"],
       ["Identity", "/identity"],
       ["Contact", "/contact"],
-      ["Media", "/media"],
+      ["Media", "/resources#media"],
     ],
   },
 ];

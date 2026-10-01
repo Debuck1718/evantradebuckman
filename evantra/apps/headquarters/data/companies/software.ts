@@ -64,7 +64,7 @@ export const softwareCompany: CompanyData = {
     title: "Our Platform Ecosystem",
     description:
       "Explore the integrated suite of intelligent digital platforms we're building to transform industries and empower organizations across Africa.",
-    image: "/images/showcase/software.webp",
+    image: "/images/showcase/software-dashboard.svg",
     highlights: [
       {
         title: "Enterprise Scale",
@@ -357,12 +357,14 @@ export const softwareCompany: CompanyData = {
 
       title: "EvantraHub",
 
-      status: "In Development",
+      status: "Live",
 
       description:
         "A comprehensive academic platform that centralizes course slides, educational resources, past examination questions, academic discussions and institutional announcements while empowering course representatives to manage and share learning materials through one unified learning ecosystem.",
 
       icon: Globe,
+
+      href: "https://evantrahub.me",
 
       featured: true,
 

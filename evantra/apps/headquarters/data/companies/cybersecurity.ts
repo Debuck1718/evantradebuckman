@@ -35,7 +35,7 @@ export const cybersecurityCompany: CompanyData = {
 
     description: "The Evantra Cybersecurity Center engineers resilient digital systems through secure software development, Zero Trust architecture, cloud security and intelligent cyber defense. We help governments, enterprises and innovators build technologies people can trust.",
 
-    image: "/images/campus/cybersecurity-center.webp",
+    image: "/images/hero/cybersecurity-lab.webp",
 
     primaryAction: {
       label: "Explore Security Solutions",

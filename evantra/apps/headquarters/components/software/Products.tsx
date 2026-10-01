@@ -1,9 +1,20 @@
 "use client";
 
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+
 import CompanySection from "@/components/shared/CompanySection";
 import SectionHeading from "@/components/shared/SectionHeading";
+import Reveal from "@/components/shared/Reveal";
 
 import { softwareCompany } from "@/data/companies";
+
+const statusStyles: Record<string, string> = {
+  Live: "bg-emerald-500/15 text-emerald-400",
+  "In Development": "bg-sky-500/15 text-sky-400",
+  Research: "bg-amber-500/15 text-amber-400",
+  "Coming Soon": "bg-white/10 text-white/60",
+};
 
 export default function Products() {
   return (
@@ -29,13 +40,22 @@ export default function Products() {
           lg:grid-cols-2
         "
       >
-        {softwareCompany.products.map((product) => (
-          <article
+        {softwareCompany.products.map((product, index) => (
+          <Reveal
             key={product.title}
+            delay={(index % 2) * 0.08}
+            distance={32}
+            amount={0.1}
+          >
+          <article
             className="
               group
 
               relative
+
+              flex
+              h-full
+              flex-col
 
               overflow-hidden
 
@@ -66,12 +86,10 @@ export default function Products() {
 
             {product.status && (
               <span
-                className="
+                className={`
                   inline-flex
 
                   rounded-full
-
-                  bg-emerald-500/15
 
                   px-3
 
@@ -85,8 +103,8 @@ export default function Products() {
 
                   tracking-[0.15em]
 
-                  text-emerald-400
-                "
+                  ${statusStyles[product.status] ?? statusStyles["Coming Soon"]}
+                `}
               >
                 {product.status}
               </span>
@@ -131,6 +149,8 @@ export default function Products() {
             <p
               className="
                 mt-5
+
+                flex-1
 
                 leading-8
 
@@ -179,11 +199,14 @@ export default function Products() {
               ))}
             </div>
 
-            {/* Future CTA */}
+            {/* CTA */}
 
             {product.href && (
               <div className="mt-10">
-                <span
+                <Link
+                  href={product.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="
                     inline-flex
 
@@ -194,13 +217,22 @@ export default function Products() {
                     font-semibold
 
                     text-[hsl(var(--accent))]
+
+                    transition-all
+
+                    duration-300
+
+                    hover:gap-3
                   "
                 >
-                  Learn More →
-                </span>
+                  Visit {product.title}
+
+                  <ArrowRight size={17} />
+                </Link>
               </div>
             )}
           </article>
+          </Reveal>
         ))}
       </div>
     </CompanySection>

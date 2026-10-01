@@ -254,7 +254,7 @@ export const campusMapData: CampusCenter[] = [
 
   imageAlt: "Global Commerce Center",
 
-  href: "/companies/global-commerce",
+  href: "/companies/commerce",
 
   accent: "teal",
 

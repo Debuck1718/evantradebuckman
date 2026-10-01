@@ -98,7 +98,7 @@ export const ecosystemData: EcosystemItem[] = [
 
     icon: Building2,
 
-    href: "/companies/infrastructure",
+    href: "/companies/engineering",
 
     color: "#0B4F71",
   },
@@ -115,7 +115,7 @@ export const ecosystemData: EcosystemItem[] = [
 
     icon: Globe2,
 
-    href: "/companies/import-export",
+    href: "/companies/commerce",
 
     color: "#D2A339",
   },

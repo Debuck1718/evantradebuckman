@@ -592,6 +592,6 @@ export const aiCompany: CompanyData = {
 
         description: "Join researchers, engineers, designers and innovators building trustworthy artificial intelligence that transforms healthcare, education, enterprise and public services. At Evantra AI Center, you'll contribute to meaningful technologies, collaborate with multidisciplinary teams and help shape the future of responsible AI across Africa and beyond.",
     },
-    slug: "",
-    name: ""
+    slug: "artificial-intelligence",
+    name: "Evantra AI Center"
 }

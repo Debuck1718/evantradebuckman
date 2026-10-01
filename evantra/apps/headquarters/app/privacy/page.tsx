@@ -388,7 +388,7 @@ export default function PrivacyPage() {
                             Terms of Use
                         </Link>
 
-                        <Link href="/security" className="hover:text-white">
+                        <Link href="/companies/cybersecurity" className="hover:text-white">
                             Security
                         </Link>
 

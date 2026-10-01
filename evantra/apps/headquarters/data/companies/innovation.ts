@@ -21,7 +21,7 @@ export const innovationCompany: CompanyData = {
 
         description: "The Evantra Innovation Center explores emerging technologies, incubates transformative ideas and develops breakthrough solutions that address tomorrow's global challenges. We bridge research, engineering and entrepreneurship to create technologies with lasting impact.",
 
-        image: "/images/companies/innovation/innovation-hero.webp",
+        image: "/images/campus/innovation-hub.webp",
 
         primaryAction: {
             label: "Explore Innovation",
@@ -65,7 +65,7 @@ export const innovationCompany: CompanyData = {
 
         description: "The Evantra Innovation Laboratory transforms bold ideas into practical technologies through research, rapid prototyping, product incubation and commercialization. Every innovation begins here before evolving into products, platforms and future companies.",
 
-        image: "/images/companies/innovation/innovation-laboratory.webp",
+        image: "/images/showcase/innovation-dashboard.svg",
 
         primaryAction: {
             label: "Explore the Lab",
@@ -439,8 +439,8 @@ export const innovationCompany: CompanyData = {
             name: ""
         },
     ],
-    slug: "",
-    name: "",
+    slug: "innovation",
+    name: "Evantra Innovation Center",
     products: [
         {
     category: "Innovation Platform",

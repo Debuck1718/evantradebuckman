@@ -13,7 +13,7 @@ export const ecosystemMapData: EcosystemNode[] = [
     subtitle: "Design",
     description:
       "Engineering practical technologies that solve real-world challenges.",
-    href: "/engineering",
+    href: "/companies/engineering",
   },
 
   {
@@ -22,7 +22,7 @@ export const ecosystemMapData: EcosystemNode[] = [
     subtitle: "Intelligence",
     description:
       "Building intelligent systems that enhance human capability.",
-    href: "/artificial-intelligence",
+    href: "/companies/artificial-intelligence",
   },
 
   {
@@ -31,7 +31,7 @@ export const ecosystemMapData: EcosystemNode[] = [
     subtitle: "Protection",
     description:
       "Securing digital infrastructure through resilient security.",
-    href: "/cybersecurity",
+    href: "/companies/cybersecurity",
   },
 
   {
@@ -49,7 +49,7 @@ export const ecosystemMapData: EcosystemNode[] = [
     subtitle: "Connectivity",
     description:
       "Creating intelligent connected environments and smart cities.",
-    href: "/infrastructure",
+    href: "/companies/engineering",
   },
 
   {
@@ -58,6 +58,6 @@ export const ecosystemMapData: EcosystemNode[] = [
     subtitle: "Trade",
     description:
       "Connecting industries through technology-enabled commerce.",
-    href: "/import-export",
+    href: "/companies/commerce",
   },
 ];

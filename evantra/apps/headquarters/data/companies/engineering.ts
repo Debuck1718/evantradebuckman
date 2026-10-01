@@ -25,7 +25,7 @@ export const engineeringCompany: CompanyData = {
     description:
       "The Evantra Engineering Center designs autonomous systems, robotics, industrial IoT, intelligent infrastructure and advanced engineering technologies that bridge software with the physical world. We engineer resilient, scalable and sustainable systems that improve industries, communities and everyday life.",
 
-    image: "/images/companies/engineering/engineering-hero.webp",
+    image: "/images/campus/engineering-center.webp",
 
     primaryAction: {
       label: "Explore Engineering",
@@ -71,11 +71,11 @@ export const engineeringCompany: CompanyData = {
       "The Autonomous Systems Initiative represents Evantra's long-term vision for intelligent robotics, autonomous mobility, industrial automation and connected infrastructure. It combines artificial intelligence, embedded engineering, computer vision and IoT to build practical systems capable of solving real-world engineering challenges.",
 
     image:
-      "/images/companies/engineering/autonomous-systems-dashboard.webp",
+      "/images/showcase/engineering-dashboard.svg",
 
     primaryAction: {
       label: "Explore Initiative",
-      href: "/engineering/autonomous-systems",
+      href: "/companies/engineering",
     },
 
     secondaryAction: {
@@ -585,7 +585,7 @@ research: [
   },
 
   {
-      title: "Human–Robot Collaboration",
+      title: "HumanÃ¢â‚¬â€œRobot Collaboration",
 
       description: "Exploring intelligent collaboration between humans and robotic systems to improve safety, productivity and operational efficiency.",
 
