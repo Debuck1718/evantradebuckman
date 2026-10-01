@@ -3,9 +3,11 @@ import {
   BrainCircuit,
   Calendar,
   FileText,
+  FolderLock,
   KeyRound,
   LayoutDashboard,
   LifeBuoy,
+  Link2,
   Users,
   WalletCards,
   type LucideIcon,
@@ -104,7 +106,14 @@ export const workspaceNavigation: readonly WorkspaceNavGroup[] = [
         label: "Knowledge",
         icon: FileText,
         description:
-          "Your interconnected second brain and research graph.",
+          "Your notes, research and linked references.",
+      },
+      {
+        href: "/workspace/vault",
+        label: "Vault",
+        icon: FolderLock,
+        description:
+          "Encrypted contracts, credentials and records.",
       },
     ],
   },
@@ -132,6 +141,13 @@ export const workspaceNavigation: readonly WorkspaceNavGroup[] = [
         description:
           "OAuth clients, redirect URIs and developer access.",
       },
+      {
+        href: "/workspace/connections",
+        label: "Connections",
+        icon: Link2,
+        description:
+          "Apps with your Evantra ID, devices, and security activity.",
+      },
     ],
   },
   {
@@ -142,7 +158,7 @@ export const workspaceNavigation: readonly WorkspaceNavGroup[] = [
         label: "Account",
         icon: Users,
         description:
-          "Profile, identity details and zero-knowledge vault.",
+          "Profile, identity details and your encrypted document vault.",
       },
       {
         href: "/workspace/support",

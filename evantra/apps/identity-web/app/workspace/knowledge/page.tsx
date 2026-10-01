@@ -116,7 +116,7 @@ export default function KnowledgePage() {
       <div className="mx-auto max-w-6xl">
         <header className="mb-8 flex flex-col gap-4 border-b border-white/10 pb-7 md:flex-row md:items-end md:justify-between">
           <div>
-            <div className="flex items-center gap-3 text-[#e6b24a]"><BookOpen size={22} /><span className="text-xs font-semibold uppercase tracking-[0.24em]">Neural Knowledge</span></div>
+            <div className="flex items-center gap-3 text-[#e6b24a]"><BookOpen size={22} /><span className="text-xs font-semibold uppercase tracking-[0.24em]">Knowledge Base</span></div>
             <h1 className="mt-4 text-3xl font-semibold tracking-tight">Your connected thinking space</h1>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-white/55">Capture decisions, research, ideas, and reflections in one searchable workspace.</p>
           </div>

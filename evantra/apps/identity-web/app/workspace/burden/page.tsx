@@ -7,7 +7,6 @@ import {
   ArrowLeft,
   BrainCircuit,
   CheckCircle2,
-  HelpCircle,
   Loader2,
   Save,
   Sparkles,
@@ -17,6 +16,7 @@ import {
 import {
   assessBurden,
   defaultBurdenSnapshot,
+  type BurdenBand,
   type BurdenSnapshot,
 } from "../lib/intelligence";
 import { useIdentitySession } from "../../../components/identity/IdentitySessionProvider";
@@ -139,7 +139,7 @@ export default function WorkspaceBurdenPage() {
     }
   }, [session]);
 
-  const getBandStyles = (band: string) => {
+  const getBandStyles = (band: BurdenBand) => {
     switch (band) {
       case "critical":
         return {

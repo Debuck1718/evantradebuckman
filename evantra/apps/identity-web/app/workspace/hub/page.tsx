@@ -24,17 +24,17 @@ import {
 import { useIdentitySession } from "../../../components/identity/IdentitySessionProvider";
 import { EvantraBrandIcon } from "../../../components/brand/EvantraBrandIcon";
 import { GlassCard } from "../../../components/ui/GlassCard";
-import { type LifeWorkPlan } from "../lib/intelligence";
+import { type BurdenBand, type LifeWorkPlan } from "../lib/intelligence";
 
 const kernelModules = [
   {
-    title: "Zero-Knowledge Vault",
-    tagline: "Cryptographic Safe & Keyring",
+    title: "Encrypted Vault",
+    tagline: "Sealed Records & Credentials",
     description:
-      "Native zero-knowledge document and credential storage. Secure contracts, credentials, and identity records under your master key.",
+      "Contracts, credentials and identity records sealed with AES-256-GCM before storage, scoped to your account and decrypted only for you.",
     icon: Lock,
-    href: "/workspace/account",
-    badge: "Native Security",
+    href: "/workspace/vault",
+    badge: "AES-256-GCM",
     accent: "from-amber-500/20 to-[#e6b24a]/5",
   },
   {
@@ -58,13 +58,13 @@ const kernelModules = [
     accent: "from-emerald-500/20 to-teal-500/5",
   },
   {
-    title: "Neural Knowledge",
-    tagline: "Interconnected Second Brain",
+    title: "Knowledge Base",
+    tagline: "Notes & Research",
     description:
-      "A bidirectional idea and research graph. Link insights, project notes, and architectural decisions without SaaS silos.",
+      "Structured notes and research documents with parent/child nesting and links between related entries, stored in your workspace.",
     icon: FileText,
     href: "/workspace/knowledge",
-    badge: "Knowledge Graph",
+    badge: "Documents",
     accent: "from-purple-500/20 to-indigo-500/5",
   },
   {
@@ -79,12 +79,12 @@ const kernelModules = [
   },
   {
     title: "OAuth & Developer Hub",
-    tagline: "First-Party SSO & API Keys",
+    tagline: "Client Registration",
     description:
-      "Register OAuth 2.0 / OIDC clients, issue API access tokens, and integrate third-party apps seamlessly into Evantra Identity.",
+      "Register OAuth 2.0 / OIDC clients and manage redirect URIs so developer applications can authenticate against Evantra Identity.",
     icon: KeyRound,
     href: "/workspace/applications",
-    badge: "Ecosystem Portal",
+    badge: "Developers",
     accent: "from-[#e6b24a]/20 to-amber-500/5",
   },
   {
@@ -97,12 +97,23 @@ const kernelModules = [
     accent: "from-cyan-500/20 to-blue-500/5",
   },
   {
+    title: "Connected Apps",
+    tagline: "Access & Device Accountability",
+    description:
+      "See every application holding your Evantra ID, what each can reach, when it was last used, and every device signed in — with one-click revoke.",
+    icon: ShieldCheck,
+    href: "/workspace/connections",
+    badge: "Security",
+    accent: "from-emerald-500/20 to-teal-500/5",
+  },
+  {
     title: "Workspace Assistant",
-    tagline: "Context Into Action",
-    description: "Ask grounded questions across your priorities, promises, knowledge, calendar, and financial signals.",
+    tagline: "Grounded Context Answers",
+    description:
+      "Ask about your priorities, deadlines and at-risk commitments. Answers are grounded strictly in your own workspace records, with the source of each point cited.",
     icon: Bot,
     href: "/workspace/assistant",
-    badge: "Kernel Guide",
+    badge: "Grounded",
     accent: "from-fuchsia-500/20 to-rose-500/5",
   },
 ];
@@ -193,9 +204,16 @@ export default function WorkspaceHubPage() {
   }
 
   const burdenScore = plan?.burden.score ?? 28;
-  const burdenBand = plan?.burden.band ?? "sustainable";
+  const burdenBand = plan?.burden.band ?? "low";
 
-  const getBandStyles = (band: string) => {
+  /*
+   * Band vocabulary is owned by the intelligence engine
+   * (BurdenBand = "low" | "moderate" | "high" | "critical").
+   * "low" is the sustainable baseline; there is deliberately no
+   * "sustainable" band value, so the default case here maps the
+   * low band to its "Optimal & Sustainable" label.
+   */
+  const getBandStyles = (band: BurdenBand) => {
     switch (band) {
       case "critical":
         return {
@@ -261,9 +279,9 @@ export default function WorkspaceHubPage() {
               </h1>
 
               <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/70">
-                Your native operating system for life, work, and identity. Backed by the
-                Evantra Kernel with zero-knowledge security, cognitive burden defense, and
-                promise accountability.
+                Your operating layer for life, work, and identity. Track commitments,
+                measure cognitive load, and keep your records in one account-scoped
+                workspace.
               </p>
             </div>
 

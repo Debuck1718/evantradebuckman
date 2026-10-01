@@ -51,3 +51,36 @@ export const burdenSchema = z.object({
     commitmentsDueSoon: z.number().int().nonnegative().max(100000),
   }),
 });
+
+/*
+ * Vault request. The category list is validated again in the
+ * route against the DB's own vocabulary so a new enum value here
+ * cannot silently insert a category the schema rejects.
+ */
+export const vaultRequestSchema = z.object({
+  category: z.enum([
+    "certificate",
+    "cv",
+    "id-record",
+    "contract",
+    "receipt",
+    "project-doc",
+    "academic-record",
+    "business-doc",
+    "other",
+  ]),
+  title: z.string().trim().min(1).max(255),
+  content: z.string().trim().min(1).max(200000),
+  tags: z.array(z.string().trim().min(1).max(64)).max(30).default([]),
+});
+
+/*
+ * Security-alert email preferences. All three are explicit booleans
+ * rather than optional, so a partial update cannot silently leave a
+ * field at its previous value while the UI shows it changed.
+ */
+export const notificationPreferencesSchema = z.object({
+  securityEmailEnabled: z.boolean(),
+  newDeviceEmail: z.boolean(),
+  appAuthorizedEmail: z.boolean(),
+});

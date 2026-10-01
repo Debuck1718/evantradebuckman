@@ -1,4 +1,4 @@
-import {
+﻿import {
   AuthorizedWorkspaceContextProvider,
   WorkspaceAssistant,
   type AssistantIntent,
@@ -15,6 +15,11 @@ import {
 
 import { getWorkspacePool } from "./_database";
 import { ensurePersonalWorkspace } from "./provisioning";
+import {
+  decryptVaultPayload,
+  encryptVaultPayload,
+} from "./_vault-crypto";
+import { resolveInsightWithProviders } from "./_ai-providers";
 
 /*
  * Persistence goes through the shared pool so
@@ -598,6 +603,12 @@ export async function askWorkspaceAssistant(
   return { threadId: resolvedThreadId, insight: aiInsight.insight, provider: aiInsight.provider, messages: await listAssistantMessages(accountId, resolvedThreadId), finance: finance.length, events: events.length };
 }
 
+/*
+ * Provider chain lives in ./_ai-providers so the OpenAI -> Gemini ->
+ * fallback order is unit-testable without a database. This function
+ * only assembles the workspace context that is safe to send, then
+ * delegates.
+ */
 async function generateAiInsight(input: {
   intent: AssistantIntent;
   question: string;
@@ -606,80 +617,213 @@ async function generateAiInsight(input: {
   events: Awaited<ReturnType<typeof listWorkspaceEvents>>;
   finance: ReturnType<typeof mapFinance>[];
   fallback: AssistantInsightResult;
-}): Promise<{ provider: "ai" | "fallback"; insight: AssistantInsightResult }> {
-  const apiKey = process.env.OPENAI_API_KEY?.trim();
+}): Promise<{ provider: "openai" | "gemini" | "fallback"; insight: AssistantInsightResult }> {
+  const includeKnowledge = process.env.EVANTRA_AI_INCLUDE_KNOWLEDGE === "true";
+  const includeFinance = process.env.EVANTRA_AI_INCLUDE_FINANCE === "true";
 
-  if (process.env.EVANTRA_AI_ENABLED !== "true" || !apiKey) {
-    return { provider: "fallback", insight: input.fallback };
-  }
-
-  const baseUrl = (process.env.OPENAI_BASE_URL ?? "https://api.openai.com/v1").replace(/\/$/, "");
-  let providerHost: string;
-  try {
-    providerHost = new URL(baseUrl).hostname;
-  } catch {
-    return { provider: "fallback", insight: input.fallback };
-  }
-  const allowedHosts = (process.env.EVANTRA_AI_ALLOWED_HOSTS ?? "api.openai.com")
-    .split(",")
-    .map(host => host.trim().toLowerCase())
-    .filter(Boolean);
-
-  if (!allowedHosts.includes(providerHost.toLowerCase())) {
-    return { provider: "fallback", insight: input.fallback };
-  }
-
-  const model = process.env.OPENAI_MODEL ?? "gpt-4o-mini";
   const workspaceContext = {
-    promises: input.promises.slice(0, 20).map(item => ({ title: item.title, status: item.status, dueAt: item.dueAt })),
-    knowledge: process.env.EVANTRA_AI_INCLUDE_KNOWLEDGE === "true"
-      ? input.knowledge.slice(0, 20).map(item => ({ title: item.title, type: item.type, tags: item.tags, content: item.content.slice(0, 800) }))
-      : input.knowledge.slice(0, 20).map(item => ({ title: item.title, type: item.type, tags: item.tags })),
-    calendar: input.events.slice(0, 20).map(item => ({ title: item.title, startAt: item.startAt, endAt: item.endAt, focusBlock: item.isFocusBlock })),
-    finance: process.env.EVANTRA_AI_INCLUDE_FINANCE === "true"
-      ? input.finance.slice(0, 20).map(item => ({ type: item.type, amount: item.amount, currency: item.currency, category: item.category }))
+    promises: input.promises.slice(0, 20).map((item) => ({
+      title: item.title,
+      status: item.status,
+      dueAt: item.dueAt,
+    })),
+    knowledge: input.knowledge.slice(0, 20).map((item) =>
+      includeKnowledge
+        ? {
+            title: item.title,
+            type: item.type,
+            tags: item.tags,
+            content: item.content.slice(0, 800),
+          }
+        : { title: item.title, type: item.type, tags: item.tags },
+    ),
+    calendar: input.events.slice(0, 20).map((item) => ({
+      title: item.title,
+      startAt: item.startAt,
+      endAt: item.endAt,
+      focusBlock: item.isFocusBlock,
+    })),
+    finance: includeFinance
+      ? input.finance.slice(0, 20).map((item) => ({
+          type: item.type,
+          amount: item.amount,
+          currency: item.currency,
+          category: item.category,
+        }))
       : [],
   };
 
-  try {
-    const response = await fetch(`${baseUrl}/chat/completions`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
-      body: JSON.stringify({
-        model,
-        temperature: 0.2,
-        response_format: { type: "json_object" },
-        messages: [
-          {
-            role: "system",
-            content: "You are Evantra Workspace Assistant. Give concise, practical, evidence-grounded guidance. Never invent facts. Return JSON with summary (string), actionItems (array of max 5 strings), and evidence (array of objects with source and reference). Use only the supplied workspace context.",
-          },
-          { role: "user", content: JSON.stringify({ intent: input.intent, question: input.question, workspaceContext }) },
-        ],
-      }),
-      signal: AbortSignal.timeout(20000),
-    });
+  const result = await resolveInsightWithProviders(
+    {
+      intent: input.intent,
+      question: input.question,
+      workspaceContext,
+    },
+    input.fallback,
+  );
 
-    if (!response.ok) return { provider: "fallback", insight: input.fallback };
+  return { provider: result.provider, insight: result.insight };
+}
 
-    const payload = await response.json() as { choices?: { message?: { content?: string } }[] };
-    const content = payload.choices?.[0]?.message?.content;
-    if (!content) return { provider: "fallback", insight: input.fallback };
 
-    const parsed = JSON.parse(content) as Partial<AssistantInsightResult>;
-    if (typeof parsed.summary !== "string" || !Array.isArray(parsed.actionItems) || !Array.isArray(parsed.evidence)) {
-      return { provider: "fallback", insight: input.fallback };
-    }
+/* ------------------------------------------------------------------ */
+/*                              Vault                                  */
+/* ------------------------------------------------------------------ */
 
-    return {
-      provider: "ai",
-      insight: {
-        summary: parsed.summary,
-        actionItems: parsed.actionItems.filter((item): item is string => typeof item === "string").slice(0, 5),
-        evidence: parsed.evidence.filter(item => item && typeof item.source === "string" && typeof item.reference === "string").slice(0, 10),
-      },
-    };
-  } catch {
-    return { provider: "fallback", insight: input.fallback };
-  }
+/*
+ * workspace.vault_items stores ciphertext, not plaintext:
+ * encrypted_payload / iv / auth_tag / key_version. Nothing in
+ * this file ever writes a raw document body, and nothing reads
+ * one without decrypting it first â€” so a database dump alone
+ * does not expose vault contents.
+ */
+
+interface VaultRow {
+  id: string;
+  category: string;
+  title: string;
+  encrypted_payload: string;
+  iv: string;
+  auth_tag: string;
+  key_version: number;
+  tags: string[];
+  is_favorite: boolean;
+  created_at: Date;
+  updated_at: Date;
+}
+
+export type VaultCategory =
+  | "certificate"
+  | "cv"
+  | "id-record"
+  | "contract"
+  | "receipt"
+  | "project-doc"
+  | "academic-record"
+  | "business-doc"
+  | "other";
+
+export interface VaultItem {
+  id: string;
+  category: VaultCategory;
+  title: string;
+  /** Decrypted body. Only ever returned to the owning account. */
+  content: string;
+  tags: string[];
+  isFavorite: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+function mapVaultItem(row: VaultRow): VaultItem {
+  return {
+    id: row.id,
+    category: row.category as VaultCategory,
+    title: row.title,
+    content: decryptVaultPayload({
+      ciphertext: row.encrypted_payload,
+      iv: row.iv,
+      authTag: row.auth_tag,
+      keyVersion: row.key_version,
+    }),
+    tags: row.tags ?? [],
+    isFavorite: row.is_favorite,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
+}
+
+export async function listVaultItems(accountId: string): Promise<VaultItem[]> {
+  const workspaceId = await workspaceIdFor(accountId);
+
+  const result = await database.query<VaultRow>(
+    `
+      SELECT id, category, title, encrypted_payload, iv, auth_tag,
+             key_version, tags, is_favorite, created_at, updated_at
+      FROM workspace.vault_items
+      WHERE workspace_id = $1 AND account_id = $2
+      ORDER BY is_favorite DESC, created_at DESC
+    `,
+    [workspaceId, accountId],
+  );
+
+  return result.rows.map(mapVaultItem);
+}
+
+export async function createVaultItem(
+  accountId: string,
+  input: {
+    category: VaultCategory;
+    title: string;
+    content: string;
+    tags?: readonly string[];
+  },
+): Promise<VaultItem> {
+  const workspaceId = await workspaceIdFor(accountId);
+  const sealed = encryptVaultPayload(input.content);
+
+  const result = await database.query<VaultRow>(
+    `
+      INSERT INTO workspace.vault_items (
+        workspace_id, account_id, category, title,
+        encrypted_payload, iv, auth_tag, key_version, tags
+      )
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+      RETURNING id, category, title, encrypted_payload, iv, auth_tag,
+                key_version, tags, is_favorite, created_at, updated_at
+    `,
+    [
+      workspaceId,
+      accountId,
+      input.category,
+      input.title.trim(),
+      sealed.ciphertext,
+      sealed.iv,
+      sealed.authTag,
+      sealed.keyVersion,
+      [...new Set((input.tags ?? []).map((tag) => tag.toLowerCase()))],
+    ],
+  );
+
+  return mapVaultItem(result.rows[0]);
+}
+
+/**
+ * Deletes a vault item, scoped to the owning account so one
+ * account can never delete another's record by guessing an id.
+ * Returns false when nothing matched.
+ */
+export async function deleteVaultItem(
+  accountId: string,
+  itemId: string,
+): Promise<boolean> {
+  const workspaceId = await workspaceIdFor(accountId);
+
+  const result = await database.query(
+    `
+      DELETE FROM workspace.vault_items
+      WHERE id = $1 AND workspace_id = $2 AND account_id = $3
+    `,
+    [itemId, workspaceId, accountId],
+  );
+
+  return (result.rowCount ?? 0) > 0;
+}
+
+/**
+ * Records that an item was opened. Kept separate from reads so
+ * listing the vault does not mark everything as accessed.
+ */
+export async function touchVaultItem(
+  accountId: string,
+  itemId: string,
+): Promise<void> {
+  await database.query(
+    `
+      UPDATE workspace.vault_items
+      SET accessed_at = NOW()
+      WHERE id = $1 AND account_id = $2
+    `,
+    [itemId, accountId],
+  );
 }

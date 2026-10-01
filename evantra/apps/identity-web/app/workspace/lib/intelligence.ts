@@ -41,9 +41,6 @@ export interface LifeWorkPlan {
   guardrails: readonly string[];
 }
 
-const BURDEN_KEY = "evantra_workspace_burden";
-const PROMISES_KEY = "evantra_workspace_promises";
-
 function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
 }
@@ -139,61 +136,13 @@ function recommendationsForBand(band: BurdenBand): readonly string[] {
   return ["Current load is sustainable. Keep focus and recovery balanced."];
 }
 
-export function loadBurdenSnapshot(): BurdenSnapshot {
-  if (typeof window === "undefined") {
-    return defaultBurdenSnapshot;
-  }
-
-  try {
-    const raw = window.localStorage.getItem(BURDEN_KEY);
-    if (!raw) {
-      return defaultBurdenSnapshot;
-    }
-
-    const parsed = JSON.parse(raw) as BurdenSnapshot;
-
-    return {
-      openTasks: Number(parsed.openTasks ?? defaultBurdenSnapshot.openTasks),
-      blockedTasks: Number(parsed.blockedTasks ?? defaultBurdenSnapshot.blockedTasks),
-      overdueTasks: Number(parsed.overdueTasks ?? defaultBurdenSnapshot.overdueTasks),
-      meetingsMinutesToday: Number(parsed.meetingsMinutesToday ?? defaultBurdenSnapshot.meetingsMinutesToday),
-      focusMinutesToday: Number(parsed.focusMinutesToday ?? defaultBurdenSnapshot.focusMinutesToday),
-      recoveryMinutesToday: Number(parsed.recoveryMinutesToday ?? defaultBurdenSnapshot.recoveryMinutesToday),
-      commitmentsDueSoon: Number(parsed.commitmentsDueSoon ?? defaultBurdenSnapshot.commitmentsDueSoon),
-    };
-  } catch {
-    return defaultBurdenSnapshot;
-  }
-}
-
-export function saveBurdenSnapshot(snapshot: BurdenSnapshot): void {
-  if (typeof window === "undefined") {
-    return;
-  }
-
-  window.localStorage.setItem(BURDEN_KEY, JSON.stringify(snapshot));
-}
-
-export function loadPromises(): WorkspacePromise[] {
-  if (typeof window === "undefined") {
-    return [];
-  }
-
-  try {
-    const raw = window.localStorage.getItem(PROMISES_KEY);
-    return raw ? (JSON.parse(raw) as WorkspacePromise[]) : [];
-  } catch {
-    return [];
-  }
-}
-
-export function savePromises(promises: readonly WorkspacePromise[]): void {
-  if (typeof window === "undefined") {
-    return;
-  }
-
-  window.localStorage.setItem(PROMISES_KEY, JSON.stringify(promises));
-}
+/*
+ * Persistence for burden and promises lives in the workspace API
+ * (app/api/workspace/repository.ts), backed by Postgres. An
+ * earlier localStorage implementation used to sit here; it was
+ * removed because two competing sources of truth meant a value
+ * could appear saved while never reaching the database.
+ */
 
 export function createPromise(title: string, dueAt: string): WorkspacePromise {
   const now = new Date().toISOString();

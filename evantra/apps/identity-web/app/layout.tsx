@@ -9,9 +9,9 @@ import {
 } from "../components/identity/IdentitySessionProvider";
 
 const isWorkspace = process.env.EVANTRA_APP_SURFACE === "workspace";
-const siteTitle = isWorkspace ? "Evantra Workspace | Life & Work Intelligence OS" : "Evantra Identity | Unified Sovereign Access";
+const siteTitle = isWorkspace ? "Evantra Workspace | Life & Work Intelligence" : "Evantra Identity | Unified Sovereign Access";
 const siteDescription = isWorkspace
-  ? "Evantra Workspace is your native operating system for life, work, and promises. Built with cognitive burden defense, zero-knowledge vault, and neural knowledge."
+  ? "Evantra Workspace brings your commitments, cognitive load, notes, calendar and records into one account-scoped operating layer, with encrypted document storage and a grounded workspace assistant."
   : "Evantra Identity provides unified, sovereign digital identity, OAuth 2.0 / OIDC authentication, and cryptographic session protection across the Evantra ecosystem.";
 const siteUrl = isWorkspace
   ? "https://workspace.evantradebuckman.com"
@@ -48,10 +48,10 @@ export const metadata: Metadata = {
     "Enterprise SSO",
     "OAuth 2.0 & OIDC",
     "Sovereign Cryptography",
-    "Zero-Knowledge Vault",
+    "Encrypted Document Vault",
     "Promise Graph",
     "Cognitive Burden Intelligence",
-    "Neural Knowledge Matrix",
+    "Knowledge Base",
     "Mission-Critical Infrastructure",
   ],
 
