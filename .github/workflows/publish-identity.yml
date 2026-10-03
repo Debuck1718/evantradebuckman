@@ -49,10 +49,13 @@ jobs:
       - name: Check out
         uses: actions/checkout@v4
 
+      # Do NOT pass `version` here. pnpm/action-setup refuses to run when the
+      # action's version conflicts with the `packageManager` field in
+      # package.json ("Multiple versions of pnpm specified"). It reads that
+      # field instead, so the repo stays the single source of truth. The root
+      # and evantra/ package.json files must therefore agree.
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 12.5.1
 
       - name: Set up Node
         uses: actions/setup-node@v4
