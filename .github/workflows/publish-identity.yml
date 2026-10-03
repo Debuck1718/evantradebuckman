@@ -4,9 +4,12 @@
 # token that npm verifies against the Trusted Publisher configured on each
 # package, so there is no long-lived credential to leak or rotate.
 #
-# Release by pushing a tag:
-#   git tag identity-v0.1.0
-#   git push origin identity-v0.1.0
+# Release by bumping the version, committing, then pushing a tag:
+#   cd evantra/packages/sdk && npm version patch
+#   cd ../identity-react && npm version patch
+#   git commit -am "release: identity v0.1.1"
+#   git tag identity-v0.1.1
+#   git push origin main identity-v0.1.1
 #
 # The version in the tag is NOT trusted; the version in each package.json is
 # what gets published. The tag only decides *when*.

@@ -24,14 +24,10 @@ pnpm add @evantra-identity/react
 Ships as ESM (`type: module`) with TypeScript declarations. React 18+ is
 a peer dependency. Node 18+.
 
-> **Not on the npm registry yet.** Until the release lands, install the
-> prebuilt tarball instead — the import path is identical:
->
-> ```bash
-> npm install ./evantra/dist-artifacts/evantra-identity-react-0.1.0.tgz
-> ```
->
-> See the [Distribution Guide](../../docs/distribution.md).
+Published from CI via npm trusted publishing (OIDC); every version carries a
+signed provenance attestation. A prebuilt tarball is also available in
+[`dist-artifacts/`](../../dist-artifacts) for offline installs — see the
+[Distribution Guide](../../docs/distribution.md).
 
 ---
 

@@ -23,14 +23,10 @@ pnpm add @evantra-identity/sdk
 Ships as ESM (`type: module`) with TypeScript declarations. Node 18+.
 No runtime dependencies.
 
-> **Not on the npm registry yet.** Until the release lands, install the
-> prebuilt tarball instead — the import path is identical:
->
-> ```bash
-> npm install ./evantra/dist-artifacts/evantra-identity-sdk-0.1.0.tgz
-> ```
->
-> See the [Distribution Guide](../../docs/distribution.md).
+Published from CI via npm trusted publishing (OIDC); every version carries a
+signed provenance attestation. A prebuilt tarball is also available in
+[`dist-artifacts/`](../../dist-artifacts) for offline installs — see the
+[Distribution Guide](../../docs/distribution.md).
 
 ---
 

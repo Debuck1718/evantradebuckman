@@ -1,21 +1,68 @@
 # Distributing the Evantra Identity SDK
 
 How to get `@evantra-identity/sdk` and `@evantra-identity/react` into a
-developer's project **without npm publishing**.
+developer's project.
 
-npm publishing is blocked until npm's two-factor authentication flow is
-completed, so until then use one of the channels below. All three ship the
-exact same code.
+Both packages are **published on the npm registry**. Use the registry
+channel unless you have a specific reason not to (air-gapped CI, or an
+offline install).
 
 ---
 
-## Option 1 — Tarballs (verified, works today)
+## Option 1 — npm registry (recommended)
+
+```bash
+npm install @evantra-identity/sdk
+npm install @evantra-identity/react
+```
+
+pnpm, Yarn and Bun accept the same names:
+
+```bash
+pnpm add @evantra-identity/sdk @evantra-identity/react
+yarn add @evantra-identity/sdk @evantra-identity/react
+bun add @evantra-identity/sdk @evantra-identity/react
+```
+
+Nothing else is required. The published tarballs already contain compiled
+`dist/` output, type declarations, `README.md` and `LICENSE`, so no build
+step runs on install and no lifecycle script is needed.
+
+### Provenance
+
+Releases are published from CI via npm trusted publishing (OIDC), so each
+version carries a signed provenance attestation recording the repository
+and workflow run that produced it. Browse it on the package page under
+**Provenance**, or:
+
+```bash
+npm view @evantra-identity/sdk dist.tarball
+```
+
+### Current versions
+
+```bash
+npm view @evantra-identity/sdk version
+npm view @evantra-identity/react version
+```
+
+### React Native / Expo
+
+`@evantra-identity/react` declares `react >=18` as a peer dependency. Make
+sure your app satisfies it; npm 7+ installs peers automatically.
+
+---
+
+## Option 2 — Tarballs (offline / pinned installs)
+
+Use this only when the registry is not reachable. Prebuilt `.tgz` files
+live in `evantra/dist-artifacts/`:
 
 Prebuilt `.tgz` files live in `evantra/dist-artifacts/`:
 
 ```
-evantra-identity-sdk-0.1.0.tgz
-evantra-identity-react-0.1.0.tgz
+evantra-identity-sdk-0.1.1.tgz
+evantra-identity-react-0.1.1.tgz
 ```
 
 They contain the compiled `dist/` plus `README.md`, `LICENSE` and
@@ -33,8 +80,8 @@ manager and every CI.
 ### Install from a local path
 
 ```bash
-npm install ./evantra/dist-artifacts/evantra-identity-sdk-0.1.0.tgz
-npm install ./evantra/dist-artifacts/evantra-identity-react-0.1.0.tgz
+npm install ./evantra/dist-artifacts/evantra-identity-sdk-0.1.1.tgz
+npm install ./evantra/dist-artifacts/evantra-identity-react-0.1.1.tgz
 ```
 
 pnpm, Yarn and Bun accept the same path.
@@ -45,8 +92,8 @@ Host the `.tgz` files anywhere reachable (GitHub Release asset, S3, a
 static site) and install by URL:
 
 ```bash
-npm install https://github.com/Debuck1718/evantradebuckman/releases/download/identity-v0.1.0/evantra-identity-sdk-0.1.0.tgz
-npm install https://github.com/Debuck1718/evantradebuckman/releases/download/identity-v0.1.0/evantra-identity-react-0.1.0.tgz
+npm install https://github.com/Debuck1718/evantradebuckman/releases/download/identity-v0.1.1/evantra-identity-sdk-0.1.1.tgz
+npm install https://github.com/Debuck1718/evantradebuckman/releases/download/identity-v0.1.1/evantra-identity-react-0.1.1.tgz
 ```
 
 ### Point a package name at a tarball
@@ -57,78 +104,25 @@ alias in `package.json`:
 ```json
 {
   "dependencies": {
-    "@evantra-identity/sdk": "https://github.com/Debuck1718/evantradebuckman/releases/download/identity-v0.1.0/evantra-identity-sdk-0.1.0.tgz",
-    "@evantra-identity/react": "https://github.com/Debuck1718/evantradebuckman/releases/download/identity-v0.1.0/evantra-identity-react-0.1.0.tgz"
-  }
-}
-```
+        "@evantra-identity/sdk": "https://github.com/Debuck1718/evantradebuckman/releases/download/identity-v0.1.1/evantra-identity-sdk-0.1.1.tgz",
+        "@evantra-identity/react": "https://github.com/Debuck1718/evantradebuckman/releases/download/identity-v0.1.1/evantra-identity-react-0.1.1.tgz"
+      }
+    }
+    ```
 
-Then `npm install` and use the normal import paths. Migrating to the real
-npm release later is a one-line change per dependency.
+    Then `npm install` and use the normal import paths. Switching to the
+    registry later is a one-line change per dependency.
 
----
+    ### Regenerating the artifacts
 
-## Option 2 — GitHub Release (recommended publishing channel)
+    ```bash
+    cd evantra
+    powershell -File scripts/build-artifacts.ps1
+    ```
 
-Attach the two `.tgz` files from `evantra/dist-artifacts/` to a GitHub
-Release. This gives you a stable, versioned, citable URL and is the usual
-way to ship before a registry release.
+    ---
 
-1. In `evantra/`, rebuild the artifacts:
-
-   ```bash
-   # from evantra/packages/sdk
-   npm run build
-   npm pack --pack-destination ../../dist-artifacts
-
-   # from evantra/packages/identity-react
-   npm run build
-   npm pack --pack-destination ../../dist-artifacts
-   ```
-
-2. On GitHub: **Releases → Draft a new release**
-
-   - Tag: `identity-v0.1.0`
-   - Title: `Evantra Identity SDK v0.1.0`
-   - Attach both `.tgz` files
-   - Paste the "What's in this release" notes below
-
-3. Share the release link. Consumers follow Option 1.
-
-### Suggested release notes
-
-The full release notes for this version live in
-[`release-notes-identity-v0.1.0.md`](./release-notes-identity-v0.1.0.md).
-Paste that file into the GitHub Release body.
-
-A short version, if you prefer:
-
-```markdown
-## Evantra Identity SDK v0.1.0
-
-Sign in with Evantra — OAuth 2.0 Authorization Code flow with PKCE
-(RFC6749, RFC7636, RFC8252).
-
-### Packages
-
-- `@evantra-identity/sdk` — servers, desktop apps, CLIs
-- `@evantra-identity/react` — React, Next.js, React Native, Expo
-
-### Install
-
-```bash
-npm install <release-asset-url>/evantra-identity-sdk-0.1.0.tgz
-npm install <release-asset-url>/evantra-identity-react-0.1.0.tgz
-```
-
-### Docs
-
-- [Client Integration Guide](../blob/main/evantra/docs/identity-client-integration.md)
-```
-
----
-
-## Option 3 — Git URL
+    ## Option 3 — Git URL
 
 `dist/` is not committed, so a git install must build the package after
 cloning. Both packages declare a `prepare` script for exactly that.
@@ -151,37 +145,28 @@ npm install github:Debuck1718/evantradebuckman#main
 
 ## Which should you use?
 
-| Channel                       | Needs npm login | Needs build | Stable URL | Recommended |
-| ----------------------------- | --------------- | ----------- | ---------- | ----------- |
-| Tarball from a local path     | No              | No          | No         | For handoffs |
-| Tarball from a URL / Release  | No              | No          | Yes        | **Yes**     |
-| Git URL                       | No              | Yes         | Yes        | Only if you commit `dist/` |
-| npm registry                  | Yes (2FA)       | No          | Yes        | Once unblocked |
+| Channel                      | Needs npm login | Needs build | Stable URL | Recommended  |
+| ---------------------------- | --------------- | ----------- | ---------- | ------------ |
+| **npm registry**             | No              | No          | Yes        | **Yes**      |
+| Tarball from a URL / Release | No              | No          | Yes        | Offline only |
+| Tarball from a local path    | No              | No          | No         | Offline only |
+| Git URL                      | No              | Yes         | Yes        | Rarely       |
 
----
-
-## Migrating to npm later
-
-When the npm publish succeeds, nothing in consumer code changes. Replace
-the tarball or git reference with the registry version:
-
-```bash
-npm uninstall @evantra-identity/sdk @evantra-identity/react
-npm install @evantra-identity/sdk @evantra-identity/react
-```
-
-Import statements stay identical because the package names are unchanged.
+The registry channel is the only one that gives consumers dependency
+resolution, semver ranges and provenance. The others exist for
+environments that cannot reach npm.
 
 ---
 
 ## What consumers can rely on
 
-- **Same code, same names.** Every channel ships `@evantra-identity/sdk`
-  and `@evantra-identity/react` at version `0.1.0`.
+- **Package names.** `@evantra-identity/sdk` (servers, desktop apps, CLIs)
+  and `@evantra-identity/react` (React, Next.js, React Native, Expo).
 - **ESM with types.** `dist/index.js` plus `dist/index.d.ts`. Node 18+.
 - **No runtime dependencies.** `@evantra-identity/sdk` has none at all;
   `@evantra-identity/react` only needs `react >=18` as a peer.
-- **License.** MIT, included in each tarball.
+- **License.** MIT.
+- **Provenance.** Published from CI via trusted publishing (OIDC).
 
 See the [Client Integration Guide](./identity-client-integration.md) for
 the actual usage.

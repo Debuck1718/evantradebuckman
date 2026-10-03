@@ -12,24 +12,24 @@ install them to add **Sign in with Evantra** to their own application.
 | [`@evantra-identity/react`](./packages/identity-react) | `pnpm add @evantra-identity/react` | React, Next.js, React Native, Expo   |
 | [`@evantra-identity/sdk`](./packages/sdk)              | `pnpm add @evantra-identity/sdk`   | Servers, desktop apps, CLI, backends |
 
-> **Not on the npm registry yet.** Until the registry release lands, install
-> from the prebuilt tarballs in [`dist-artifacts/`](./dist-artifacts):
->
-> ```bash
-> npm install ./evantra/dist-artifacts/evantra-identity-sdk-0.1.0.tgz
-> npm install ./evantra/dist-artifacts/evantra-identity-react-0.1.0.tgz
-> ```
->
-> See the [Distribution Guide](./docs/distribution.md) for tarball, GitHub
-> Release and git-URL instructions.
+```bash
+npm install @evantra-identity/sdk
+npm install @evantra-identity/react
+```
+
+Releases publish from CI via npm trusted publishing (OIDC), so every
+version carries a signed provenance attestation. Prebuilt tarballs remain
+available in [`dist-artifacts/`](./dist-artifacts) for environments that
+cannot reach the registry — see the
+[Distribution Guide](./docs/distribution.md).
 
 Both implement **OAuth 2.0 Authorization Code flow with PKCE**
 (RFC6749, RFC7636, RFC8252). There is no implicit flow and no
 client-secret-only flow.
 
 - Full walkthrough: [Client Integration Guide](./docs/identity-client-integration.md)
+- Distribution: [Distribution Guide](./docs/distribution.md)
 - Releasing: [Publishing Guide](./docs/publishing.md)
-- Without npm: [Distribution Guide](./docs/distribution.md)
 - License: [MIT](./LICENSE)
 
 ## Workspace layout

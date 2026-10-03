@@ -2,16 +2,16 @@
 
 Add **Sign in with Evantra** to your app in one afternoon.
 
-This release ships the official Evantra Identity SDK as prebuilt tarballs.
-It covers the OAuth 2.0 Authorization Code flow with PKCE (RFC6749, RFC7636,
-RFC8252) — the same protocol Google, GitHub and Apple use. You never build
-a login form: you send the user to Evantra, Evantra handles sign-in,
-sign-up, passwords and email verification, then returns them to your app
-with a code.
+This release ships the official Evantra Identity SDK. It covers the OAuth
+2.0 Authorization Code flow with PKCE (RFC6749, RFC7636, RFC8252) — the
+same protocol Google, GitHub and Apple use. You never build a login form:
+you send the user to Evantra, Evantra handles sign-in, sign-up, passwords
+and email verification, then returns them to your app with a code.
 
-> **Not on the npm registry yet.** npm publishing is blocked on the 2FA
-> flow. Use the tarball URLs below — they need no npm login and the import
-> paths are identical to the future registry release.
+> **Superseded by v0.1.1.** Both packages are now published on the npm
+> registry. Install with `npm install @evantra-identity/sdk` — see the
+> [Distribution Guide](./distribution.md). If you are already using the
+> tarball install from this release, switching is a one-line change.
 
 ---
 
@@ -32,12 +32,15 @@ Node 18+.
 ## 2. Install
 
 ```bash
-npm install https://github.com/Debuck1718/evantradebuckman/releases/download/identity-v0.1.0/evantra-identity-sdk-0.1.0.tgz
-npm install https://github.com/Debuck1718/evantradebuckman/releases/download/identity-v0.1.0/evantra-identity-react-0.1.0.tgz
+npm install @evantra-identity/sdk
+npm install @evantra-identity/react
 ```
 
 `@evantra-identity/react` needs `react >=18` as a peer dependency.
 `@evantra-identity/sdk` has no runtime dependencies at all.
+
+Older releases are also available as prebuilt tarballs on the GitHub
+Release page, for environments that cannot reach the registry.
 
 ---
 
@@ -384,19 +387,21 @@ first, then the token: `refreshEvantraToken({ clientId }, refreshToken)`.
   the full walkthrough, including the registration and email-verification
   round-trip, token refresh and logout.
 - [Distribution Guide](https://github.com/Debuck1718/evantradebuckman/blob/main/evantra/docs/distribution.md) —
-  every install channel and how to migrate to npm later.
+  the registry install plus the offline tarball channels.
 - [SDK README](https://github.com/Debuck1718/evantradebuckman/blob/main/evantra/packages/sdk/README.md)
 - [React README](https://github.com/Debuck1718/evantradebuckman/blob/main/evantra/packages/identity-react/README.md)
 
 ---
 
-## Why the tarball and not npm
+## Install channels
 
-npm publishing is blocked until the account's two-factor authentication flow
-is completed. The tarballs are the exact same code that will appear on the
-registry — same package names, same version 0.1.0, same import paths.
+v0.1.0 shipped as prebuilt tarballs because npm publishing was still being
+set up. It is still fully supported — the tarballs are the exact same code
+the registry carries, with the same package names and import paths.
 
-When the npm release lands, migration is one line per dependency and zero
+Both packages have since moved to the npm registry and publish
+continuously from CI via trusted publishing (OIDC). If you installed 0.1.0
+from a tarball, moving to the registry is one line per dependency and zero
 code changes:
 
 ```bash

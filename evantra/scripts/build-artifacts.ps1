@@ -1,7 +1,8 @@
 # Rebuilds the distributable SDK tarballs in evantra/dist-artifacts/.
 #
-# Use this whenever the SDK source changes and you want to hand a fresh
-# build to developers before the npm release is unblocked.
+# Use this to produce offline tarballs for developers who cannot reach the
+# npm registry. Normal releases go through the npm publish workflow
+# (.github/workflows/publish-identity.yml) instead.
 #
 #   .\evantra\scripts\build-artifacts.ps1
 #
@@ -68,6 +69,7 @@ Get-ChildItem $outDir -Filter *.tgz | ForEach-Object {
 }
 
 Write-Host "`nConsumers install with:" -ForegroundColor Green
-Write-Host "  npm install ./evantra/dist-artifacts/evantra-identity-sdk-0.1.0.tgz"
-Write-Host "  npm install ./evantra/dist-artifacts/evantra-identity-react-0.1.0.tgz"
+Write-Host "  npm install ./evantra/dist-artifacts/evantra-identity-sdk-0.1.1.tgz"
+Write-Host "  npm install ./evantra/dist-artifacts/evantra-identity-react-0.1.1.tgz"
 Write-Host "`nNext: commit evantra/dist-artifacts/, or attach the .tgz files to a GitHub Release."
+Write-Host "Note: the registry install (npm install @evantra-identity/sdk) is preferred." -ForegroundColor Yellow
