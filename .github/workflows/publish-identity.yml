@@ -1,0 +1,108 @@
+# Publishes the Evantra Identity packages to npm via Trusted Publishing (OIDC).
+#
+# No npm token or secret is stored anywhere. GitHub mints a short-lived OIDC
+# token that npm verifies against the Trusted Publisher configured on each
+# package, so there is no long-lived credential to leak or rotate.
+#
+# Release by pushing a tag:
+#   git tag identity-v0.1.0
+#   git push origin identity-v0.1.0
+#
+# The version in the tag is NOT trusted; the version in each package.json is
+# what gets published. The tag only decides *when*.
+#
+# One-time setup (see evantra/docs/publishing.md):
+#   npmjs.com -> each package -> Settings -> Trusted Publisher -> GitHub Actions
+#     Organization or user: Debuck1718
+#     Repository:           evantradebuckman
+#     Workflow filename:    publish-identity.yml
+#     Environment:          (leave blank)
+
+name: Publish Identity
+
+on:
+  push:
+    tags:
+      - "identity-v*"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Build and pack only, do not publish"
+        type: boolean
+        default: true
+
+# Least privilege: OIDC minting needs id-token, and npm provenance needs it too.
+permissions:
+  contents: read
+  id-token: write
+
+# Never let two releases race each other.
+concurrency:
+  group: publish-identity-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Build and publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 12.5.1
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          # Node 24 ships an npm new enough for Trusted Publishing. Older npm
+          # silently ignores the OIDC exchange and falls back to token auth.
+          node-version: 24
+          registry-url: "https://registry.npmjs.org"
+          cache: pnpm
+
+      # npm performs the OIDC exchange, so pin it explicitly rather than
+      # relying on whatever the runner image happens to bundle.
+      - name: Pin npm
+        run: npm install -g npm@latest
+
+      # The pnpm workspace lives in evantra/, not the repository root.
+      - name: Install dependencies
+        working-directory: evantra
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        working-directory: evantra
+        run: pnpm typecheck
+
+      - name: Build
+        working-directory: evantra
+        run: |
+          pnpm --filter @evantra-identity/sdk build
+          pnpm --filter @evantra-identity/react build
+
+      - name: Show tarball contents
+        working-directory: evantra
+        run: |
+          pnpm --filter @evantra-identity/sdk pack --dry-run
+          pnpm --filter @evantra-identity/react pack --dry-run
+
+      # npm reads package.json for the version. --provenance is safe here
+      # (unlike a local publish) because GitHub provides an OIDC provider.
+      # publishConfig.access is already "public", so no --access flag.
+      - name: Publish @evantra-identity/sdk
+        if: ${{ github.event_name == 'push' || inputs.dry_run == false }}
+        working-directory: evantra/packages/sdk
+        run: npm publish --provenance
+
+      - name: Publish @evantra-identity/react
+        if: ${{ github.event_name == 'push' || inputs.dry_run == false }}
+        working-directory: evantra/packages/identity-react
+        run: npm publish --provenance
+
+      - name: Verify on the registry
+        run: |
+          npm view @evantra-identity/sdk version
+          npm view @evantra-identity/react version
