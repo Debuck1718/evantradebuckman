@@ -1,6 +1,6 @@
 {
   "name": "@evantra-identity/sdk",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": false,
   "description": "Official Evantra Identity SDK — OAuth 2.0 Authorization Code flow with PKCE and Evantra Workspace types.",
   "keywords": [

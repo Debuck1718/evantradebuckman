@@ -1,6 +1,6 @@
 {
   "name": "@evantra-identity/react",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": false,
   "description": "Sign in with Evantra — React, React Native and Expo components plus the OAuth 2.0 / PKCE core for Evantra Identity.",
   "keywords": [
