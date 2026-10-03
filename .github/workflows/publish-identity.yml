@@ -105,7 +105,32 @@ jobs:
         working-directory: evantra/packages/identity-react
         run: npm publish --provenance
 
+      # `npm view <pkg> version` exits 0 even when it returns a stale version,
+      # so printing it proves nothing. Assert the published version equals the
+      # one in package.json, and fail the job otherwise. Without this, a publish
+      # that quietly does nothing still produces a green run.
       - name: Verify on the registry
+        working-directory: evantra
         run: |
-          npm view @evantra-identity/sdk version
-          npm view @evantra-identity/react version
+          set -euo pipefail
+          check() {
+            local pkg="$1" dir="$2"
+            local want published attempts=0
+            want=$(node -p "require('./$dir/package.json').version")
+            while [ "$attempts" -lt 10 ]; do
+              published=$(npm view "$pkg" version 2>/dev/null || echo missing)
+              if [ "$published" = "$want" ]; then
+                echo "OK  $pkg@$published"
+                return 0
+              fi
+              attempts=$((attempts + 1))
+              echo "waiting for $pkg (want $want, registry has $published) [$attempts/10]"
+              sleep 15
+            done
+            echo "::error::$pkg published $published but package.json says $want"
+            return 1
+          }
+          failed=0
+          check @evantra-identity/sdk packages/sdk || failed=1
+          check @evantra-identity/react packages/identity-react || failed=1
+          exit $failed
