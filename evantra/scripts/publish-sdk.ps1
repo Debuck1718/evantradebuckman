@@ -44,8 +44,20 @@ function Invoke-Npm {
         # npm/cmd write normal notices to stderr; collect it instead of aborting.
         $prevEap = $ErrorActionPreference
         $ErrorActionPreference = "Continue"
-        & $cmdExe /d /c "npm $($Args -join ' ')" | Out-Host
-        $code = $LASTEXITCODE
+        # Do NOT pipe this through a cmdlet. In PowerShell, $LASTEXITCODE after
+        # a pipeline is the exit code of the LAST command in that pipeline, so
+        # `... | Out-Host` makes $LASTEXITCODE Out-Host's always-successful code
+        # and every npm failure looks like a success. Capture to a temp file
+        # instead, then replay it: no pipeline, so $LASTEXITCODE stays cmd.exe's.
+        $logFile = [System.IO.Path]::GetTempFileName()
+        try {
+            & $cmdExe /d /c "npm $($Args -join ' ') > `"$logFile`" 2>&1"
+            $code = $LASTEXITCODE
+            Get-Content -LiteralPath $logFile | ForEach-Object { Write-Host $_ }
+        }
+        finally {
+            Remove-Item -LiteralPath $logFile -Force -ErrorAction SilentlyContinue
+        }
         $ErrorActionPreference = $prevEap
 
         return $code
@@ -166,18 +178,37 @@ foreach ($pkg in $packages) {
 }
 
 # 4. Verify -------------------------------------------------------------------
+# A publish that reported success but did not land on the registry is still a
+# failed release, so this step decides the script's exit code rather than just
+# printing a red line and continuing (which is how a silent failure used to
+# look like a successful run).
 Write-Host "`n==> Verifying on the registry" -ForegroundColor Cyan
+$verified = 0
 foreach ($pkg in $packages) {
     $dir  = Join-Path $evantraDir $pkg
     $name = (Get-Content (Join-Path $dir "package.json") -Raw | ConvertFrom-Json).name
+    $want = (Get-Content (Join-Path $dir "package.json") -Raw | ConvertFrom-Json).version
 
     $view = Get-NpmOutput -Dir $repoRoot -Args @("view", $name, "version")
-    if ($view.ExitCode -eq 0) {
-        Write-Host ("  " + $name + "@" + $view.Output) -ForegroundColor Green
+    if ($view.ExitCode -eq 0 -and $view.Output.Trim() -eq $want) {
+        Write-Host ("  " + $name + "@" + $view.Output + " is live") -ForegroundColor Green
+        $verified++
+    }
+    elseif ($view.ExitCode -eq 0) {
+        Write-Host ("  " + $name + " shows " + $view.Output + " but package.json says " + $want) -ForegroundColor Red
     }
     else {
-        Write-Host ("  " + $name + " - not found on the registry") -ForegroundColor Red
+        # A 404 here is often just registry read lag; the package can still be
+        # live. Ask the user to confirm in the browser before treating it as
+        # fatal, but do NOT report the run as successful.
+        Write-Host ("  " + $name + "@" + $want + " - not visible on the registry yet") -ForegroundColor Red
+        Write-Host ("    The publish may still have succeeded; the registry read path lags." + " Check https://www.npmjs.com/package/" + $name) -ForegroundColor Yellow
     }
+}
+
+if ($verified -ne $packages.Count) {
+    Write-Host "`nNot every package was confirmed on the registry. See above." -ForegroundColor Red
+    exit 1
 }
 
 Write-Host "`nDone. Consumers can now run:" -ForegroundColor Green
