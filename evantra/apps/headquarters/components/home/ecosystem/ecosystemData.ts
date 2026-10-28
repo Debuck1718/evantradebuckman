@@ -1,122 +1,164 @@
 import {
-  BrainCircuit,
-  Building2,
-  Cpu,
-  ShieldCheck,
-  FlaskConical,
-  Globe2,
+  BookOpen,
+  Clapperboard,
+  Frame,
+  GraduationCap,
+  Images,
+  MessagesSquare,
+  Newspaper,
+  Ruler,
+  Video,
 } from "lucide-react";
 
 export interface EcosystemItem {
   id: string;
+
+  /** Public facing name of the partner product. */
   title: string;
+
+  /** Short descriptor, used as the card eyebrow. */
   eyebrow: string;
+
+  /** One line positioning statement pulled from the product itself. */
+  tagline: string;
+
+  /** What the product does, in two sentences. */
   description: string;
-  icon: typeof BrainCircuit;
+
+  icon: typeof Clapperboard;
+
+  /** Public link to the product. */
   href: string;
+
+  /** Brand accent used for the icon, eyebrow and link colour. */
   color: string;
+
+  /** Small capability labels displayed as chips. */
+  highlights: string[];
+
+  /** "Live" products are shipped and publicly accessible. */
+  status: "Live" | "In development";
+
+  /** Short domain shown as the link preview inside the card. */
+  domain: string;
+
+  /** Category used for the filter tabs. */
+  category: EcosystemCategory;
+
+  /** Sort order for the grid. */
+  order: number;
 }
+
+export type EcosystemCategory =
+  | "All products"
+  | "Media"
+  | "Creative studio"
+  | "Education";
+
+export const ecosystemCategories: EcosystemCategory[] = [
+  "All products",
+  "Media",
+  "Creative studio",
+  "Education",
+];
 
 export const ecosystemData: EcosystemItem[] = [
   {
-    id: "software-engineering",
+    id: "nicks-media",
 
-    title: "Software Engineering",
-
-    eyebrow: "Digital Platforms",
+    title: "Nick's Media",
+    eyebrow: "Media house",
+    tagline: "Independent journalism. Made to move.",
 
     description:
-      "Enterprise software, cloud platforms, automation and digital transformation solutions engineered for scale.",
+      "A modern media house combining journalism, creative production and broadcast — original reporting, explainers, investigations, cultural analysis and video built for every screen.",
 
-    icon: Cpu,
+    icon: Clapperboard,
 
-    href: "/companies/software",
+    href: "https://nicks-media-red.vercel.app/",
+    color: "#C43B3B",
 
-    color: "#0B4F71",
+    highlights: ["Newsroom", "Live desk", "Video & broadcast"],
+
+    status: "Live",
+    domain: "nicks-media-red.vercel.app",
+    category: "Media",
+    order: 1,
   },
 
   {
-    id: "artificial-intelligence",
+    id: "azibk-framing",
 
-    title: "Artificial Intelligence",
-
-    eyebrow: "AI & Intelligent Systems",
+    title: "AZIBK Framing",
+    eyebrow: "Picture framing studio",
+    tagline: "Bespoke framing, finished by hand.",
 
     description:
-      "Building intelligent systems that enhance decision making, productivity and human capability.",
+      "A picture framing studio based in Accra taking commissions for custom hardwood and metal frames, conservation mounting and museum-grade glazing — with a two-week turnaround.",
 
-    icon: BrainCircuit,
+    icon: Frame,
 
-    href: "/companies/artificial-intelligence",
+    href: "https://azibk.vercel.app/",
+    color: "#B7852B",
 
-    color: "#D2A339",
+    highlights: ["Bespoke frames", "Conservation mounting", "Museum glazing"],
+
+    status: "Live",
+    domain: "azibk.vercel.app",
+    category: "Creative studio",
+    order: 2,
   },
 
   {
-    id: "cybersecurity",
+    id: "evantrahub",
 
-    title: "Cybersecurity",
-
-    eyebrow: "Security & Trust",
-
-    description:
-      "Protecting digital infrastructure through modern security architecture, resilience and governance.",
-
-    icon: ShieldCheck,
-
-    href: "/companies/cybersecurity",
-
-    color: "#0B4F71",
-  },
-
-  {
-    id: "research",
-
-    title: "Research & Innovation",
-
-    eyebrow: "Future Technologies",
+    title: "EvantraHub",
+    eyebrow: "Education platform",
+    tagline: "One place for every course material.",
 
     description:
-      "Applied research transforming emerging technologies into practical products and services.",
+      "An academic platform that centralises course slides, past questions, discussions and announcements, while giving course representatives a simple way to upload and share learning resources.",
 
-    icon: FlaskConical,
+    icon: GraduationCap,
 
-    href: "/research",
+    href: "https://www.evantrahub.me/",
+    color: "#0B6E88",
 
-    color: "#D2A339",
-  },
+    highlights: ["Course slides", "Past questions", "Academic forums"],
 
-  {
-    id: "infrastructure",
-
-    title: "Smart Infrastructure",
-
-    eyebrow: "Connected Systems",
-
-    description:
-      "IoT, intelligent infrastructure and sustainable engineering solutions for tomorrow's cities.",
-
-    icon: Building2,
-
-    href: "/companies/engineering",
-
-    color: "#0B4F71",
-  },
-
-  {
-    id: "trade",
-
-    title: "Import & Export",
-
-    eyebrow: "Global Commerce",
-
-    description:
-      "Connecting global markets through technology-enabled logistics, trade and strategic partnerships.",
-
-    icon: Globe2,
-
-    href: "/companies/commerce",
-
-    color: "#D2A339",
+    status: "Live",
+    domain: "evantrahub.me",
+    category: "Education",
+    order: 3,
   },
 ];
+
+/**
+ * Product capabilities surfaced in each card so the section reads
+ * like a product collection instead of a link list.
+ */
+export const ecosystemCapabilities = {
+  "nicks-media": [
+    { label: "Reporting", icon: Newspaper },
+    { label: "Video", icon: Video },
+    { label: "Editorial", icon: MessagesSquare },
+  ],
+
+  "azibk-framing": [
+    { label: "Framing", icon: Frame },
+    { label: "Measuring", icon: Ruler },
+    { label: "Gallery work", icon: Images },
+  ],
+
+  evantrahub: [
+    { label: "Course slides", icon: BookOpen },
+    { label: "Study library", icon: GraduationCap },
+    { label: "Discussion", icon: MessagesSquare },
+  ],
+} as const;
+
+export const ecosystemStats = {
+  products: ecosystemData.length,
+  live: ecosystemData.filter((item) => item.status === "Live").length,
+  categories: ecosystemCategories.length - 1,
+};

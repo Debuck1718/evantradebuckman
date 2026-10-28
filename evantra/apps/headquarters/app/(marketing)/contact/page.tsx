@@ -4,7 +4,6 @@ import Link from "next/link";
 import {
   ArrowRight,
   Building2,
-  CheckCircle2,
   Globe2,
   Mail,
   MessageSquare,
@@ -15,6 +14,7 @@ import {
   GlobalHeader,
   GlobalFooter,
 } from "@/components/layout";
+import ContactForm from "@/components/contact/ContactForm";
 
 export const metadata: Metadata = {
   title: "Contact Evantra | Evantra De-Buckman Ventures",
@@ -228,163 +228,7 @@ export default function ContactPage() {
             {/* Form */}
 
             <div className="rounded-[2rem] border border-[#10182c]/10 bg-[#f8f9fb] p-6 shadow-sm sm:p-8 lg:p-10">
-              <form className="space-y-6">
-                <div className="grid gap-6 sm:grid-cols-2">
-                  <div>
-                    <label
-                      htmlFor="firstName"
-                      className="text-sm font-medium"
-                    >
-                      First name
-                    </label>
-
-                    <input
-                      id="firstName"
-                      name="firstName"
-                      type="text"
-                      autoComplete="given-name"
-                      required
-                      className="mt-2 w-full rounded-xl border border-[#10182c]/10 bg-white px-4 py-3.5 text-sm outline-none transition placeholder:text-[#9aa3b3] focus:border-[#e6b24a] focus:ring-4 focus:ring-[#e6b24a]/10"
-                      placeholder="Your first name"
-                    />
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="lastName"
-                      className="text-sm font-medium"
-                    >
-                      Last name
-                    </label>
-
-                    <input
-                      id="lastName"
-                      name="lastName"
-                      type="text"
-                      autoComplete="family-name"
-                      required
-                      className="mt-2 w-full rounded-xl border border-[#10182c]/10 bg-white px-4 py-3.5 text-sm outline-none transition placeholder:text-[#9aa3b3] focus:border-[#e6b24a] focus:ring-4 focus:ring-[#e6b24a]/10"
-                      placeholder="Your last name"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="email"
-                    className="text-sm font-medium"
-                  >
-                    Email address
-                  </label>
-
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    required
-                    className="mt-2 w-full rounded-xl border border-[#10182c]/10 bg-white px-4 py-3.5 text-sm outline-none transition placeholder:text-[#9aa3b3] focus:border-[#e6b24a] focus:ring-4 focus:ring-[#e6b24a]/10"
-                    placeholder="you@example.com"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="organization"
-                    className="text-sm font-medium"
-                  >
-                    Organization
-                    <span className="ml-2 text-[#9aa3b3]">
-                      Optional
-                    </span>
-                  </label>
-
-                  <input
-                    id="organization"
-                    name="organization"
-                    type="text"
-                    autoComplete="organization"
-                    className="mt-2 w-full rounded-xl border border-[#10182c]/10 bg-white px-4 py-3.5 text-sm outline-none transition placeholder:text-[#9aa3b3] focus:border-[#e6b24a] focus:ring-4 focus:ring-[#e6b24a]/10"
-                    placeholder="Company or organization"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="inquiryType"
-                    className="text-sm font-medium"
-                  >
-                    Inquiry type
-                  </label>
-
-                  <select
-                    id="inquiryType"
-                    name="inquiryType"
-                    required
-                    defaultValue=""
-                    className="mt-2 w-full rounded-xl border border-[#10182c]/10 bg-white px-4 py-3.5 text-sm outline-none transition focus:border-[#e6b24a] focus:ring-4 focus:ring-[#e6b24a]/10"
-                  >
-                    <option value="" disabled>
-                      Select an inquiry type
-                    </option>
-
-                    <option value="business">
-                      Business & Partnerships
-                    </option>
-
-                    <option value="technology">
-                      Technology & Engineering
-                    </option>
-
-                    <option value="research">
-                      Research & Innovation
-                    </option>
-
-                    <option value="general">
-                      General Inquiry
-                    </option>
-                  </select>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="message"
-                    className="text-sm font-medium"
-                  >
-                    Message
-                  </label>
-
-                  <textarea
-                    id="message"
-                    name="message"
-                    required
-                    rows={7}
-                    className="mt-2 w-full resize-y rounded-xl border border-[#10182c]/10 bg-white px-4 py-3.5 text-sm outline-none transition placeholder:text-[#9aa3b3] focus:border-[#e6b24a] focus:ring-4 focus:ring-[#e6b24a]/10"
-                    placeholder="Tell us about your project, opportunity or inquiry..."
-                  />
-                </div>
-
-                <div className="flex items-start gap-3 rounded-xl border border-[#10182c]/10 bg-white p-4">
-                  <CheckCircle2
-                    size={18}
-                    className="mt-0.5 shrink-0 text-[#e6b24a]"
-                  />
-
-                  <p className="text-xs leading-5 text-[#53627b]">
-                    Please avoid submitting passwords, authentication
-                    tokens or other sensitive credentials through this
-                    form.
-                  </p>
-                </div>
-
-                <button
-                  type="submit"
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#e6b24a] px-6 py-4 text-sm font-semibold text-[#091522] transition hover:bg-[#f0c261]"
-                >
-                  Send Inquiry
-                  <ArrowRight size={17} />
-                </button>
-              </form>
+              <ContactForm />
             </div>
           </div>
         </section>

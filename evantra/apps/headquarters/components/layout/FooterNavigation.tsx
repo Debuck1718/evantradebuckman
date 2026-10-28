@@ -31,6 +31,14 @@ const groups = [
       ["Media", "/resources#media"],
     ],
   },
+  {
+    title: "Partners",
+    links: [
+      ["Nick's Media", "https://nicks-media-red.vercel.app/"],
+      ["AZIBK Framing", "https://azibk.vercel.app/"],
+      ["EvantraHub", "https://www.evantrahub.me/"],
+    ],
+  },
 ];
 
 export default function FooterNavigation() {
@@ -43,7 +51,7 @@ export default function FooterNavigation() {
 
         sm:grid-cols-2
 
-        lg:grid-cols-3
+        lg:grid-cols-4
       "
     >
       {groups.map((group) => (
@@ -67,23 +75,30 @@ export default function FooterNavigation() {
           </h4>
 
           <div className="space-y-4">
-            {group.links.map(([label, href]) => (
-              <Link
-                key={label}
-                href={href}
-                className="
-                  block
+            {group.links.map(([label, href]) => {
+              const external = href.startsWith("http");
 
-                  text-white/70
+              return (
+                <Link
+                  key={label}
+                  href={href}
+                  {...(external
+                    ? { target: "_blank", rel: "noreferrer" }
+                    : {})}
+                  className="
+                    block
 
-                  transition-colors
+                    text-white/70
 
-                  hover:text-ev-gold
-                "
-              >
-                {label}
-              </Link>
-            ))}
+                    transition-colors
+
+                    hover:text-ev-gold
+                  "
+                >
+                  {label}
+                </Link>
+              );
+            })}
           </div>
         </div>
       ))}
