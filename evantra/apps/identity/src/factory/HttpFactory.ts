@@ -2,6 +2,7 @@ import { WorkflowFactory } from "./WorkflowFactory";
 import { PlatformFactory } from "./PlatformFactory";
 
 import { AuthorizationController } from "../http/controllers/AuthorizationController";
+import { ClientDisplayInfoController } from "../http/controllers/ClientDisplayInfoController";
 import { TokenController } from "../http/controllers/TokenController";
 import { RevokeTokenController } from "../http/controllers/RevokeTokenController";
 import { IntrospectTokenController } from "../http/controllers/IntrospectTokenController";
@@ -291,6 +292,11 @@ export class HttpFactory {
     // Client Controllers
     // ==========================================================
 
+    const clientDisplayInfoController =
+      new ClientDisplayInfoController(
+        workflows.clients.getClientDisplayInfo,
+      );
+
     const registerClientController =
       new RegisterClientController(
 
@@ -455,6 +461,9 @@ export class HttpFactory {
 
         controllers: {
 
+          displayInfo:
+            clientDisplayInfoController,
+ 
           registerClient:
             registerClientController,
 

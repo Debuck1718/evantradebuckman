@@ -12,6 +12,13 @@ export function createClientRoutes(
   const router = Router();
   const controllers = clients.controllers;
 
+  router.get(
+    "/:clientId/display-info",
+    controllers.displayInfo.handle.bind(
+      controllers.displayInfo,
+    ),
+  );
+
   router.post(
     "/register",
     controllers.registerClient.handle.bind(

@@ -3,6 +3,7 @@ export * from "./RegisterAccountWorkflow"
 export * from "./VerifyAccountWorkflow"
 export * from "./ReactivateAccountWorkflow"
 export * from "./RegisterClientWorkflow"
+export * from "./GetClientDisplayInfoWorkflow";
 export * from "./RegisterClientRedirectUriWorkflow";
 export * from "./ApproveClientWorkflow";
 export * from "./AuthorizeWorkflow"

@@ -10,6 +10,7 @@ interface IdentityShellProps {
   children: ReactNode;
   title?: string;
   description?: string;
+  compact?: boolean;
 }
 
 /*
@@ -27,6 +28,7 @@ export function IdentityShell({
   children,
   title = "Evantra Identity",
   description = "Secure access to the Evantra digital ecosystem.",
+  compact = false,
 }: IdentityShellProps) {
   const { authenticated, loading } = useIdentitySession();
 
@@ -37,12 +39,12 @@ export function IdentityShell({
   const showWorkspaceLink = !loading && authenticated;
 
   return (
-    <main className="min-h-screen px-6 py-10">
-      <div className="mx-auto flex min-h-[calc(100vh-5rem)] max-w-6xl items-center justify-center">
+    <main className={compact ? "min-h-screen px-3 py-4 sm:px-6 sm:py-8" : "min-h-screen px-6 py-10"}>
+      <div className={compact ? "mx-auto flex min-h-[calc(100svh-2rem)] max-w-2xl items-center justify-center" : "mx-auto flex min-h-[calc(100vh-5rem)] max-w-6xl items-center justify-center"}>
         <div className="grid w-full overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/[0.025] shadow-2xl lg:grid-cols-[0.9fr_1.1fr]">
 
           {/* Brand panel */}
-          <section className="hidden min-h-[650px] flex-col justify-between border-r border-white/10 bg-gradient-to-br from-[#0b4f71]/40 via-[#06131f] to-[#06131f] p-12 lg:flex">
+          {!compact && <section className="hidden min-h-[650px] flex-col justify-between border-r border-white/10 bg-gradient-to-br from-[#0b4f71]/40 via-[#06131f] to-[#06131f] p-12 lg:flex">
             <div>
               <div className="mb-12 flex items-center justify-between">
                 <Link
@@ -106,14 +108,14 @@ export function IdentityShell({
                 </Link>
               )}
             </div>
-          </section>
+          </section>}
 
           {/* Authentication panel */}
-          <section className="flex min-h-[650px] items-center justify-center p-6 sm:p-10">
-            <div className="w-full max-w-md">
+          <section className={`flex items-center justify-center ${compact ? "min-h-0 p-4 sm:p-8" : "min-h-[650px] p-6 sm:p-10"}`}>
+            <div className={`w-full ${compact ? "max-w-xl" : "max-w-md"}`}>
 
               {/* Mobile Header with Brand Icon and Workspace shortcut */}
-              <div className="mb-8 flex items-center justify-between lg:hidden">
+              <div className={`${compact ? "mb-5" : "mb-8 lg:hidden"} flex items-center justify-between`}>
                 <Link
                   href="/"
                   className="flex items-center gap-3"
@@ -141,12 +143,12 @@ export function IdentityShell({
                 )}
               </div>
 
-              <div className="mb-8">
-                <p className="mb-3 text-xs font-medium uppercase tracking-[0.22em] text-[#e6b24a]">
-                  {title}
+              <div className={compact ? "mb-5" : "mb-8"}>
+                <p className="mb-2 text-xs font-medium uppercase tracking-[0.22em] text-[#e6b24a]">
+                  {compact ? "Evantra Identity" : title}
                 </p>
 
-                <h2 className="text-3xl font-semibold text-white">
+                <h2 className={`${compact ? "text-2xl sm:text-3xl" : "text-3xl"} font-semibold text-white`}>
                   {title === "Evantra Identity"
                     ? "Welcome back."
                     : title}

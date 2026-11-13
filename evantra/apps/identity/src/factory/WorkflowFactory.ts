@@ -3,7 +3,8 @@ import {
   VerifyAccountWorkflow,
   ReactivateAccountWorkflow,
   AuthenticateWorkflow,
-
+  GetClientDisplayInfoWorkflow,
+ 
   RegisterClientWorkflow,
   RegisterClientRedirectUriWorkflow,
   ApproveClientWorkflow,
@@ -124,6 +125,11 @@ export class WorkflowFactory {
     // ==========================================================
     // OAuth Clients
     // ==========================================================
+
+    const getClientDisplayInfo =
+      new GetClientDisplayInfoWorkflow(
+        services.clients,
+      );
 
     const registerClient =
       new RegisterClientWorkflow(
@@ -433,6 +439,8 @@ const verifyContactEmailChange =
 
   clients: {
 
+    getClientDisplayInfo,
+ 
     registerClient,
 
     approveClient,

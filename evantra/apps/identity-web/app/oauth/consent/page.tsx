@@ -1,6 +1,7 @@
 import Link from "next/link";
+import { headers } from "next/headers";
 
-import { IdentityShell } from "../../../components/identity/IdentityShell";
+import { IdentityConsentShell } from "../../../components/identity/IdentityConsentShell";
 import { describeScopes, EVANTRA_DEFAULT_SCOPE } from "../../lib/oauth/scopes";
 
 interface OAuthConsentPageProps {
@@ -14,6 +15,46 @@ interface OAuthConsentPageProps {
     code_challenge?: string;
     code_challenge_method?: string;
   }>;
+}
+
+interface ClientDisplayInfo {
+  name: string;
+  homepageUrl: string | null;
+  description: string | null;
+}
+
+const IDENTITY_API_URL = (
+  process.env.IDENTITY_API_URL ??
+  process.env.NEXT_PUBLIC_IDENTITY_API_URL ??
+  "https://evantra-headquarters.onrender.com"
+).replace(/\/$/, "");
+
+async function getClientDisplayInfo(
+  clientId: string | undefined,
+): Promise<ClientDisplayInfo | null> {
+  if (!clientId) return null;
+
+  try {
+    const requestHeaders = await headers();
+    const forwardedHost = requestHeaders.get("x-forwarded-host");
+    const host = forwardedHost ?? requestHeaders.get("host");
+    const protocol = requestHeaders.get("x-forwarded-proto") ?? "https";
+    const baseUrl = host ? `${protocol}://${host}` : IDENTITY_API_URL;
+    const response = await fetch(
+      `${baseUrl}/api/backend/clients/${encodeURIComponent(clientId)}/display-info`,
+      { cache: "no-store" },
+    );
+
+    if (!response.ok) return null;
+
+    const result = (await response.json()) as {
+      client?: ClientDisplayInfo;
+    };
+
+    return result.client ?? null;
+  } catch {
+    return null;
+  }
 }
 
 function buildQuery(params: Record<string, string | undefined>) {
@@ -68,9 +109,9 @@ export default async function OAuthConsentPage({
 
   const scopes = describeScopes(requestedScope);
 
-  const clientName =
-    readParam(resolvedSearchParams.client_id) ??
-    "External application";
+  const clientId = readParam(resolvedSearchParams.client_id);
+  const client = await getClientDisplayInfo(clientId);
+  const clientName = client?.name ?? "External application";
 
   const query = buildQuery(resolvedSearchParams);
 
@@ -131,20 +172,32 @@ export default async function OAuthConsentPage({
   })();
 
   return (
-    <IdentityShell
-      title="Application consent"
-      description="Approve which identity data this application may access."
-    >
-      <div className="space-y-6">
+    <IdentityConsentShell>
+      <div className="space-y-4">
         <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-6">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#e6b24a]">
             Requested by
           </p>
-          <h3 className="mt-4 text-2xl font-semibold text-white">
+          <h3 className="mt-2 break-words text-xl font-semibold text-white sm:text-2xl">
             {clientName}
           </h3>
-          <p className="mt-4 text-sm leading-6 text-white/60">
-            This application needs your consent before it can access the data below.
+          {client?.homepageUrl ? (
+            <a
+              href={client.homepageUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-1 inline-block max-w-full truncate text-sm text-[#fae59a] hover:underline"
+            >
+              {new URL(client.homepageUrl).hostname}
+            </a>
+          ) : null}
+          {client?.description ? (
+            <p className="mt-2 text-sm leading-5 text-white/60">
+              {client.description}
+            </p>
+          ) : null}
+          <p className="mt-3 text-sm leading-5 text-white/60">
+            This application is requesting access to:
           </p>
         </div>
 
@@ -154,7 +207,7 @@ export default async function OAuthConsentPage({
           </p>
 
           {scopes.length > 0 ? (
-            <div className="mt-5 grid gap-4">
+            <div className="mt-3 grid gap-2">
               {scopes.map((item) => (
                 <div
                   key={item.scope}
@@ -168,23 +221,24 @@ export default async function OAuthConsentPage({
                       {item.scope}
                     </span>
                   </div>
-                  <p className="mt-2 text-sm leading-6 text-white/60">
+                  <p className="mt-1 text-sm leading-5 text-white/60">
                     {item.definition.description}
                   </p>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="mt-5 text-sm leading-6 text-white/50">
+            <p className="mt-3 text-sm leading-5 text-white/50">
               This request did not name any scopes, so the application will
               receive only your authenticated identity.
             </p>
-          )}        </div>
+          )}
+        </div>
 
-        <div className="grid gap-4 sm:grid-cols-[1.1fr_0.9fr]">
+        <div className="grid gap-2 sm:grid-cols-2">
           <a
             href={backendAuthorizeUrl}
-            className="inline-flex items-center justify-center rounded-xl bg-[#e6b24a] px-5 py-3 text-sm font-semibold text-[#06131f] transition hover:bg-[#f0c15e]"
+            className="inline-flex items-center justify-center rounded-xl bg-[#e6b24a] px-5 py-3.5 text-sm font-semibold text-[#06131f] transition hover:bg-[#f0c15e]"
           >
             Grant access
           </a>
@@ -197,12 +251,10 @@ export default async function OAuthConsentPage({
           </Link>
         </div>
 
-        <div className="text-sm text-white/40">
-          <p>
-            Consent is required so this application can use your Evantra identity safely.
-          </p>
-        </div>
+        <p className="text-center text-xs leading-5 text-white/40">
+          You can review or revoke this access later in your account settings.
+        </p>
       </div>
-    </IdentityShell>
+    </IdentityConsentShell>
   );
 }
