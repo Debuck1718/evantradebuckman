@@ -4,7 +4,7 @@ import {
   Response,
 } from "express";
 
-import { GetClientDisplayInfoWorkflow } from "../../workflows";
+import { GetClientDisplayInfoWorkflow } from "../../workflows/GetClientDisplayInfoWorkflow";
 
 /**
  * Serves the minimal public identity used on OAuth consent screens.
