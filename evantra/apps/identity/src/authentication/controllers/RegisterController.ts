@@ -1,7 +1,9 @@
 import {
   HttpController,
+  HttpError,
   HttpRequest,
   HttpResponse,
+  HttpStatus,
 } from "../../http";
 
 import {
@@ -65,6 +67,21 @@ export class RegisterController
         returnTo:
           body.returnTo ?? null,
 
+      }).catch((error: unknown) => {
+        if (
+          error instanceof Error &&
+          (
+            error.message === "Contact email already exists." ||
+            error.message === "Evantra ID already exists."
+          )
+        ) {
+          throw new HttpError(
+            HttpStatus.CONFLICT,
+            error.message,
+          );
+        }
+
+        throw error;
       });
 
     return RegisterResponseMapper.success(

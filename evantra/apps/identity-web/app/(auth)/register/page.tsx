@@ -13,6 +13,8 @@ import {
 
 import {
   CheckCircle2,
+  Eye,
+  EyeOff,
   Loader2,
   Mail,
   UserRoundPlus,
@@ -26,16 +28,7 @@ import {
   IdentityShell,
 } from "../../../components/identity/IdentityShell";
 
-/**
- * Resolves the caller-supplied
- * returnTo value into a safe
- * same-origin path.
- *
- * Anything that is not a relative
- * path is discarded so a malicious
- * link can never redirect a visitor
- * off the identity origin.
- */
+
 function safeReturnTo(
   returnTo: string | null,
 ): string {
@@ -55,12 +48,7 @@ function RegisterPageContent() {
   const searchParams =
     useSearchParams();
 
-  /*
-   * Preserved across registration and
-   * the verification round-trip so a
-   * client app receives the user back
-   * where they started.
-   */
+
   const returnTo =
     safeReturnTo(
       searchParams.get("returnTo"),
@@ -81,17 +69,22 @@ function RegisterPageContent() {
   const [password, setPassword] =
     useState("");
 
+  const [confirmPassword, setConfirmPassword] =
+    useState("");
+
+  const [showPassword, setShowPassword] =
+    useState(false);
+
+  const [showConfirmPassword, setShowConfirmPassword] =
+    useState(false);
+
   const [loading, setLoading] =
     useState(false);
 
   const [error, setError] =
     useState("");
 
-  /*
-   * Set once registration succeeds.
-   * Holds the contact email the
-   * verification message was sent to.
-   */
+
   const [pendingEmail, setPendingEmail] =
     useState<string | null>(null);
 
@@ -149,6 +142,13 @@ function RegisterPageContent() {
       return;
     }
 
+    if (password !== confirmPassword) {
+      setError(
+        "Your passwords do not match. Check both fields and try again.",
+      );
+      return;
+    }
+
     try {
       setLoading(true);
 
@@ -170,42 +170,27 @@ function RegisterPageContent() {
         returnTo,
       });
 
-      /*
-       * Registration is complete.
-       *
-       * The account begins in
-       * PENDING_VERIFICATION and a
-       * verification email has been
-       * sent.
-       *
-       * Verification happens through
-       * the link in that email, so we
-       * show a pending state here
-       * instead of navigating to the
-       * token-consuming /verify page.
-       */
+
       setPendingEmail(
         normalizedEmail,
       );
     } catch (error) {
-      setError(
+      const message =
         error instanceof Error
           ? error.message
-          : "Unable to create your Evantra ID.",
+          : "";
+
+      setError(
+        message === "Contact email already exists."
+          ? "An account is already registered with this contact email."
+          : message || "Unable to create your Evantra ID.",
       );
     } finally {
       setLoading(false);
     }
   }
 
-  /*
-   * Pending verification state.
-   *
-   * Shown after a successful
-   * registration, in place of the
-   * form, once the verification
-   * email has been dispatched.
-   */
+
   if (pendingEmail) {
     return (
       <IdentityShell
@@ -412,28 +397,108 @@ function RegisterPageContent() {
             Password
           </label>
 
-          <input
-            id="password"
-            name="password"
-            type="password"
-            autoComplete="new-password"
-            value={password}
-            onChange={(event) =>
-              setPassword(
-                event.target.value,
-              )
-            }
-            placeholder="Create a password"
-            disabled={loading}
-            className="h-12 w-full rounded-xl border border-white/10 bg-white/[0.045] px-4 text-sm text-white outline-none transition placeholder:text-white/25 focus:border-[#e6b24a]/50 focus:bg-white/[0.06] focus:ring-2 focus:ring-[#e6b24a]/10 disabled:opacity-50"
-          />
+          <div className="relative">
+            <input
+              id="password"
+              name="password"
+              type={showPassword ? "text" : "password"}
+              autoComplete="new-password"
+              value={password}
+              onChange={(event) =>
+                setPassword(
+                  event.target.value,
+                )
+              }
+              placeholder="Create a password"
+              disabled={loading}
+              className="h-12 w-full rounded-xl border border-white/10 bg-white/[0.045] py-3 pl-4 pr-12 text-sm text-white outline-none transition placeholder:text-white/25 focus:border-[#e6b24a]/50 focus:bg-white/[0.06] focus:ring-2 focus:ring-[#e6b24a]/10 disabled:opacity-50"
+            />
+
+            <button
+              type="button"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+              onClick={() =>
+                setShowPassword((current) => !current)
+              }
+              disabled={loading}
+              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg p-2 text-white/40 transition hover:text-white disabled:opacity-50"
+            >
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          </div>
+        </div>
+
+        {/* Confirm password */}
+
+        <div>
+          <label
+            htmlFor="confirmPassword"
+            className="mb-2 block text-sm font-medium text-white/80"
+          >
+            Confirm password
+          </label>
+
+          <div className="relative">
+            <input
+              id="confirmPassword"
+              name="confirmPassword"
+              type={showConfirmPassword ? "text" : "password"}
+              autoComplete="new-password"
+              value={confirmPassword}
+              onChange={(event) =>
+                setConfirmPassword(
+                  event.target.value,
+                )
+              }
+              placeholder="Enter your password again"
+              disabled={loading}
+              className="h-12 w-full rounded-xl border border-white/10 bg-white/[0.045] py-3 pl-4 pr-12 text-sm text-white outline-none transition placeholder:text-white/25 focus:border-[#e6b24a]/50 focus:bg-white/[0.06] focus:ring-2 focus:ring-[#e6b24a]/10 disabled:opacity-50"
+            />
+
+            <button
+              type="button"
+              aria-label={
+                showConfirmPassword
+                  ? "Hide confirmation password"
+                  : "Show confirmation password"
+              }
+              onClick={() =>
+                setShowConfirmPassword((current) => !current)
+              }
+              disabled={loading}
+              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg p-2 text-white/40 transition hover:text-white disabled:opacity-50"
+            >
+              {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          </div>
         </div>
 
         {/* Error */}
 
         {error && (
-          <div className="rounded-xl border border-red-400/20 bg-red-400/10 px-4 py-3 text-sm leading-6 text-red-200">
+          <div
+            role="alert"
+            className="rounded-xl border border-red-400/20 bg-red-400/10 px-4 py-3 text-sm leading-6 text-red-200"
+          >
             {error}
+            {error === "An account is already registered with this contact email." && (
+              <p className="mt-2">
+                <Link
+                  href={`/login?returnTo=${encodeURIComponent(returnTo)}`}
+                  className="font-medium text-[#f7d97f] underline underline-offset-2"
+                >
+                  Sign in
+                </Link>
+                {" or "}
+                <Link
+                  href="/forgot-password"
+                  className="font-medium text-[#f7d97f] underline underline-offset-2"
+                >
+                  reset your password
+                </Link>
+                {" if you cannot access your account."}
+              </p>
+            )}
           </div>
         )}
 
@@ -482,10 +547,7 @@ function RegisterPageContent() {
   );
 }
 
-/**
- * useSearchParams requires a Suspense
- * boundary during prerendering.
- */
+
 export default function RegisterPage() {
   return (
     <Suspense
