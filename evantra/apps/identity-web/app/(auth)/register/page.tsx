@@ -183,7 +183,9 @@ function RegisterPageContent() {
       setError(
         message === "Contact email already exists."
           ? "An account is already registered with this contact email."
-          : message || "Unable to create your Evantra ID.",
+          : message === "Evantra ID already exists."
+            ? "An account is already registered with this Evantra ID."
+            : message || "Unable to create your Evantra ID.",
       );
     } finally {
       setLoading(false);
@@ -242,7 +244,9 @@ function RegisterPageContent() {
             </Link>
 
             <Link
-              href={`/verify/resend?returnTo=${encodeURIComponent(
+              href={`/verify/resend?email=${encodeURIComponent(
+                pendingEmail,
+              )}&returnTo=${encodeURIComponent(
                 returnTo,
               )}`}
               className="w-full rounded-xl border-white/10 px-5 py-3 text-center text-sm font-medium text-white/70 transition hover:bg-white/5 hover:text-white"
@@ -483,6 +487,15 @@ function RegisterPageContent() {
             {error}
             {error === "An account is already registered with this contact email." && (
               <p className="mt-2">
+                <Link
+                  href={`/verify/resend?email=${encodeURIComponent(
+                    contactEmail.trim().toLowerCase(),
+                  )}&returnTo=${encodeURIComponent(returnTo)}`}
+                  className="font-medium text-[#f7d97f] underline-offset-2"
+                >
+                  Resend the verification email
+                </Link>
+                {" if your account is still pending, "}
                 <Link
                   href={`/login?returnTo=${encodeURIComponent(returnTo)}`}
                   className="font-medium text-[#f7d97f] underline underline-offset-2"

@@ -339,6 +339,7 @@ export interface VerifyAccountResponse {
 
 export interface ResendVerificationInput {
   contactEmail: string;
+  returnTo?: string;
 }
 
 export interface ResendVerificationResponse {
@@ -385,6 +386,9 @@ export async function resendVerification(
       body: JSON.stringify({
         contactEmail:
           input.contactEmail,
+        ...(input.returnTo
+          ? { returnTo: input.returnTo }
+          : {}),
       }),
 
       cache: "no-store",

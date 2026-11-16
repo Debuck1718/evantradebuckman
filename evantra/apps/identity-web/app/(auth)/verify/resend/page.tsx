@@ -2,6 +2,7 @@
 
 import {
   FormEvent,
+  useEffect,
   useState,
 } from "react";
 
@@ -21,6 +22,26 @@ import {
 export default function ResendVerificationPage() {
   const [contactEmail, setContactEmail] =
     useState("");
+
+  const [returnTo, setReturnTo] =
+    useState("");
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const email = params.get("email")?.trim();
+    const requestedReturnTo = params.get("returnTo") ?? "";
+
+    if (email) {
+      setContactEmail(email);
+    }
+
+    if (
+      requestedReturnTo.startsWith("/") &&
+      !requestedReturnTo.startsWith("//")
+    ) {
+      setReturnTo(requestedReturnTo);
+    }
+  }, []);
 
   const [loading, setLoading] =
     useState(false);
@@ -54,6 +75,7 @@ export default function ResendVerificationPage() {
     try {
       await resendVerification({
         contactEmail: email,
+        ...(returnTo ? { returnTo } : {}),
       });
 
       setSuccess(true);
@@ -124,7 +146,9 @@ export default function ResendVerificationPage() {
 
                 <div className="mt-8 flex flex-col gap-3">
                   <Link
-                    href="/login"
+                    href={returnTo
+                      ? `/login?returnTo=${encodeURIComponent(returnTo)}`
+                      : "/login"}
                     className="w-full rounded-xl bg-[#e6b24a] px-5 py-3 text-center text-sm font-semibold text-[#06131f] transition hover:bg-[#f0c15e]"
                   >
                     Continue to sign in
@@ -162,9 +186,9 @@ export default function ResendVerificationPage() {
                   </h1>
 
                   <p className="mt-3 text-sm leading-6 text-white/50">
-                    Enter the contact email associated
-                    with your Evantra ID and we'll send
-                    you a new verification link.
+                    If your account is still pending, enter the contact email
+                    associated with your Evantra ID. We&apos;ll send a fresh
+                    verification link, including if the original link expired.
                   </p>
                 </div>
 
@@ -224,7 +248,9 @@ export default function ResendVerificationPage() {
 
                 <div className="mt-8 text-center">
                   <Link
-                    href="/login"
+                    href={returnTo
+                      ? `/login?returnTo=${encodeURIComponent(returnTo)}`
+                      : "/login"}
                     className="text-sm text-white/40 transition hover:text-white"
                   >
                     Return to sign in

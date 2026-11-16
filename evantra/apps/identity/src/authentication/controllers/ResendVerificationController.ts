@@ -54,6 +54,10 @@ implements HttpController {
 
         request.body.contactEmail,
 
+      returnTo:
+
+        request.body.returnTo ?? null,
+
     });
 
     return ResendVerificationResponseMapper

@@ -4,4 +4,5 @@
  */
 export interface ResendVerificationRequest {
   readonly contactEmail: string;
+  readonly returnTo?: string;
 }

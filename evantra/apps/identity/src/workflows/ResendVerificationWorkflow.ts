@@ -54,6 +54,7 @@ export class ResendVerificationWorkflow {
 
   async execute(params: {
     contactEmail: string;
+    returnTo?: string | null;
   }): Promise<void> {
 
     // ======================================================
@@ -138,6 +139,9 @@ export class ResendVerificationWorkflow {
 
         expiresAt:
           verification.expiresAt,
+
+        returnTo:
+          params.returnTo ?? null,
       });
   }
 }
