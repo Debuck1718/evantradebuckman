@@ -98,11 +98,15 @@ export class CommunicationService {
 
   }): Promise<void> {
 
+    const identityWebUrl = (
+      process.env.EVANTRA_IDENTITY_WEB_URL ??
+      (process.env.NODE_ENV === "production"
+        ? "https://identity.evantradebuckman.com"
+        : "http://localhost:3001")
+    ).replace(/\/$/, "");
+
     const verificationUrl =
-      `${(
-        process.env.EVANTRA_IDENTITY_WEB_URL ??
-        "http://localhost:3001"
-      ).replace(/\/$/, "")}/verify?token=${encodeURIComponent(
+      `${identityWebUrl}/verify?token=${encodeURIComponent(
         params.token,
       )}${buildReturnToQuery(
         params.returnTo,
@@ -151,11 +155,22 @@ export class CommunicationService {
 
   }): Promise<void> {
 
+    const identityWebUrl = (
+      process.env.EVANTRA_IDENTITY_WEB_URL ??
+      (process.env.NODE_ENV === "production"
+        ? "https://identity.evantradebuckman.com"
+        : "http://localhost:3001")
+    ).replace(/\/$/, "");
+
+    const resetUrl =
+      `${identityWebUrl}/reset-password?token=${encodeURIComponent(
+        params.token,
+      )}`;
+
     const template =
       PasswordRecoveryTemplate.render(
-
         params,
-
+        resetUrl,
       );
 
     await this.provider.sendEmail({
