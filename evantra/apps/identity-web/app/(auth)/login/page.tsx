@@ -25,11 +25,15 @@ import {
 import {
   IdentityShell,
 } from "../../../components/identity/IdentityShell";
+import {
+  useIdentitySession,
+} from "../../../components/identity/IdentitySessionProvider";
 
 function LoginPageContent() {
   const router = useRouter();
   const searchParams =
     useSearchParams();
+  const { establish } = useIdentitySession();
 
   /*
    * Where to send the user once they
@@ -124,8 +128,8 @@ function LoginPageContent() {
         );
       }
 
-      router.push(safeReturnTo);
-      router.refresh();
+      establish(result);
+      router.replace(safeReturnTo);
     } catch (err) {
       setError(
         err instanceof Error

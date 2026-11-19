@@ -4,6 +4,7 @@ import {
   createContext,
   useContext,
   useEffect,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -27,6 +28,8 @@ interface IdentitySessionContextValue {
   authenticated: boolean;
 
   refresh: () => Promise<void>;
+
+  establish: (result: AuthenticateResponse) => void;
 
   clear: () => void;
 }
@@ -54,12 +57,20 @@ export function IdentitySessionProvider({
   const [loading, setLoading] =
     useState(true);
 
+  const sessionRequestId = useRef(0);
+
   async function refresh() {
+    const requestId = ++sessionRequestId.current;
+
     try {
       setLoading(true);
 
       const result =
         await validateSession();
+
+      if (requestId !== sessionRequestId.current) {
+        return;
+      }
 
       /*
        * A null result means there is
@@ -81,20 +92,37 @@ export function IdentitySessionProvider({
         result.session ?? null,
       );
     } catch {
-      setAccount(null);
-      setSession(null);
+      if (requestId === sessionRequestId.current) {
+        setAccount(null);
+        setSession(null);
+      }
     } finally {
-      setLoading(false);
+      if (requestId === sessionRequestId.current) {
+        setLoading(false);
+      }
     }
   }
 
+  function establish(result: AuthenticateResponse) {
+    sessionRequestId.current += 1;
+    setAccount(result.account);
+    setSession(result.session);
+    setLoading(false);
+  }
+
   function clear() {
+    sessionRequestId.current += 1;
     setAccount(null);
     setSession(null);
+    setLoading(false);
   }
 
   useEffect(() => {
-    refresh();
+    const timeoutId = window.setTimeout(() => {
+      void refresh();
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
   }, []);
 
   return (
@@ -107,6 +135,7 @@ export function IdentitySessionProvider({
           account !== null &&
           session !== null,
         refresh,
+        establish,
         clear,
       }}
     >
